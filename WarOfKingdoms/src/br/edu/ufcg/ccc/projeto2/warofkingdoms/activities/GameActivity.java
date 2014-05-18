@@ -3,10 +3,11 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
-import android.widget.ImageView;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryManager;
@@ -20,10 +21,10 @@ import br.ufcg.edu.ccc.projeto2.R;
 public class GameActivity extends Activity implements OnTouchListener {
 
 	private View mapImage;
-
-	@SuppressWarnings("unused")
 	private View mapImageMask;
-
+	
+	private Bitmap maskImageBitmap;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,8 +33,23 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
-
+		
 		mapImage.setOnTouchListener(this);
+		
+		mapImageMask.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right,
+					int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+				reloadMaskImageBitmap();
+			}
+		});
+	}
+	
+	private void reloadMaskImageBitmap() {
+		mapImageMask.setDrawingCacheEnabled(true);
+		maskImageBitmap = Bitmap.createBitmap(mapImageMask
+				.getDrawingCache());
+		mapImageMask.setDrawingCacheEnabled(false);
 	}
 
 	/**
@@ -51,16 +67,13 @@ public class GameActivity extends Activity implements OnTouchListener {
 	 * @return
 	 */
 	private int getHotspotColor(int hotspotId, int x, int y) {
-		ImageView maskImage = (ImageView) findViewById(hotspotId);
-		maskImage.setDrawingCacheEnabled(true);
-		Bitmap maskImageBitmap = Bitmap.createBitmap(maskImage
-				.getDrawingCache());
-		maskImage.setDrawingCacheEnabled(false);
 		return maskImageBitmap.getPixel(x, y);
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent ev) {
+		double starTime = System.nanoTime();
+		
 		final int action = ev.getAction();
 		final int motionEventX = (int) ev.getX();
 		final int motionEventY = (int) ev.getY();
@@ -68,10 +81,12 @@ public class GameActivity extends Activity implements OnTouchListener {
 		int touchedPixelColor = getHotspotColor(R.id.map_mask, motionEventX,
 				motionEventY);
 
+		Log.d("Touched Color", String.valueOf(touchedPixelColor));
+		
 		// When the user touches outside the image itself, onTouch is called
 		// because the ImageView matches its parent, i.e. the whole screen, but
 		// the image is not stretched to match the whole screen
-		if (touchedPixelColor == 0) {
+		if (touchedPixelColor == 0 || touchedPixelColor == -1) {
 			return false;
 		}
 
@@ -91,6 +106,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 			}
 			break;
 		}
+		
+		Log.d("onTouch Time", String.valueOf((System.nanoTime() - starTime) / 1000000));
 		return true;
 	}
 }
