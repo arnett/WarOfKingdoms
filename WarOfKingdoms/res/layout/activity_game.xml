@@ -20,5 +20,10 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
         android:src="@drawable/map_mask_letters_jpg" />
+    
+    <RelativeLayout
+        android:id="@+id/token"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

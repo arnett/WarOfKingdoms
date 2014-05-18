@@ -24,12 +24,13 @@ public class GameActivity extends Activity implements OnTouchListener {
 	private View mapImageMask;
 	
 	private Bitmap maskImageBitmap;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_game);
+		
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
@@ -51,7 +52,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 				.getDrawingCache());
 		mapImageMask.setDrawingCacheEnabled(false);
 	}
-
+	
 	/**
 	 * Returns the color of the pixel <tt>(x, y)</tt> on the image represented
 	 * by <tt>hotspotId</tt>
@@ -86,9 +87,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 		// When the user touches outside the image itself, onTouch is called
 		// because the ImageView matches its parent, i.e. the whole screen, but
 		// the image is not stretched to match the whole screen
-		if (touchedPixelColor == 0 || touchedPixelColor == -1) {
+		if (touchedPixelColor == 0 || touchedPixelColor == -1)
 			return false;
-		}
 
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -104,10 +104,12 @@ public class GameActivity extends Activity implements OnTouchListener {
 						String.valueOf(touchedTerritory), Toast.LENGTH_SHORT)
 						.show();
 			}
+			
 			break;
 		}
 		
 		Log.d("onTouch Time", String.valueOf((System.nanoTime() - starTime) / 1000000));
+		
 		return true;
 	}
 }
