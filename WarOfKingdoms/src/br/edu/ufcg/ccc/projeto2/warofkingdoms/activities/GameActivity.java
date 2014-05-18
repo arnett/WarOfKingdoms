@@ -2,12 +2,16 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryManager;
@@ -20,20 +24,27 @@ import br.ufcg.edu.ccc.projeto2.R;
  */
 public class GameActivity extends Activity implements OnTouchListener {
 
+	private RelativeLayout tokenLayout;
+	
 	private View mapImage;
 	private View mapImageMask;
 	
 	private Bitmap maskImageBitmap;
+	
+	private Bitmap imageToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_game);
-		
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
+		tokenLayout = (RelativeLayout) findViewById(R.id.token);
+		tokenLayout.setBackgroundColor(100);
+		
+		imageToken = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
 		
 		mapImage.setOnTouchListener(this);
 		
@@ -46,6 +57,11 @@ public class GameActivity extends Activity implements OnTouchListener {
 		});
 	}
 	
+	/**
+	 * Method to recreate the maskImageBitmap,
+	 * it is used when the layout changes (mainly
+	 * for screen rotation).
+	 */
 	private void reloadMaskImageBitmap() {
 		mapImageMask.setDrawingCacheEnabled(true);
 		maskImageBitmap = Bitmap.createBitmap(mapImageMask
@@ -70,10 +86,30 @@ public class GameActivity extends Activity implements OnTouchListener {
 	private int getHotspotColor(int hotspotId, int x, int y) {
 		return maskImageBitmap.getPixel(x, y);
 	}
+	
+	private void addTokenToLayout(int x, int y, RelativeLayout layout) {
+//		Centralize the image
+		x -= imageToken.getWidth()  / 2;
+		y -= imageToken.getHeight() / 2;
+		
+		ImageView imageView = new ImageView(this);
+		imageView.setImageBitmap(imageToken);
+		
+//		Paramenter to place the image in the right place, centered in x, y
+//		Create a param object with same dimensions as imageToken 
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+				imageToken.getWidth(), imageToken.getHeight());
+//		The image will be placed 'x' units far from the left border
+//		and y far from the top border
+		params.leftMargin = x;
+		params.topMargin  = y;
+		
+		layout.addView(imageView, params);
+	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent ev) {
-		double starTime = System.nanoTime();
+		double DEBUG_StartTime = System.nanoTime();
 		
 		final int action = ev.getAction();
 		final int motionEventX = (int) ev.getX();
@@ -98,6 +134,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 		case MotionEvent.ACTION_UP:
 			Territory touchedTerritory = TerritoryManager
 					.getTerritoryByClosestColor(touchedPixelColor);
+			
+			addTokenToLayout(motionEventX, motionEventY, tokenLayout);
 
 			if (touchedTerritory != null) {
 				Toast.makeText(getBaseContext(),
@@ -105,10 +143,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 						.show();
 			}
 			
+			Log.d("onTouch Time", String.valueOf((System.nanoTime() - DEBUG_StartTime) / 1000000));
 			break;
 		}
-		
-		Log.d("onTouch Time", String.valueOf((System.nanoTime() - starTime) / 1000000));
 		
 		return true;
 	}
