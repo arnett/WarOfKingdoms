@@ -15,7 +15,8 @@ public class ColorMatcher {
 
 	/**
 	 * 
-	 * @param possibleColors a list with all colors to be matched against
+	 * @param possibleColors
+	 *            a list with all colors to be matched against
 	 */
 	public ColorMatcher(Collection<Integer> possibleColors) {
 		this.possibleColors = new ArrayList<Integer>(possibleColors);
@@ -33,8 +34,8 @@ public class ColorMatcher {
 	}
 
 	/**
-	 * Returns the closest color in <tt> possibleColors </tt> to the
-	 * specified <tt> color </tt>
+	 * Returns the closest color in <tt> possibleColors </tt> to the specified
+	 * <tt> color </tt>
 	 * 
 	 * @param color
 	 * @return
@@ -52,6 +53,7 @@ public class ColorMatcher {
 
 	/**
 	 * Returns the list of possible colors to be matched against
+	 * 
 	 * @return
 	 */
 	public List<Integer> getPossibleColors() {
