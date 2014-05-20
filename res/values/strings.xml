@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WarOfKingdoms</string>
-    <string name="title_activity_game">GameActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="app_name">War of Kingdoms</string>
+    <string name="title_activity_game">War of Kingdoms</string>
+    <string name="choose_an_action">Choose an action</string>
 
 </resources>

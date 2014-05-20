@@ -23,4 +23,5 @@ public class Move {
 		territories.add(territory);
 	}
 
+	
 }

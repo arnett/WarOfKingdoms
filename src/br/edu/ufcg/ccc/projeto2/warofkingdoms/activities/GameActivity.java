@@ -1,6 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_ACTIVITY_LOG_TAG;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -31,7 +33,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 	private Bitmap imageToken;
 
-	private String LOG_TAG = "GameActivity";
+	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "CHOOSE_ACTION_DIALOG_FRAGMENT_TAG";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +120,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 		int touchedPixelColor = getHotspotColor(R.id.map_mask, motionEventX,
 				motionEventY);
 
-		Log.v(LOG_TAG, "touched pixel color is " + Integer.toHexString(touchedPixelColor));
+		Log.v(GAME_ACTIVITY_LOG_TAG,
+				"touched pixel color is "
+						+ Integer.toHexString(touchedPixelColor));
 
 		// When the user touches outside the image itself, onTouch is called
 		// because the ImageView matches its parent, i.e. the whole screen, but
@@ -136,15 +140,22 @@ public class GameActivity extends Activity implements OnTouchListener {
 			Territory touchedTerritory = TerritoryManager
 					.getTerritoryByClosestColor(touchedPixelColor);
 
-			Log.d(LOG_TAG, "touched territory is " + touchedTerritory);
+			Log.d(GAME_ACTIVITY_LOG_TAG, "touched territory is " + touchedTerritory);
+
+			startDialog();
 
 			addTokenToLayout(motionEventX, motionEventY, tokenLayout);
 
-			Log.v(LOG_TAG, "onTouch total time was "
+			Log.v(GAME_ACTIVITY_LOG_TAG, "onTouch total time was "
 					+ (System.nanoTime() - DEBUG_StartTime) / 1000000);
 			break;
 		}
 
 		return true;
+	}
+
+	private void startDialog() {
+		DialogFragment chooseActionDialogFragment = new ChooseActionDialogFragment();
+		chooseActionDialogFragment.show(getFragmentManager(), CHOOSE_ACTION_DIALOG_FRAGMENT_TAG);
 	}
 }
