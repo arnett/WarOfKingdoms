@@ -14,12 +14,4 @@ public enum Action {
 	public String toString() {
 		return actionName;
 	}
-
-	public static String[] getStringValues() {
-		String[] stringValues = new String[values().length];
-		for (int i = 0; i < values().length; i++) {
-			stringValues[i] = values()[i].toString();
-		}
-		return stringValues;
-	}
 }

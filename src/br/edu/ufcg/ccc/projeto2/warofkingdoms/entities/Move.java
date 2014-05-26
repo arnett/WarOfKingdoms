@@ -1,11 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
-import java.util.List;
-
-public class Move {
+public abstract class Move {
 
 	private Action action;
-	private List<Territory> territories;
 
 	public Action getAction() {
 		return action;
@@ -15,13 +12,4 @@ public class Move {
 		this.action = action;
 	}
 
-	public List<Territory> getTerritories() {
-		return territories;
-	}
-
-	public void addTerritory(Territory territory) {
-		territories.add(territory);
-	}
-
-	
 }

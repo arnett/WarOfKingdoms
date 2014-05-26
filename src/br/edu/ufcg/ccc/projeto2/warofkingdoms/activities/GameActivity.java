@@ -2,7 +2,6 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_ACTIVITY_LOG_TAG;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,7 +12,11 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseActionDialogFragment.OnActionSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryManager;
 import br.ufcg.edu.ccc.projeto2.R;
 
@@ -22,18 +25,23 @@ import br.ufcg.edu.ccc.projeto2.R;
  * @author Arnett
  * 
  */
-public class GameActivity extends Activity implements OnTouchListener {
+public class GameActivity extends Activity implements OnTouchListener,
+		OnActionSelectedListener {
+
+	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "ChooseActionDialogFragmentTag";
 
 	private RelativeLayout tokenLayout;
+	private Bitmap imageToken;
 
 	private View mapImage;
 	private View mapImageMask;
-
 	private Bitmap maskImageBitmap;
 
-	private Bitmap imageToken;
+	private SelectionState currentSelectionState = SelectionState.SELECTING_ORIGIN;
 
-	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "CHOOSE_ACTION_DIALOG_FRAGMENT_TAG";
+	private GameManager gameManager = GameManager.getInstance();
+
+	private Territory firstSelectedTerritory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +53,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 		mapImageMask = findViewById(R.id.map_mask);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);
-
-		imageToken = BitmapFactory.decodeResource(this.getResources(),
-				R.drawable.ic_launcher);
 
 		mapImage.setOnTouchListener(this);
 
@@ -89,7 +94,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 		return maskImageBitmap.getPixel(x, y);
 	}
 
-	private void addTokenToLayout(int x, int y, RelativeLayout layout) {
+	private void addTokenToLayout(int imageResource, int x, int y, RelativeLayout layout) {
+		imageToken = BitmapFactory.decodeResource(this.getResources(),
+				imageResource);
+		
 		// Centralize the image
 		x -= imageToken.getWidth() / 2;
 		y -= imageToken.getHeight() / 2;
@@ -113,9 +121,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 	public boolean onTouch(View touchedView, MotionEvent event) {
 		double DEBUG_StartTime = System.nanoTime();
 
-		final int action = event.getAction();
-		final int motionEventX = (int) event.getX();
-		final int motionEventY = (int) event.getY();
+		int action = event.getAction();
+		int motionEventX = (int) event.getX();
+		int motionEventY = (int) event.getY();
 
 		int touchedPixelColor = getHotspotColor(R.id.map_mask, motionEventX,
 				motionEventY);
@@ -137,25 +145,101 @@ public class GameActivity extends Activity implements OnTouchListener {
 			// to pressed_territory, as we would do with buttons.
 			break;
 		case MotionEvent.ACTION_UP:
-			Territory touchedTerritory = TerritoryManager
-					.getTerritoryByClosestColor(touchedPixelColor);
-
-			Log.d(GAME_ACTIVITY_LOG_TAG, "touched territory is " + touchedTerritory);
-
-			startDialog();
-
-			addTokenToLayout(motionEventX, motionEventY, tokenLayout);
-
-			Log.v(GAME_ACTIVITY_LOG_TAG, "onTouch total time was "
-					+ (System.nanoTime() - DEBUG_StartTime) / 1000000);
+			processTouch(motionEventX, motionEventY, touchedPixelColor);
 			break;
 		}
 
+		Log.v(GAME_ACTIVITY_LOG_TAG,
+				"onTouch total time was "
+						+ (System.nanoTime() - DEBUG_StartTime) / 1000000);
 		return true;
 	}
 
-	private void startDialog() {
-		DialogFragment chooseActionDialogFragment = new ChooseActionDialogFragment();
-		chooseActionDialogFragment.show(getFragmentManager(), CHOOSE_ACTION_DIALOG_FRAGMENT_TAG);
+	private void processTouch(int motionEventX, int motionEventY,
+			int touchedPixelColor) {
+		switch (currentSelectionState) {
+		case SELECTING_ORIGIN:
+			processFirstTouch(motionEventX, motionEventY, touchedPixelColor);
+			break;
+		case SELECTING_TARGET:
+			processSecondTouch(motionEventX, motionEventY, touchedPixelColor);
+			break;
+		}
+	}
+
+	private void processFirstTouch(int motionEventX, int motionEventY,
+			int touchedPixelColor) {
+		firstSelectedTerritory = TerritoryManager
+				.getTerritoryByClosestColor(touchedPixelColor);
+
+		Log.d(GAME_ACTIVITY_LOG_TAG, "touched territory is "
+				+ firstSelectedTerritory);
+
+		Action[] appliableActionsToThisTerritory = firstSelectedTerritory
+				.getCurrentState().getApplicableActions();
+		startActionPopup(appliableActionsToThisTerritory);
+	}
+
+	private void processSecondTouch(int motionEventX, int motionEventY,
+			int touchedPixelColor) {
+		Territory touchedTerritory = TerritoryManager
+				.getTerritoryByClosestColor(touchedPixelColor);
+
+		gameManager.makeAttackMove(firstSelectedTerritory, touchedTerritory);
+		addTokenToLayout(R.drawable.token_attack, touchedTerritory.getCenterX(getScreenWidth()),
+				touchedTerritory.getCenterY(getScreenHeight()), tokenLayout);
+		currentSelectionState = SelectionState.SELECTING_ORIGIN;
+	}
+
+	private void startActionPopup(Action[] actions) {
+		ChooseActionDialogFragment chooseActionDialogFragment = new ChooseActionDialogFragment();
+		chooseActionDialogFragment.setActions(actions);
+		chooseActionDialogFragment.show(getFragmentManager(),
+				CHOOSE_ACTION_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void onActionSelected(Action chosenAction) {
+		switch (chosenAction) {
+		case ATTACK:
+			currentSelectionState = SelectionState.SELECTING_TARGET;
+			break;
+		case DEFEND:
+			gameManager.makeDefendMove(firstSelectedTerritory);
+			addTokenToLayout(R.drawable.token_defense,
+					firstSelectedTerritory.getCenterX(getScreenWidth()),
+					firstSelectedTerritory.getCenterY(getScreenHeight()),
+					tokenLayout);
+			currentSelectionState = SelectionState.SELECTING_ORIGIN;
+			break;
+		}
+	}
+
+	private int getScreenWidth() {
+		ImageView mapImageView = (ImageView) mapImage;
+		int ih = mapImageView.getMeasuredHeight();
+		int iw = mapImageView.getMeasuredWidth();
+		int iH = mapImageView.getDrawable().getIntrinsicHeight();
+		int iW = mapImageView.getDrawable().getIntrinsicWidth();
+
+		if (ih / iH <= iw / iW) {
+			iw = iW * ih / iH;
+		}
+
+		return iw;
+	}
+
+	private int getScreenHeight() {
+		ImageView mapImageView = (ImageView) mapImage;
+		int ih = mapImageView.getMeasuredHeight();
+		int iw = mapImageView.getMeasuredWidth();
+		int iH = mapImageView.getDrawable().getIntrinsicHeight();
+		int iW = mapImageView.getDrawable().getIntrinsicWidth();
+
+		if (ih / iH > iw / iW) {
+			iw = iW * ih / iH;
+		}
+
+		return ih;
 	}
 }
