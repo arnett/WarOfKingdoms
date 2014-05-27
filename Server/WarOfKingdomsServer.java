@@ -13,6 +13,7 @@ public class WarOfKingdomsServer {
 		DataOutputStream dataOutputStream = null;
 
 		try {
+			
 			serverSocket = new ServerSocket(8888);
 			System.out.println(serverSocket.getLocalSocketAddress());
 			System.out.println("Listening :8888");
