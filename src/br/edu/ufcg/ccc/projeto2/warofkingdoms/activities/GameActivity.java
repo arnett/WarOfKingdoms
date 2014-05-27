@@ -1,10 +1,19 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_ACTIVITY_LOG_TAG;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +21,7 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
@@ -36,6 +46,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private View mapImage;
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
+	
+	String outputMessage;
+	String inputMessage;
 
 	private SelectionState currentSelectionState = SelectionState.SELECTING_ORIGIN;
 
@@ -174,7 +187,16 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 		Log.d(GAME_ACTIVITY_LOG_TAG, "touched territory is "
 				+ firstSelectedTerritory);
+		outputMessage = "FirstClick;First Click: touched territory is " + firstSelectedTerritory.toString();
+		MyTask task = new MyTask();
+		task.execute();
+		while (inputMessage == null) {
+		}
+		
+		Toast.makeText(getApplicationContext(), inputMessage, 
+				Toast.LENGTH_SHORT).show();
 
+		inputMessage = null;
 		Action[] appliableActionsToThisTerritory = firstSelectedTerritory
 				.getCurrentState().getApplicableActions();
 		startActionPopup(appliableActionsToThisTerritory);
@@ -188,7 +210,16 @@ public class GameActivity extends Activity implements OnTouchListener,
 		gameManager.makeAttackMove(firstSelectedTerritory, touchedTerritory);
 		addTokenToLayout(R.drawable.token_attack, touchedTerritory.getCenterX(getScreenWidth()),
 				touchedTerritory.getCenterY(getScreenHeight()), tokenLayout);
+		outputMessage = "AttackSecondClick;First Click: Attack origin is: " + firstSelectedTerritory.toString() + 
+				" - Attack target is: " + touchedTerritory;
+		MyTask task = new MyTask();
+		task.execute();
+		while (inputMessage == null) {
+		}
+		Toast.makeText(getApplicationContext(), inputMessage, 
+				Toast.LENGTH_SHORT).show();
 		currentSelectionState = SelectionState.SELECTING_ORIGIN;
+		inputMessage = null;
 	}
 
 	private void startActionPopup(Action[] actions) {
@@ -200,9 +231,17 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	@Override
 	public void onActionSelected(Action chosenAction) {
+		MyTask task = null;
 		switch (chosenAction) {
 		case ATTACK:
 			currentSelectionState = SelectionState.SELECTING_TARGET;
+			outputMessage = "Attack;Attack: Attack move selected";
+			task = new MyTask();
+			task.execute();
+			while (inputMessage == null) {
+			}
+			Toast.makeText(getApplicationContext(), inputMessage, 
+					Toast.LENGTH_SHORT).show();
 			break;
 		case DEFEND:
 			gameManager.makeDefendMove(firstSelectedTerritory);
@@ -211,8 +250,17 @@ public class GameActivity extends Activity implements OnTouchListener,
 					firstSelectedTerritory.getCenterY(getScreenHeight()),
 					tokenLayout);
 			currentSelectionState = SelectionState.SELECTING_ORIGIN;
+			outputMessage = "Defend;Defend: Defend move selected";
+			task = new MyTask();
+			task.execute();
+			while (inputMessage == null) {
+			}
+
+			Toast.makeText(getApplicationContext(), inputMessage, 
+					Toast.LENGTH_SHORT).show();
 			break;
 		}
+		inputMessage = null;
 	}
 
 	private int getScreenWidth() {
@@ -241,5 +289,57 @@ public class GameActivity extends Activity implements OnTouchListener,
 		}
 
 		return ih;
+	}
+	
+	private class MyTask extends AsyncTask<Void, Void, Void>{
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			Socket socket = null;
+			DataOutputStream dataOutputStream = null;
+			DataInputStream dataInputStream = null;
+
+			try {
+				socket = new Socket("192.168.43.168", 8888);
+				dataOutputStream = new DataOutputStream(socket.getOutputStream());
+				dataInputStream = new DataInputStream(socket.getInputStream());
+				dataOutputStream.writeUTF(outputMessage);
+				inputMessage = dataInputStream.readUTF();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			finally{
+				if (socket != null){
+					try {
+						socket.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				if (dataOutputStream != null){
+					try {
+						dataOutputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if (dataInputStream != null){
+					try {
+						dataInputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			return null;
+		}
 	}
 }
