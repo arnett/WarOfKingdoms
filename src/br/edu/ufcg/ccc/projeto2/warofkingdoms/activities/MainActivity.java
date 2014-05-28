@@ -13,10 +13,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
@@ -27,7 +27,6 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryManager;
 import br.ufcg.edu.ccc.projeto2.R;
 
@@ -36,8 +35,8 @@ import br.ufcg.edu.ccc.projeto2.R;
  * @author Arnett
  * 
  */
-public class GameActivity extends Activity implements OnTouchListener,
-		OnActionSelectedListener, OnClickListener {
+public class MainActivity extends Activity implements OnTouchListener,
+		OnActionSelectedListener {
 
 	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "ChooseActionDialogFragmentTag";
 
@@ -47,14 +46,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private View mapImage;
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
-
-	private String outputMessage;
-	private String inputMessage;
+	
+	String outputMessage;
+	String inputMessage;
 
 	private SelectionState currentSelectionState = SelectionState.SELECTING_ORIGIN;
 
 	private GameManager gameManager = GameManager.getInstance();
-	private NetworkManager networkManager = NetworkManager.getInstance();
 
 	private Territory firstSelectedTerritory;
 
@@ -109,11 +107,10 @@ public class GameActivity extends Activity implements OnTouchListener,
 		return maskImageBitmap.getPixel(x, y);
 	}
 
-	private void addTokenToLayout(int imageResource, int x, int y,
-			RelativeLayout layout) {
+	private void addTokenToLayout(int imageResource, int x, int y, RelativeLayout layout) {
 		imageToken = BitmapFactory.decodeResource(this.getResources(),
 				imageResource);
-
+		
 		// Centralize the image
 		x -= imageToken.getWidth() / 2;
 		y -= imageToken.getHeight() / 2;
@@ -190,14 +187,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 		Log.d(GAME_ACTIVITY_LOG_TAG, "touched territory is "
 				+ firstSelectedTerritory);
-		outputMessage = "FirstClick;First Click: touched territory is "
-				+ firstSelectedTerritory.toString();
+		outputMessage = "FirstClick;First Click: touched territory is " + firstSelectedTerritory.toString();
 		MyTask task = new MyTask();
 		task.execute();
 		while (inputMessage == null) {
 		}
-
-		Toast.makeText(getApplicationContext(), inputMessage,
+		
+		Toast.makeText(getApplicationContext(), inputMessage, 
 				Toast.LENGTH_SHORT).show();
 
 		inputMessage = null;
@@ -212,20 +208,15 @@ public class GameActivity extends Activity implements OnTouchListener,
 				.getTerritoryByClosestColor(touchedPixelColor);
 
 		gameManager.makeAttackMove(touchedTerritory);
-		addTokenToLayout(R.drawable.token_attack,
-				touchedTerritory.getCenterX(getScreenWidth()),
+		addTokenToLayout(R.drawable.token_attack, touchedTerritory.getCenterX(getScreenWidth()),
 				touchedTerritory.getCenterY(getScreenHeight()), tokenLayout);
-
-		outputMessage = "AttackSecondClick;First Click: Attack origin is: "
-				+ firstSelectedTerritory.toString() + " - Attack target is: "
-				+ touchedTerritory;
-
+		outputMessage = "AttackSecondClick;First Click: Attack origin is: " + firstSelectedTerritory.toString() + 
+				" - Attack target is: " + touchedTerritory;
 		MyTask task = new MyTask();
 		task.execute();
 		while (inputMessage == null) {
 		}
-
-		Toast.makeText(getApplicationContext(), inputMessage,
+		Toast.makeText(getApplicationContext(), inputMessage, 
 				Toast.LENGTH_SHORT).show();
 		currentSelectionState = SelectionState.SELECTING_ORIGIN;
 		inputMessage = null;
@@ -249,7 +240,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 			task.execute();
 			while (inputMessage == null) {
 			}
-			Toast.makeText(getApplicationContext(), inputMessage,
+			Toast.makeText(getApplicationContext(), inputMessage, 
 					Toast.LENGTH_SHORT).show();
 			break;
 		case DEFEND:
@@ -265,7 +256,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 			while (inputMessage == null) {
 			}
 
-			Toast.makeText(getApplicationContext(), inputMessage,
+			Toast.makeText(getApplicationContext(), inputMessage, 
 					Toast.LENGTH_SHORT).show();
 			break;
 		}
@@ -299,8 +290,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 		return ih;
 	}
-
-	private class MyTask extends AsyncTask<Void, Void, Void> {
+	
+	private class MyTask extends AsyncTask<Void, Void, Void>{
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -311,8 +302,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 			try {
 				String serverLocation = "192.168.2.125";
 				socket = new Socket(serverLocation, 8888);
-				dataOutputStream = new DataOutputStream(
-						socket.getOutputStream());
+				dataOutputStream = new DataOutputStream(socket.getOutputStream());
 				dataInputStream = new DataInputStream(socket.getInputStream());
 				dataOutputStream.writeUTF(outputMessage);
 				inputMessage = dataInputStream.readUTF();
@@ -322,8 +312,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
-				if (socket != null) {
+			}
+			finally{
+				if (socket != null){
 					try {
 						socket.close();
 					} catch (IOException e) {
@@ -332,7 +323,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 					}
 				}
 
-				if (dataOutputStream != null) {
+				if (dataOutputStream != null){
 					try {
 						dataOutputStream.close();
 					} catch (IOException e) {
@@ -340,7 +331,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 					}
 				}
 
-				if (dataInputStream != null) {
+				if (dataInputStream != null){
 					try {
 						dataInputStream.close();
 					} catch (IOException e) {
@@ -351,17 +342,5 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 			return null;
 		}
-	}
-
-	@Override
-	public void onClick(View v) {
-
-		networkManager.sendCurrentMoves(gameManager.getCurrentMoves());
-		// open wait dialog
-	}
-
-	private void onResult() {
-		// TODO Auto-generated method stub
-
 	}
 }

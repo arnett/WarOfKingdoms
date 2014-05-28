@@ -7,18 +7,36 @@ public class Territory {
 
 	private TerritoryState currentState = new ConqueredTerritory();
 	private String name;
+	private String id;
+	private Player owner;
 
 	private int centerX;
 	private int centerY;
 
-	private int NEXUS_7_MAP_WIDTH = 886;
-	private int NEXUS_7_MAP_HEIGHT = 1774;
-	
+	private final int NEXUS_7_MAP_WIDTH = 886;
+	private final int NEXUS_7_MAP_HEIGHT = 1774;
+
 	public Territory(String name, int centerX, int centerY) {
 		super();
 		this.name = name;
 		this.centerX = centerX;
 		this.centerY = centerY;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player owner) {
+		this.owner = owner;
 	}
 
 	public int getCenterX(int minhaLargura) {
