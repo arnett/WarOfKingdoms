@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseScreenActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
             android:theme="@style/FullscreenTheme" >
@@ -29,6 +29,8 @@
             </intent-filter>
         </activity>
         <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.GameActivity" android:screenOrientation="portrait" android:configChanges="orientation|keyboardHidden"></activity>
+        <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.RegisterPlayerActivity" android:screenOrientation="portrait" android:configChanges="orientation|keyboardHidden"></activity>
+        <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseScreenActivity" android:screenOrientation="portrait" android:configChanges="orientation|keyboardHidden"></activity>
     </application>
 
 </manifest>
