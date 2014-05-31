@@ -5,7 +5,7 @@
     android:background="#0099cc" >
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView_panel_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Shall We Choose a Name..."
@@ -86,7 +86,7 @@
             android:text="Next" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/textView_panel_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/nextPhaseButton"

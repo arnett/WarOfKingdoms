@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
 						emailText.getText().toString(), 
 						passwordText.getText().toString())) {
 					Log.v("TODO", "Login");
-					Intent myIntent = new Intent(LoginActivity.this, ChooseScreenActivity.class);
+					Intent myIntent = new Intent(LoginActivity.this, PanelActivity.class);
 					startActivity(myIntent);
 					finish();
 				} else {
