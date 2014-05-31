@@ -52,7 +52,6 @@ public class ChooseScreenActivity extends Activity {
 		
 		imgAvatar.setImageResource(imagesId[0]);
 		
-		final EditText name = (EditText) findViewById(R.id.editText1);
 		ListView list = (ListView) findViewById(R.id.list);
 		list.setAdapter(adapter);
 		
@@ -64,33 +63,13 @@ public class ChooseScreenActivity extends Activity {
 			}
 		});
 		
-		name.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				nameAvatar.setText(arg0);
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {}
-			
-			@Override
-			public void afterTextChanged(Editable arg0) {}
-		});
-		
 		nextPhaseButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				System.out.println(name.getText());
-				if (name.getText().toString().isEmpty()) {
-					Toast.makeText(getApplicationContext(), "Your Name is Empty. You Shall Not Pass!", Toast.LENGTH_SHORT).show();
-				} else {
-					Intent myIntent = new Intent(ChooseScreenActivity.this, GameActivity.class);
-					startActivity(myIntent);
-					finish();
-				}
+				Intent myIntent = new Intent(ChooseScreenActivity.this, GameActivity.class);
+				startActivity(myIntent);
+				finish();
 			}
 		});
 	}

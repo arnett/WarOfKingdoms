@@ -81,8 +81,9 @@ public class UserSQLiteHelper extends SQLiteOpenHelper {
 		
 		if (cursor != null)
 			cursor.moveToFirst();
-		else
+		else {
 			return null;
+		}
 		
 		if (cursor.getCount() < 1) {
 			cursor.close();

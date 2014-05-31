@@ -28,6 +28,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.server.DumbServer;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryManager;
 import br.ufcg.edu.ccc.projeto2.R;
 
@@ -54,9 +55,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private SelectionState currentSelectionState = SelectionState.SELECTING_ORIGIN;
 
 	private GameManager gameManager = GameManager.getInstance();
-	private NetworkManager networkManager = NetworkManager.getInstance();
+//	private NetworkManager networkManager = NetworkManager.getInstance();
 
 	private Territory firstSelectedTerritory;
+	
+	private DumbServer server;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 				reloadMaskImageBitmap();
 			}
 		});
+		
+		server = new DumbServer();
 	}
 
 	/**
@@ -304,51 +309,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			Socket socket = null;
-			DataOutputStream dataOutputStream = null;
-			DataInputStream dataInputStream = null;
-
-			try {
-				String serverLocation = "192.168.2.125";
-				socket = new Socket(serverLocation, 8888);
-				dataOutputStream = new DataOutputStream(
-						socket.getOutputStream());
-				dataInputStream = new DataInputStream(socket.getInputStream());
-				dataOutputStream.writeUTF(outputMessage);
-				inputMessage = dataInputStream.readUTF();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				if (socket != null) {
-					try {
-						socket.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				if (dataOutputStream != null) {
-					try {
-						dataOutputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
-				if (dataInputStream != null) {
-					try {
-						dataInputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
+			server.sendMessage(outputMessage);
+			inputMessage = server.getMessage();
+			
 			return null;
 		}
 	}
@@ -356,7 +319,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 	@Override
 	public void onClick(View v) {
 
-		networkManager.sendCurrentMoves(gameManager.getCurrentMoves());
+//		networkManager.sendCurrentMoves(gameManager.getCurrentMoves());
 		// open wait dialog
 	}
 

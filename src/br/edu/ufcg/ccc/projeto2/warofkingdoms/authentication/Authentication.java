@@ -15,4 +15,11 @@ public class Authentication {
 		
 		return player.getPassword().equals(password);
 	}
+	
+	public static boolean isLoginEmailValid(Context context, String email) {
+		UserSQLiteHelper userDB = new UserSQLiteHelper(context);
+		Player player = userDB.getPlayer(email);
+		
+		return player != null;
+	}
 }
