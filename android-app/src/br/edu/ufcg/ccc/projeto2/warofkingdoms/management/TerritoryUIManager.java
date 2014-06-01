@@ -1,7 +1,10 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.management;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import android.annotation.SuppressLint;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ColorMatcher;
@@ -100,5 +103,21 @@ public class TerritoryUIManager {
 
 	public TerritoryCenter getTerritoryUICenter(Territory territory) {
 		return territoriesCenters.get(territory.getName());
+	}
+
+	private List<Territory> toTerritoryList(Map<Integer, Territory> territoriesMap) {
+		List<Territory> territories = new ArrayList<Territory>();
+		for (Integer territoryName : territoriesMap.keySet()) {
+			territories.add(territoriesMap.get(territoryName));
+		}
+		return territories;
+	}
+
+	public List<Territory> getAllTerritories() {
+		List<Territory> territories = toTerritoryList(regionColorsToTerritories);
+		
+		// Removing the sea from the territories
+		territories.remove(null);
+		return territories;
 	}
 }

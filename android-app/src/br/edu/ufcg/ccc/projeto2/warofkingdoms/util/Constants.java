@@ -8,6 +8,8 @@ public class Constants {
 
 	// Networking constants
 	public static String SERVER_URL = "http://ec2-54-207-113-191.sa-east-1.compute.amazonaws.com";
+	
+	public static String CONNECT_URI = "/connect";
 	public static String SEND_MOVES_URI = "/sendMoves";
 	
 }

@@ -5,9 +5,9 @@ public class Territory {
 	// Name will be the primary key for this object
 	private String name;
 	private Player owner;
-	
+
 	public Territory() {
-		
+
 	}
 
 	public Territory(String name) {

@@ -2,6 +2,7 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.management;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Game;
@@ -15,6 +16,9 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
  */
 public class GameManager {
 
+	private String NAME = "Player " + new Random().nextInt(100);
+	private String ID = "MAC" + new Random().nextInt(100);
+
 	private static GameManager instance;
 
 	private Game game;
@@ -23,7 +27,8 @@ public class GameManager {
 	private Player currentPlayer;
 
 	private GameManager() {
-
+		currentPlayer = new Player(NAME, ID);
+		game = new Game(TerritoryUIManager.getInstance().getAllTerritories());
 	}
 
 	public synchronized static GameManager getInstance() {
@@ -66,4 +71,13 @@ public class GameManager {
 			}
 		}
 	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public List<Territory> getAllTerritories() {
+		return game.getTerritories();
+	}
+
 }

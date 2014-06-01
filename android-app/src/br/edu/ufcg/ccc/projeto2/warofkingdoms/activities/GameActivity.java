@@ -1,5 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +21,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseActionDialogFragm
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
@@ -44,18 +48,21 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private Bitmap maskImageBitmap;
 	private Button nextPhaseButton;
 
-	private SelectionState currentSelectionState = SelectionState.SELECTING_ORIGIN;
+	private SelectionState currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 
-	private GameManager gameManager = GameManager.getInstance();
-	private NetworkManager networkManager = NetworkManager.getInstance();
-	private TerritoryUIManager territoryManager = TerritoryUIManager
-			.getInstance();
+	private GameManager gameManager;
+	private NetworkManager networkManager;
+	private TerritoryUIManager territoryManager;
 
-	private Territory firstSelectedTerritory;
+	private Territory firstSelectedTerritoryForTheCurrentAction;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		gameManager = GameManager.getInstance();
+		networkManager = NetworkManager.getInstance();
+		territoryManager = TerritoryUIManager.getInstance();
 
 		setContentView(R.layout.activity_game);
 
@@ -77,6 +84,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 				reloadMaskImageBitmap();
 			}
 		});
+
+		
+		drawTerritoryOwnershipTokens();
 	}
 
 	/**
@@ -131,6 +141,22 @@ public class GameActivity extends Activity implements OnTouchListener,
 		layout.addView(imageView, params);
 	}
 
+	private void drawTerritoryOwnershipTokens() {
+		getScreenWidth();
+		Map<Player, Integer> tokens = new HashMap<Player, Integer>();
+		tokens.put(gameManager.getCurrentPlayer(), R.drawable.ic_launcher);
+
+		// TODO erase drawn tokens
+		for (Territory territory : gameManager.getAllTerritories()) {
+			if (!territory.isFree()) {
+				int tokenImage = tokens.get(territory.getOwner());
+				int centerX = TerritoryUIManager.getInstance().getTerritoryUICenter(territory).getCenterX(getScreenWidth());
+				int centerY = TerritoryUIManager.getInstance().getTerritoryUICenter(territory).getCenterY(getScreenWidth());
+				addTokenToLayout(tokenImage, centerX, centerY, tokenLayout);
+			}
+		}
+	}
+
 	@Override
 	public boolean onTouch(View touchedView, MotionEvent event) {
 		double DEBUG_StartTime = System.nanoTime();
@@ -170,7 +196,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private void processTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		switch (currentSelectionState) {
+		switch (currentActionSelectionState) {
 		case SELECTING_ORIGIN:
 			processFirstTouch(motionEventX, motionEventY, touchedPixelColor);
 			break;
@@ -182,13 +208,14 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private void processFirstTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		firstSelectedTerritory = territoryManager
+		firstSelectedTerritoryForTheCurrentAction = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
-		Log.d(LOG_TAG, "touched territory is " + firstSelectedTerritory);
+		Log.d(LOG_TAG, "touched territory is "
+				+ firstSelectedTerritoryForTheCurrentAction);
 
 		Action[] appliableActionsToThisTerritory = gameManager
-				.getApplicableActions(firstSelectedTerritory);
+				.getApplicableActions(firstSelectedTerritoryForTheCurrentAction);
 
 		if (appliableActionsToThisTerritory != null) {
 			startActionPopup(appliableActionsToThisTerritory);
@@ -212,7 +239,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
 				yTerritoryCenter, tokenLayout);
 
-		currentSelectionState = SelectionState.SELECTING_ORIGIN;
+		currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 	}
 
 	private void startActionPopup(Action[] actions) {
@@ -226,19 +253,22 @@ public class GameActivity extends Activity implements OnTouchListener,
 	public void onActionSelected(Action chosenAction) {
 		switch (chosenAction) {
 		case ATTACK:
-			currentSelectionState = SelectionState.SELECTING_TARGET;
+			currentActionSelectionState = SelectionState.SELECTING_TARGET;
 			break;
 		case DEFEND:
-			gameManager.makeDefendMove(firstSelectedTerritory);
+			gameManager
+					.makeDefendMove(firstSelectedTerritoryForTheCurrentAction);
 
 			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
-					firstSelectedTerritory).getCenterX(getScreenWidth());
+					firstSelectedTerritoryForTheCurrentAction).getCenterX(
+					getScreenWidth());
 			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
-					firstSelectedTerritory).getCenterY(getScreenHeight());
+					firstSelectedTerritoryForTheCurrentAction).getCenterY(
+					getScreenHeight());
 			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
 
-			currentSelectionState = SelectionState.SELECTING_ORIGIN;
+			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
 		}
 	}
@@ -297,4 +327,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 							+ conflicts.length, Toast.LENGTH_SHORT).show();
 		}
 	}
+
+	@Override
+	public void onConnectTaskCompleted(Territory startingTerritory) {
+		// TODO Remove this method from OnTaskCompleted and create a global
+		// interface with a request id (as we do in startActivityForResult(act,
+		// i)) or create multiple listeners, each for a single asynchronous
+		// task.
+	}
+
 }

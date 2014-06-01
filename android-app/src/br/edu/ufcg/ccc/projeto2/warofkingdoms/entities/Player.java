@@ -4,6 +4,15 @@ public class Player {
 
 	private String id, email, name, password;
 
+	public Player() {
+		
+	}
+
+	public Player(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	public String getEmail() {
 		return email;
 	}
