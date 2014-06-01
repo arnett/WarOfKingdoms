@@ -1,0 +1,10 @@
+{
+    "author": "2ALR",
+    "name": "WarOfKingdoms-Server",
+    "description": "Server",
+    "version": "0.0.1",
+    "private": false,
+    "dependencies": {
+        "express": "*"
+    }
+}
