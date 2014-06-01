@@ -6,10 +6,11 @@ import java.util.List;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Game;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 
 /**
- * A singleton that manages the game state
+ * A singleton that manages the game state.
  * 
  */
 public class GameManager {
@@ -18,6 +19,8 @@ public class GameManager {
 
 	private Game game;
 	private List<Move> currentMoves = new ArrayList<Move>();
+
+	private Player currentPlayer;
 
 	private GameManager() {
 
@@ -50,5 +53,17 @@ public class GameManager {
 
 	public List<Move> getCurrentMoves() {
 		return currentMoves;
+	}
+
+	public Action[] getApplicableActions(Territory territory) {
+		if (territory.isFree()) {
+			return new Action[] {Action.ATTACK};
+		} else {
+			if (territory.getOwner().equals(currentPlayer)) {
+				return new Action[] {Action.ATTACK, Action.DEFEND};
+			} else {
+				return null;
+			}
+		}
 	}
 }

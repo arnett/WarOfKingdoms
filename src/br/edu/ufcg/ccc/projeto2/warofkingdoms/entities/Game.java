@@ -11,21 +11,26 @@ public class Game {
 		this.territories = territories;
 	}
 
+	/**
+	 * Updates the provided territory if it exists.
+	 * 
+	 * @param territory
+	 */
 	public void updateTerritory(Territory territory) {
-		if (territories.get(territory.getId()) != null) {
-			territories.put(territory.getId(), territory);
+		if (territories.get(territory.getName()) != null) {
+			territories.put(territory.getName(), territory);
 		}
 	}
 
 	public void addTerritory(Territory territory) {
-		territories.put(territory.getId(), territory);
+		territories.put(territory.getName(), territory);
 	}
 
 	public void removeTerritory(Territory territory) {
-		territories.remove(territory.getId());
+		territories.remove(territory.getName());
 	}
 
 	public Territory getTerritory(Territory territory) {
-		return territories.get(territory.getId());
+		return territories.get(territory.getName());
 	}
 }

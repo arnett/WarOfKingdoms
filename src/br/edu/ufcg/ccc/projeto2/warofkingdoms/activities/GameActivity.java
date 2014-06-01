@@ -1,17 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_ACTIVITY_LOG_TAG;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,17 +10,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.server.DumbServer;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryManager;
 import br.ufcg.edu.ccc.projeto2.R;
 
 /**
@@ -38,7 +30,9 @@ import br.ufcg.edu.ccc.projeto2.R;
  * 
  */
 public class GameActivity extends Activity implements OnTouchListener,
-		OnActionSelectedListener, OnClickListener {
+		OnActionSelectedListener, OnClickListener, OnTaskCompleted {
+
+	private String LOG_TAG = "GameActivity";
 
 	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "ChooseActionDialogFragmentTag";
 
@@ -48,18 +42,15 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private View mapImage;
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
-
-	private String outputMessage;
-	private String inputMessage;
+	private Button nextPhaseButton;
 
 	private SelectionState currentSelectionState = SelectionState.SELECTING_ORIGIN;
 
 	private GameManager gameManager = GameManager.getInstance();
-//	private NetworkManager networkManager = NetworkManager.getInstance();
+	private NetworkManager networkManager = NetworkManager.getInstance();
+	private TerritoryManager territoryManager = TerritoryManager.getInstance();
 
 	private Territory firstSelectedTerritory;
-	
-	private DumbServer server;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +60,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
+
+		nextPhaseButton = (Button) findViewById(R.id.nextPhaseButton);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);
 
 		mapImage.setOnTouchListener(this);
+		nextPhaseButton.setOnClickListener(this);
 
 		mapImageMask.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 			@Override
@@ -82,8 +76,6 @@ public class GameActivity extends Activity implements OnTouchListener,
 				reloadMaskImageBitmap();
 			}
 		});
-		
-		server = new DumbServer();
 	}
 
 	/**
@@ -149,7 +141,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		int touchedPixelColor = getHotspotColor(R.id.map_mask, motionEventX,
 				motionEventY);
 
-		Log.v(GAME_ACTIVITY_LOG_TAG,
+		Log.v(LOG_TAG,
 				"touched pixel color is "
 						+ Integer.toHexString(touchedPixelColor));
 
@@ -170,9 +162,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 			break;
 		}
 
-		Log.v(GAME_ACTIVITY_LOG_TAG,
-				"onTouch total time was "
-						+ (System.nanoTime() - DEBUG_StartTime) / 1000000);
+		Log.v(LOG_TAG, "onTouch total time was "
+				+ (System.nanoTime() - DEBUG_StartTime) / 1000000);
 		return true;
 	}
 
@@ -190,30 +181,25 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private void processFirstTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		firstSelectedTerritory = TerritoryManager
+		firstSelectedTerritory = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
-		Log.d(GAME_ACTIVITY_LOG_TAG, "touched territory is "
-				+ firstSelectedTerritory);
-		outputMessage = "FirstClick;First Click: touched territory is "
-				+ firstSelectedTerritory.toString();
-		MyTask task = new MyTask();
-		task.execute();
-		while (inputMessage == null) {
+		Log.d(LOG_TAG, "touched territory is " + firstSelectedTerritory);
+
+		Action[] appliableActionsToThisTerritory = gameManager
+				.getApplicableActions(firstSelectedTerritory);
+
+		if (appliableActionsToThisTerritory != null) {
+			startActionPopup(appliableActionsToThisTerritory);
+		} else {
+			// TODO Print a message stating that the user can't start an action
+			// from an enemy's territory
 		}
-
-		Toast.makeText(getApplicationContext(), inputMessage,
-				Toast.LENGTH_SHORT).show();
-
-		inputMessage = null;
-		Action[] appliableActionsToThisTerritory = firstSelectedTerritory
-				.getCurrentState().getApplicableActions();
-		startActionPopup(appliableActionsToThisTerritory);
 	}
 
 	private void processSecondTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		Territory touchedTerritory = TerritoryManager
+		Territory touchedTerritory = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
 		gameManager.makeAttackMove(touchedTerritory);
@@ -221,19 +207,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 				touchedTerritory.getCenterX(getScreenWidth()),
 				touchedTerritory.getCenterY(getScreenHeight()), tokenLayout);
 
-		outputMessage = "AttackSecondClick;First Click: Attack origin is: "
-				+ firstSelectedTerritory.toString() + " - Attack target is: "
-				+ touchedTerritory;
-
-		MyTask task = new MyTask();
-		task.execute();
-		while (inputMessage == null) {
-		}
-
-		Toast.makeText(getApplicationContext(), inputMessage,
-				Toast.LENGTH_SHORT).show();
 		currentSelectionState = SelectionState.SELECTING_ORIGIN;
-		inputMessage = null;
 	}
 
 	private void startActionPopup(Action[] actions) {
@@ -245,17 +219,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	@Override
 	public void onActionSelected(Action chosenAction) {
-		MyTask task = null;
 		switch (chosenAction) {
 		case ATTACK:
 			currentSelectionState = SelectionState.SELECTING_TARGET;
-			outputMessage = "Attack;Attack: Attack move selected";
-			task = new MyTask();
-			task.execute();
-			while (inputMessage == null) {
-			}
-			Toast.makeText(getApplicationContext(), inputMessage,
-					Toast.LENGTH_SHORT).show();
 			break;
 		case DEFEND:
 			gameManager.makeDefendMove(firstSelectedTerritory);
@@ -264,17 +230,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 					firstSelectedTerritory.getCenterY(getScreenHeight()),
 					tokenLayout);
 			currentSelectionState = SelectionState.SELECTING_ORIGIN;
-			outputMessage = "Defend;Defend: Defend move selected";
-			task = new MyTask();
-			task.execute();
-			while (inputMessage == null) {
-			}
-
-			Toast.makeText(getApplicationContext(), inputMessage,
-					Toast.LENGTH_SHORT).show();
 			break;
 		}
-		inputMessage = null;
 	}
 
 	private int getScreenWidth() {
@@ -305,26 +262,30 @@ public class GameActivity extends Activity implements OnTouchListener,
 		return ih;
 	}
 
-	private class MyTask extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			server.sendMessage(outputMessage);
-			inputMessage = server.getMessage();
-			
-			return null;
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.nextPhaseButton:
+			networkManager
+					.sendCurrentMoves(this, gameManager.getCurrentMoves());
+			break;
+		default:
+			return;
 		}
+		// TODO make a loading dialog
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onSendMovesTaskCompleted(Conflict[] conflicts) {
+		// TODO close loading dialog window
+		// TODO manage conflicts here
 
-//		networkManager.sendCurrentMoves(gameManager.getCurrentMoves());
-		// open wait dialog
-	}
-
-	private void onResult() {
-		// TODO Auto-generated method stub
-
+		if (conflicts == null || conflicts.length == 0) {
+			// TODO get updated map
+			Toast.makeText(
+					getBaseContext(),
+					"teve resultado o nosso trabalho; length do conflicts = "
+							+ conflicts.length, Toast.LENGTH_SHORT).show();
+		}
 	}
 }

@@ -15,21 +15,19 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:label="@string/app_name" >
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.LoginActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.GameActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
-            android:screenOrientation="landscape"
-            android:theme="@style/FullscreenActionBarStyle" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.GameActivity" android:screenOrientation="landscape" android:configChanges="keyboardHidden"></activity>
+        <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.LoginActivity" android:screenOrientation="landscape" android:configChanges="keyboardHidden"></activity>
         <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.RegisterPlayerActivity" android:screenOrientation="landscape" android:configChanges="keyboardHidden"></activity>
         <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseScreenActivity" android:screenOrientation="landscape" android:configChanges="keyboardHidden"></activity>
         <activity android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.PanelActivity" android:screenOrientation="landscape" android:configChanges="keyboardHidden"></activity>

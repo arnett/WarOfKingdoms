@@ -1,13 +1,9 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.states.ConqueredTerritory;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.states.TerritoryState;
-
 public class Territory {
 
-	private TerritoryState currentState = new ConqueredTerritory();
+	// Name will be the primary key for this object
 	private String name;
-	private String id;
 	private Player owner;
 
 	private int centerX;
@@ -16,19 +12,11 @@ public class Territory {
 	private final int NEXUS_7_MAP_WIDTH = 886;
 	private final int NEXUS_7_MAP_HEIGHT = 1774;
 
-	public Territory(String name, int centerX, int centerY) {
-		super();
+	public Territory(String name) {
 		this.name = name;
-		this.centerX = centerX;
-		this.centerY = centerY;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	public Territory() {
 	}
 
 	public Player getOwner() {
@@ -63,17 +51,12 @@ public class Territory {
 		this.name = name;
 	}
 
-	public TerritoryState getCurrentState() {
-		return currentState;
-	}
-
-	public void setCurrentState(TerritoryState currentState) {
-		this.currentState = currentState;
-	}
-
 	@Override
 	public String toString() {
 		return name;
 	}
 
+	public boolean isFree() {
+		return owner == null;
+	}
 }
