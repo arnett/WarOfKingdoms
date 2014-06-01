@@ -21,7 +21,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.ufcg.edu.ccc.projeto2.R;
 
 /**
@@ -48,7 +48,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private GameManager gameManager = GameManager.getInstance();
 	private NetworkManager networkManager = NetworkManager.getInstance();
-	private TerritoryManager territoryManager = TerritoryManager.getInstance();
+	private TerritoryUIManager territoryManager = TerritoryUIManager
+			.getInstance();
 
 	private Territory firstSelectedTerritory;
 
@@ -203,9 +204,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 				.getTerritoryByClosestColor(touchedPixelColor);
 
 		gameManager.makeAttackMove(touchedTerritory);
-		addTokenToLayout(R.drawable.token_attack,
-				touchedTerritory.getCenterX(getScreenWidth()),
-				touchedTerritory.getCenterY(getScreenHeight()), tokenLayout);
+
+		int xTerritoryCenter = territoryManager.getTerritoryUICenter(
+				touchedTerritory).getCenterX(getScreenWidth());
+		int yTerritoryCenter = territoryManager.getTerritoryUICenter(
+				touchedTerritory).getCenterY(getScreenHeight());
+		addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
+				yTerritoryCenter, tokenLayout);
 
 		currentSelectionState = SelectionState.SELECTING_ORIGIN;
 	}
@@ -225,10 +230,14 @@ public class GameActivity extends Activity implements OnTouchListener,
 			break;
 		case DEFEND:
 			gameManager.makeDefendMove(firstSelectedTerritory);
-			addTokenToLayout(R.drawable.token_defense,
-					firstSelectedTerritory.getCenterX(getScreenWidth()),
-					firstSelectedTerritory.getCenterY(getScreenHeight()),
-					tokenLayout);
+
+			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
+					firstSelectedTerritory).getCenterX(getScreenWidth());
+			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
+					firstSelectedTerritory).getCenterY(getScreenHeight());
+			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
+					yTerritoryCenter, tokenLayout);
+
 			currentSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
 		}

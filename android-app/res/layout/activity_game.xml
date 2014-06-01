@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
-        android:src="@drawable/map_mask_png"
+        android:src="@drawable/mask"
         android:visibility="invisible" />
 
     <ImageView
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
-        android:src="@drawable/map_png" />
+        android:src="@drawable/map" />
     
     <RelativeLayout
         android:id="@+id/token"
