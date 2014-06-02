@@ -1,3 +1,33 @@
+
+// POST function that receives the moves of the user
+function sendMoves(req, res) {	
+    var moveObjects = createMoveObjects(req.body);
+    console.log(moveObjects);
+    res.send("[]");
+}
+
+// POST function that create a new user
+function connect(req, res) {
+
+	var id = req.body.id;
+	var name = req.body.name;
+	var aPlayer = new gameLogicModule.Player(id, name)
+	playerList.push(aPlayer);
+
+	var chosenTerritoryIndex = getRandomNumber(0, 25);
+	while (territoriesWithOwners.contains(chosenTerritoryIndex)) {
+		chosenTerritoryIndex = getRandomNumber(0, 25);
+	}
+
+	territoriesWithOwners.push(chosenTerritoryIndex);
+	var playersTerritory = territories[chosenTerritoryIndex];
+	res.send(objToJSON(playersTerritory));
+}
+
+function getRandomNumber(start, end) {
+	return Math.floor(Math.random() * end) + start;
+}
+
 // convert JSON into objects Move
 function createMoveObjects(movesJson) {
 	var formattedMoves = [];
@@ -10,11 +40,14 @@ function createMoveObjects(movesJson) {
 	return formattedMoves;
 }
 
-// POST function that receives the moves of the user
-function sendMoves(req, res) {	
-    var moveObjects = createMoveObjects(req.body);
-    console.log(moveObjects);
-    res.send("[]");
+
+Array.prototype.contains = function(elem)
+{
+   for (var i in this)
+   {
+       if (this[i] == elem) return true;
+   }
+   return false;
 }
 
 // this convert any "object" in JSON string 
@@ -23,8 +56,9 @@ function objToJSON(object) {
 	return JSON.stringify(object);
 }
 
-// importing the module that contains the "objects" signature
+// importing external module
 var gameLogicModule = require('./gameLogic.js');
+var utilsModule = require('./utils.js');
 
 // required imports
 var express = require('express');
@@ -35,8 +69,14 @@ var app = express();
 app.use(bodyParser());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
+
+var playerList = new Array();
+var territories = utilsModule.createTerritories();
+var territoriesWithOwners = new Array();
+
 // POST functions
 app.post('/sendMoves', sendMoves);
+app.post('/connect', connect);
 
 
 // GET functions
