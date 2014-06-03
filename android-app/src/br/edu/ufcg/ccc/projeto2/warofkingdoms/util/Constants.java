@@ -7,7 +7,8 @@ public class Constants {
 	public static String CHOOSE_ACTION_DIALOG_FRAGMENT_LOG_TAG = "ChooseActionDialogFragment";
 
 	// Networking constants
-	public static String SERVER_URL = "http://ec2-54-207-113-191.sa-east-1.compute.amazonaws.com";
+//	public static String SERVER_URL = "http://ec2-54-207-113-191.sa-east-1.compute.amazonaws.com:4000";
+	public static String SERVER_URL = "http://192.168.2.1:3000";
 	
 	public static String CONNECT_URI = "/connect";
 	public static String SEND_MOVES_URI = "/sendMoves";

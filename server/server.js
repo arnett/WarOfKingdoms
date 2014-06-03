@@ -11,8 +11,10 @@ function connect(req, res) {
 
 	var id = req.body.id;
 	var name = req.body.name;
+  var session = req.body.session;
 	var aPlayer = new gameLogicModule.Player(id, name)
 	playerList.push(aPlayer);
+  gameLogicModule.addPlayerToSession(session, aPlayer);
 
 	var chosenTerritoryIndex = getRandomNumber(0, 25);
 	while (territoriesWithOwners.contains(chosenTerritoryIndex)) {
@@ -22,6 +24,7 @@ function connect(req, res) {
 	territoriesWithOwners.push(chosenTerritoryIndex);
 	var playersTerritory = territories[chosenTerritoryIndex];
 	res.send(objToJSON(playersTerritory));
+  console.log(playerList);
 }
 
 function getRandomNumber(start, end) {
@@ -70,6 +73,12 @@ app.use(bodyParser());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
 
+var session = new gameLogicModule.Session(1)
+//var aPlayer = new gameLogicModule.Player(1, "Andre")
+gameLogicModule.addSession(session)
+//gameLogicModule.addPlayerToSession(1, aPlayer);
+
+
 var playerList = new Array();
 var territories = utilsModule.createTerritories();
 var territoriesWithOwners = new Array();
@@ -85,3 +94,5 @@ app.post('/connect', connect);
 // port that the server will be listening
 var port = 3000;
 app.listen(port);
+
+console.log("Server running...");
