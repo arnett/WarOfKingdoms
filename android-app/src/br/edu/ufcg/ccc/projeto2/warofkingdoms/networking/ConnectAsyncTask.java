@@ -28,8 +28,12 @@ public class ConnectAsyncTask extends AsyncTask<String, Void, Territory>{
 		try {
 			String id = params[0];
 			String name = params[1];
+			String sessionId = params[2];
+			String territory = params[3];
 			playerJson.put("id", id);
 			playerJson.put("name", name);
+			playerJson.put("session", sessionId);
+			playerJson.put("territory", territory);
 
 			String territoryJson = requestPOST(CONNECT_URI, playerJson.toString());
 			startingTerritory = JSONParser.parseJsonToTerritory(new JSONObject(territoryJson));

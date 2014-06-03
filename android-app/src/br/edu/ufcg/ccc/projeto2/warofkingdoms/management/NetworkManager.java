@@ -31,9 +31,9 @@ public class NetworkManager {
 		sendMovesTask.execute(moves.toArray(new Move[0]));
 	}
 
-	public void connect(OnTaskCompleted listener, String id, String name) {
+	public void connect(OnTaskCompleted listener, String id, String name, String sessionId, String territory) {
 		AsyncTask<String, Void, Territory> connectTask = new ConnectAsyncTask(listener);
-		connectTask.execute(id, name);
+		connectTask.execute(id, name, sessionId, territory);
 	}
 
 	

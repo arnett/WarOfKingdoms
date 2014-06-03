@@ -44,7 +44,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	public void onClick(View arg0) {
 		String id = currentPlayer.getId();
 		String name = currentPlayer.getName();
-		networkManager.connect(this, id, name);
+		networkManager.connect(this, id, name, "1", "1");
 	}
 
 	@Override
