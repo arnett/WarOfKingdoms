@@ -2,8 +2,8 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.util;
 
 public class TerritoryCenter {
 
-	private final int NEXUS_7_MAP_WIDTH = 886;
-	private final int NEXUS_7_MAP_HEIGHT = 1774;
+	private final int NEXUS_7_MAP_WIDTH = 1123;
+	private final int NEXUS_7_MAP_HEIGHT = 1662;
 
 	private int x;
 	private int y;

@@ -6,6 +6,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -85,8 +86,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 			}
 		});
 
-		
-		drawTerritoryOwnershipTokens();
+		new WaitUntilMapIsDrawnAsyncTask().execute();
 	}
 
 	/**
@@ -142,7 +142,6 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	private void drawTerritoryOwnershipTokens() {
-		getScreenWidth();
 		Map<Player, Integer> tokens = new HashMap<Player, Integer>();
 		tokens.put(gameManager.getCurrentPlayer(), R.drawable.ic_launcher);
 
@@ -150,8 +149,12 @@ public class GameActivity extends Activity implements OnTouchListener,
 		for (Territory territory : gameManager.getAllTerritories()) {
 			if (!territory.isFree()) {
 				int tokenImage = tokens.get(territory.getOwner());
-				int centerX = TerritoryUIManager.getInstance().getTerritoryUICenter(territory).getCenterX(getScreenWidth());
-				int centerY = TerritoryUIManager.getInstance().getTerritoryUICenter(territory).getCenterY(getScreenWidth());
+				int centerX = TerritoryUIManager.getInstance()
+						.getTerritoryUICenter(territory)
+						.getCenterX(getMapWidth());
+				int centerY = TerritoryUIManager.getInstance()
+						.getTerritoryUICenter(territory)
+						.getCenterY(getMapHeight());
 				addTokenToLayout(tokenImage, centerX, centerY, tokenLayout);
 			}
 		}
@@ -160,6 +163,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 	@Override
 	public boolean onTouch(View touchedView, MotionEvent event) {
 		double DEBUG_StartTime = System.nanoTime();
+
+		drawTerritoryOwnershipTokens();
 
 		int action = event.getAction();
 		int motionEventX = (int) event.getX();
@@ -233,9 +238,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 		gameManager.makeAttackMove(touchedTerritory);
 
 		int xTerritoryCenter = territoryManager.getTerritoryUICenter(
-				touchedTerritory).getCenterX(getScreenWidth());
+				touchedTerritory).getCenterX(getMapWidth());
 		int yTerritoryCenter = territoryManager.getTerritoryUICenter(
-				touchedTerritory).getCenterY(getScreenHeight());
+				touchedTerritory).getCenterY(getMapHeight());
 		addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
 				yTerritoryCenter, tokenLayout);
 
@@ -261,44 +266,16 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentAction).getCenterX(
-					getScreenWidth());
+					getMapWidth());
 			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentAction).getCenterY(
-					getScreenHeight());
+					getMapHeight());
 			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
 
 			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
 		}
-	}
-
-	private int getScreenWidth() {
-		ImageView mapImageView = (ImageView) mapImage;
-		int ih = mapImageView.getMeasuredHeight();
-		int iw = mapImageView.getMeasuredWidth();
-		int iH = mapImageView.getDrawable().getIntrinsicHeight();
-		int iW = mapImageView.getDrawable().getIntrinsicWidth();
-
-		if (ih / iH <= iw / iW) {
-			iw = iW * ih / iH;
-		}
-
-		return iw;
-	}
-
-	private int getScreenHeight() {
-		ImageView mapImageView = (ImageView) mapImage;
-		int ih = mapImageView.getMeasuredHeight();
-		int iw = mapImageView.getMeasuredWidth();
-		int iH = mapImageView.getDrawable().getIntrinsicHeight();
-		int iW = mapImageView.getDrawable().getIntrinsicWidth();
-
-		if (ih / iH > iw / iW) {
-			iw = iW * ih / iH;
-		}
-
-		return ih;
 	}
 
 	@Override
@@ -336,4 +313,52 @@ public class GameActivity extends Activity implements OnTouchListener,
 		// task.
 	}
 
+	private int getMapWidth() {
+		ImageView mapImageView = (ImageView) mapImage;
+		int ih = mapImageView.getMeasuredHeight();
+		int iw = mapImageView.getMeasuredWidth();
+		int iH = mapImageView.getDrawable().getIntrinsicHeight();
+		int iW = mapImageView.getDrawable().getIntrinsicWidth();
+
+		if (ih / iH <= iw / iW) {
+			iw = iW * ih / iH;
+		}
+
+		return iw;
+	}
+
+	private int getMapHeight() {
+		ImageView mapImageView = (ImageView) mapImage;
+		int ih = mapImageView.getMeasuredHeight();
+		int iw = mapImageView.getMeasuredWidth();
+		int iH = mapImageView.getDrawable().getIntrinsicHeight();
+		int iW = mapImageView.getDrawable().getIntrinsicWidth();
+
+		if (ih / iH > iw / iW) {
+			iw = iW * ih / iH;
+		}
+
+		return ih;
+	}
+
+	private class WaitUntilMapIsDrawnAsyncTask extends
+			AsyncTask<Void, Void, Void> {
+
+		/**
+		 * The map image is only plotted when the activity is loaded, i.e. when
+		 * the state of the activity is about to become "Running". Since the
+		 * centers of the territories are calculated based on the current size
+		 * of the map, the territory centers don't exist before this.
+		 */
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			while (getMapWidth() == 0) {
+
+			}
+
+			drawTerritoryOwnershipTokens();
+			return null;
+		}
+
+	}
 }
