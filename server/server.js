@@ -5,9 +5,46 @@
 	[{"action": "Attack", "targetTerritory": {"name": "J"} }, {"action": "Attack", "targetTerritory": {"name": "E"}}]
 */
 function sendMoves(req, res) {
-    var moveObjects = createMoveObjects(req.body);
-    console.log(moveObjects);
-    res.send("[]");
+	var id      = req.body.id;
+	var session = req.body.session;
+
+    var moveObjects = createMoveObjects(id, req.body.moves);
+
+    var session = sessionController.getSession(session)
+    if (session.getPlayerTerritories(id).length != moveObjects.length) {
+    	res.send("[]");
+    	return undefined
+    }
+
+    for (var i = 0; i < moveObjects.length; i++)
+    	session.movesInCurrentTurn.push(moveObjects[i])
+    // session.movesInCurrentTurn.push(moveObjects);
+    session.movesInCurrentTurnConsumed++;
+    if (session.movesInCurrentTurnConsumed >= session.playerList.length)
+    	session.movesInCurrentTurnComplete = true;
+
+    console.log(session.movesInCurrentTurn)
+    var interval = setInterval( function() {
+
+    	if (session.movesInCurrentTurnComplete) {
+    		clearInterval(interval);
+
+    		session.consumeMove()
+
+    		var conflict = "[ "
+    		for (var i = 0; i < session.playersInConflict.length; i++) {
+    			conflict = conflict.concat(session.playersInConflict[i]).concat(",")
+    		};
+    		conflict = conflict.concat("0 ]")
+
+    		res.send("{ 'user_in_conflict': ".concat(conflict).concat(" }"));
+
+    		//session.processMoves()
+    	} else {
+    		console.log('Waiting for users. '.concat(session.movesInCurrentTurnConsumed).concat('/').concat(session.playerList.length))
+    	}
+
+    }, 1000);
 }
 
 // POST function that receives the dice value to check who won the conflict
@@ -33,37 +70,58 @@ function getIsGameFinished(req, res) {
 // POST function that create a new user
 /*
 	Usage Example:
-	{"name": "Player 1", "id": "MAC 1", "session": 1, "territory": 1}
+	{"name": "Player 1", "id": 1, "session": 1, "territory": "A"}
 */
 function connect(req, res) {
 
-	var id = req.body.id;
-	var name = req.body.name;
-  	var session = req.body.session;
+	var id        = req.body.id;
+	var name      = req.body.name;
+  	var session   = req.body.session;
   	var territory = req.body.territory;
 
 	var aPlayer = new gameLogicModule.Player(id, name)
-	playerList.push(aPlayer);
-  	gameLogicModule.addPlayerToSession(session, aPlayer);
 
-	var chosenTerritoryIndex = territory;
-	if (territoriesWithOwners.contains(chosenTerritoryIndex)) {
+	sessionController.addPlayerToSession(session, aPlayer);
+  	
+	if (sessionController.isTerritoryOwned(session, territory)) {
 		//TODO use a meaningful error code, using this just to test passing error codes
+		// http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 		res.send(400, {});
 	} else {
-		territoriesWithOwners.push(chosenTerritoryIndex);
-		var playersTerritory = territories[chosenTerritoryIndex];
-		res.send(objToJSON(playersTerritory));
+		var session = sessionController.getSession(session)
+		sessionController.addTerritoryToPlayerInSession(session.id, aPlayer.id, territory)
+		
+		console.log(session)
+		res.send(objToJSON(session.getTerritory(territory)));
 	}
 }
 
+var count = 0;
+
+function teste(req, res) {
+	count++;
+	console.log(count)
+
+	
+	var interval = setInterval(
+		function() {
+			if (count == 2) {
+				clearInterval(interval);
+				res.send('{"count":' + count +'}');
+			} else {
+				console.log("Ainda não")
+			}
+		}
+		, 1000);
+	//setTimeout( function(){ if (count > 3) res.send('{"count":' + count +'}'); } , 1000);
+}
+
 // convert JSON into objects Move
-function createMoveObjects(movesJson) {
-	console.log(movesJson)
+function createMoveObjects(player_id, movesJson) {
 	var formattedMoves = [];
 
-	for (var i = 0; i < movesJson.length; i++) { 
-		var move = new gameLogicModule.Move(movesJson[i].action, movesJson[i].targetTerritory);
+	for (var i = 0; i < movesJson.length; i++) {
+		var move = new gameLogicModule.Move(player_id, movesJson[i].action, movesJson[i].targetTerritoryName);
 		formattedMoves.push(move);
 	}
 
@@ -100,14 +158,18 @@ app.use(bodyParser());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
 
-var session = new gameLogicModule.Session(1)
+var sessionController = new gameLogicModule.SessionController()
+sessionController.addNewSession(new gameLogicModule.Session(1))
+sessionController.addTerritoriesToSession(1, utilsModule.createTerritories())
+
+//var session = new gameLogicModule.Session(1)
 //var aPlayer = new gameLogicModule.Player(1, "Andre")
-gameLogicModule.addSession(session)
+//gameLogicModule.addSession(session)
 //gameLogicModule.addPlayerToSession(1, aPlayer);
 
 
-var playerList = new Array();
-var territories = utilsModule.createTerritories();
+//var playerList = new Array();
+//var territories = utilsModule.createTerritories();
 var territoriesWithOwners = new Array();
 
 // POST functions
@@ -116,6 +178,7 @@ app.post('/sendDiceValue'    , sendDiceValue);
 app.get ('/getTerritories'   , getTerritories);
 app.get ('/getIsGameFinished', getIsGameFinished);
 app.post('/connect'          , connect);
+app.get ('/teste'            , teste);
 
 
 // GET functions
