@@ -9,29 +9,99 @@ import org.json.JSONObject;
 
 import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
+/**
+ * 
+ * @author Arnett
+ * 
+ */
 public class JSONParser {
 
 	private static String LOG_TAG = "JSONParser";
 
+	public static JSONObject parsePlayerToJson(Player player) {
+		JSONObject playerJson = new JSONObject();
+		try {
+			playerJson.put(PLAYER_ID_TAG, player.getId());
+			playerJson.put(PLAYER_NAME_TAG, player.getName());
+			playerJson.put(PLAYER_HOUSE_TAG, parseHouseToJson(player.getHouse()));
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return playerJson;
+	}
+
+	/**
+	 * Parses the given house to a <tt>JSONObject</tt>.
+	 * 
+	 * @param house
+	 * @return
+	 */
+	public static JSONObject parseHouseToJson(House house) {
+		JSONObject houseJson = new JSONObject();
+		try {
+			houseJson.put(HOUSE_NAME_TAG, house.getName());
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return houseJson;
+	}
+
+	/**
+	 * Parses the given territory to a <tt>JSONObject</tt>.
+	 * 
+	 * @param territory
+	 * @return
+	 */
+	public static JSONObject parseTerritoryToJson(Territory territory) {
+		JSONObject territoryJson = new JSONObject();
+		try {
+			territoryJson.put(TERRITORY_NAME_TAG, territory.getName());
+
+			if (territory.getOwner() == null) {
+				territoryJson.put(TERRITORY_OWNER_TAG, JSONObject.NULL);
+			} else {
+				territoryJson.put(TERRITORY_OWNER_TAG,
+						parseHouseToJson(territory.getOwner()));
+			}
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return territoryJson;
+	}
+
+	/**
+	 * Parses the given move to a <tt>JSONObject</tt>.
+	 * 
+	 * @param move
+	 * @return
+	 */
 	public static JSONObject parseMoveToJson(Move move) {
 		JSONObject moveJson = new JSONObject();
 		try {
-			moveJson.put("action", move.getAction());
-
-			JSONObject territoryJson = parseTerritoryToJson(move
-					.getTargetTerritory());
-			moveJson.put("targetTerritory", territoryJson);
+			moveJson.put(MOVE_ORIGIN_TAG,
+					parseTerritoryToJson(move.getOrigin()));
+			moveJson.put(MOVE_TARGET_TAG,
+					parseTerritoryToJson(move.getTarget()));
+			moveJson.put(MOVE_ACTION_TAG, move.getAction().toString());
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return moveJson;
 	}
 
-	public static JSONArray parseMovesToJson(Move[] moves) {
+	/**
+	 * Parses the given list of moves to a <tt>JSONArray</tt>.
+	 * 
+	 * @param moves
+	 * @return
+	 */
+	public static JSONArray parseMovesToJson(List<Move> moves) {
 		JSONArray movesJsonArray = new JSONArray();
 		for (Move move : moves) {
 			movesJsonArray.put(parseMoveToJson(move));
@@ -39,47 +109,75 @@ public class JSONParser {
 		return movesJsonArray;
 	}
 
-	public static JSONObject parseTerritoryToJson(Territory territory) {
-		JSONObject territoryJson = new JSONObject();
-		try {
-			territoryJson.put("name", territory.getName());
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
-		return territoryJson;
-	}
-
+	/**
+	 * Parses the given <tt>JSONObject</tt> to a territory.
+	 * 
+	 * @param territoryJson
+	 * @return
+	 */
 	public static Territory parseJsonToTerritory(JSONObject territoryJson) {
 		Territory territory = new Territory();
 		try {
-			territory.setName(territoryJson.getString("name"));
+			territory.setName(territoryJson.getString(TERRITORY_NAME_TAG));
+
+			if (!territoryJson.isNull(TERRITORY_OWNER_TAG)) {
+				House house = parseJsonToHouse(territoryJson
+						.getJSONObject(TERRITORY_OWNER_TAG));
+				territory.setOwner(house);
+			}
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return territory;
 	}
 
+	/**
+	 * Parses the given <tt>JSONArray</tt> to a list of territories.
+	 * 
+	 * @param territoriesJson
+	 * @return
+	 */
+	public static List<Territory> parseJsonToTerritories(
+			JSONArray territoriesJson) {
+		List<Territory> territories = new ArrayList<Territory>();
+		try {
+			for (int i = 0; i < territoriesJson.length(); i++) {
+				territories.add(parseJsonToTerritory(territoriesJson
+						.getJSONObject(i)));
+			}
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return territories;
+	}
+
+	/**
+	 * Parses the given <tt>JSONObject</tt> to a player.
+	 * 
+	 * @param playerJson
+	 * @return
+	 */
 	public static Player parseJsonToPlayer(JSONObject playerJson) {
 		Player player = new Player();
 		try {
-			player.setId(playerJson.getString("id"));
+			player.setId(playerJson.getString(PLAYER_ID_TAG));
+			player.setName(playerJson.getString(PLAYER_NAME_TAG));
+
+			House house = parseJsonToHouse(playerJson
+					.getJSONObject(PLAYER_HOUSE_TAG));
+			player.setHouse(house);
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return player;
 	}
 
-	public static Conflict parseJsonToConflict(JSONObject conflictJson) {
-		Conflict conflict = new Conflict();
-		try {
-			conflict.setTerritory(parseJsonToTerritory(conflictJson.getJSONObject("territory")));
-			conflict.setPlayers(parseJsonToPlayers(conflictJson.getJSONArray("players")));
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
-		return conflict;
-	}
-	
+	/**
+	 * Parses the given <tt>JSONArray</tt> to a list of players.
+	 * 
+	 * @param playersJson
+	 * @return
+	 */
 	public static List<Player> parseJsonToPlayers(JSONArray playersJson) {
 		List<Player> players = new ArrayList<Player>();
 		try {
@@ -92,15 +190,78 @@ public class JSONParser {
 		return players;
 	}
 
+	/**
+	 * Parses the given <tt>JSONObject</tt> to a conflict.
+	 * 
+	 * @param conflictJson
+	 * @return
+	 */
+	public static Conflict parseJsonToConflict(JSONObject conflictJson) {
+		Conflict conflict = new Conflict();
+		try {
+			Territory territory = parseJsonToTerritory(conflictJson
+					.getJSONObject(CONFLICT_TERRITORY_TAG));
+			conflict.setTerritory(territory);
+
+			List<House> houses = parseJsonToHouses(conflictJson
+					.getJSONArray(CONFLICT_HOUSES_TAG));
+			conflict.setHouses(houses);
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return conflict;
+	}
+
+	/**
+	 * Parses the given <tt>JSONArray</tt> to a list of conflicts.
+	 * 
+	 * @param conflictsJson
+	 * @return
+	 */
 	public static List<Conflict> parseJsonToConflicts(JSONArray conflictsJson) {
 		List<Conflict> conflicts = new ArrayList<Conflict>();
 		try {
 			for (int i = 0; i < conflictsJson.length(); i++) {
-				conflicts.add(parseJsonToConflict(conflictsJson.getJSONObject(i)));
+				conflicts.add(parseJsonToConflict(conflictsJson
+						.getJSONObject(i)));
 			}
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return conflicts;
+	}
+
+	/**
+	 * Parses the given <tt>JSONObject</tt> to a house.
+	 * 
+	 * @param houseJson
+	 * @return
+	 */
+	public static House parseJsonToHouse(JSONObject houseJson) {
+		House house = new House();
+		try {
+			house.setName(houseJson.getString(HOUSE_NAME_TAG));
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return house;
+	}
+
+	/**
+	 * Parses the given <tt>JSONArray</tt> to a List of houses.
+	 * 
+	 * @param housesJson
+	 * @return
+	 */
+	public static List<House> parseJsonToHouses(JSONArray housesJson) {
+		List<House> houses = new ArrayList<House>();
+		try {
+			for (int i = 0; i < housesJson.length(); i++) {
+				houses.add(parseJsonToHouse(housesJson.getJSONObject(i)));
+			}
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return houses;
 	}
 }
