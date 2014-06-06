@@ -1,6 +1,10 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_URI;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SERVER_URL;
+
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,14 +22,13 @@ import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.OnTaskCompleted;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
 /**
  * Produces a collection of conflicts based on the provided Moves.
  * 
  * 
  */
-public class SendMovesAsyncTask extends AsyncTask<Move, Void, Conflict[]> {
+public class SendMovesAsyncTask extends AsyncTask<Move, Void, List<Conflict>> {
 
 	private String LOG_TAG = "SendMovesAsyncTask";
 
@@ -68,11 +71,11 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, Conflict[]> {
 	}
 
 	@Override
-	protected Conflict[] doInBackground(Move... moves) {
+	protected List<Conflict> doInBackground(Move... moves) {
 		String response = requestPOST(SEND_MOVES_URI, JSONParser
 				.parseMovesToJson(moves).toString());
 
-		Conflict[] conflicts = null;
+		List<Conflict> conflicts = null;
 		try {
 			conflicts = JSONParser
 					.parseJsonToConflicts(new JSONArray(response));
@@ -83,7 +86,7 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, Conflict[]> {
 	}
 
 	@Override
-	protected void onPostExecute(Conflict[] conflicts) {
+	protected void onPostExecute(List<Conflict> conflicts) {
 		super.onPostExecute(conflicts);
 
 		taskCompletedListener.onSendMovesTaskCompleted(conflicts);

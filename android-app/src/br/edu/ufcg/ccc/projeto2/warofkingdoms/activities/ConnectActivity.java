@@ -1,6 +1,7 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -48,7 +49,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onSendMovesTaskCompleted(Conflict[] conflicts) {
+	public void onSendMovesTaskCompleted(List<Conflict> conflicts) {
 
 	}
 

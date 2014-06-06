@@ -1,20 +1,9 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdomstest;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.util.Log;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser;
 
 public class TestJsonParser {
 
-	private String LOG_TAG = "TestJsonParser";
+//	private String LOG_TAG = "TestJsonParser";
 	
 	public void testJsonParser() {
 //		Move o = new Move(Action.ATTACK, new Territory("A", 0, 0));

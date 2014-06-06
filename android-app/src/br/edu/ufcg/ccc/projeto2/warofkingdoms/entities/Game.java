@@ -1,23 +1,13 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Game {
 
-	private Map<String, Territory> territories;
-
-	public Game(Map<String, Territory> territories) {
-		this.territories = territories;
-	}
+	private List<Territory> territories;
 
 	public Game(List<Territory> territories) {
-		this.territories = new HashMap<String, Territory>();
-		for (Territory territory : territories) {
-			this.territories.put(territory.getName(), territory);
-		}
+		this.territories = territories;
 	}
 
 	/**
@@ -25,30 +15,30 @@ public class Game {
 	 * 
 	 * @param territory
 	 */
-	public void updateTerritory(Territory territory) {
-		if (territories.get(territory.getName()) != null) {
-			territories.put(territory.getName(), territory);
+	public boolean updateTerritory(Territory territory) {
+		int territoryPosition = territories.indexOf(territory);
+		if (territoryPosition != -1) {
+			territories.set(territoryPosition, territory);
 		}
+		return false;
 	}
 
-	public void addTerritory(Territory territory) {
-		territories.put(territory.getName(), territory);
+	/**
+	 * Adds the provided territory to the map.
+	 * 
+	 * @param territory
+	 * @return
+	 */
+	public boolean addTerritory(Territory territory) {
+		return territories.add(territory);
 	}
 
-	public void removeTerritory(Territory territory) {
-		territories.remove(territory.getName());
-	}
-
-	private List<Territory> toTerritoryList(
-			Map<String, Territory> territoriesMap) {
-		List<Territory> territories = new ArrayList<Territory>();
-		for (String territoryName : territoriesMap.keySet()) {
-			territories.add(territoriesMap.get(territoryName));
-		}
-		return territories;
-	}
-
+	/**
+	 * Returns all the territories of the map.
+	 * 
+	 * @return
+	 */
 	public List<Territory> getTerritories() {
-		return toTerritoryList(territories);
+		return territories;
 	}
 }

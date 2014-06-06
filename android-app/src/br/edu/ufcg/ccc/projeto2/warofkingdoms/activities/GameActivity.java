@@ -1,6 +1,7 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
@@ -292,16 +293,16 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	@Override
-	public void onSendMovesTaskCompleted(Conflict[] conflicts) {
+	public void onSendMovesTaskCompleted(List<Conflict> conflicts) {
 		// TODO close loading dialog window
 		// TODO manage conflicts here
 
-		if (conflicts == null || conflicts.length == 0) {
+		if (conflicts == null || conflicts.size() == 0) {
 			// TODO get updated map
 			Toast.makeText(
 					getBaseContext(),
 					"teve resultado o nosso trabalho; length do conflicts = "
-							+ conflicts.length, Toast.LENGTH_SHORT).show();
+							+ conflicts.size(), Toast.LENGTH_SHORT).show();
 		}
 	}
 

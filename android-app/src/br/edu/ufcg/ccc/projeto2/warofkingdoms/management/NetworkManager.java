@@ -27,7 +27,7 @@ public class NetworkManager {
 	}
 
 	public void sendCurrentMoves(OnTaskCompleted listener, List<Move> moves) {
-		AsyncTask<Move, Void, Conflict[]> sendMovesTask = new SendMovesAsyncTask(listener);
+		AsyncTask<Move, Void, List<Conflict>> sendMovesTask = new SendMovesAsyncTask(listener);
 		sendMovesTask.execute(moves.toArray(new Move[0]));
 	}
 

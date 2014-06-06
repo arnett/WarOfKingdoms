@@ -1,16 +1,18 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
+import java.util.List;
+
 public class Conflict {
 
-	private Player[] players;
+	private List<House> houses;
 	private Territory territory;
 
-	public Player[] getPlayers() {
-		return players;
+	public List<House> getHouses() {
+		return houses;
 	}
 
-	public void setPlayers(Player[] players) {
-		this.players = players;
+	public void setHouses(List<House> houses) {
+		this.houses = houses;
 	}
 
 	public Territory getTerritory() {
@@ -20,5 +22,6 @@ public class Conflict {
 	public void setTerritory(Territory territory) {
 		this.territory = territory;
 	}
+
 
 }

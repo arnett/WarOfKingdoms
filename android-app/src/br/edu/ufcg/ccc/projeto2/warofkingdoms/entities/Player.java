@@ -2,7 +2,10 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
 public class Player {
 
-	private String id, email, name, password;
+	private String id;
+	private String email;
+	private String name;
+	private String password;
 
 	public Player() {
 		

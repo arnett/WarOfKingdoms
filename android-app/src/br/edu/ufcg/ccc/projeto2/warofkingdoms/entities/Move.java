@@ -2,20 +2,31 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
 public class Move {
 
+	private Territory origin;
+	private Territory target;
 	private Action action;
-	private Territory targetTerritory;
 
-	public Move(Action action, Territory target) {
+	public Move(Territory origin, Territory target, Action action) {
+		super();
+		this.origin = origin;
+		this.target = target;
 		this.action = action;
-		this.targetTerritory = target;
 	}
 
-	public Territory getTargetTerritory() {
-		return targetTerritory;
+	public Territory getOrigin() {
+		return origin;
 	}
 
-	public void setTargetTerritory(Territory target) {
-		this.targetTerritory = target;
+	public void setOrigin(Territory origin) {
+		this.origin = origin;
+	}
+
+	public Territory getTarget() {
+		return target;
+	}
+
+	public void setTarget(Territory target) {
+		this.target = target;
 	}
 
 	public Action getAction() {

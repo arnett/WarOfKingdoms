@@ -1,5 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,18 +69,6 @@ public class JSONParser {
 		return player;
 	}
 
-	public static Player[] parseJsonToPlayers(JSONArray playersJson) {
-		Player[] players = new Player[playersJson.length()];
-		try {
-			for (int i = 0; i < players.length; i++) {
-				players[i] = parseJsonToPlayer(playersJson.getJSONObject(i));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
-		return players;
-	}
-
 	public static Conflict parseJsonToConflict(JSONObject conflictJson) {
 		Conflict conflict = new Conflict();
 		try {
@@ -88,12 +79,24 @@ public class JSONParser {
 		}
 		return conflict;
 	}
-
-	public static Conflict[] parseJsonToConflicts(JSONArray conflictsJson) {
-		Conflict[] conflicts = new Conflict[conflictsJson.length()];
+	
+	public static List<Player> parseJsonToPlayers(JSONArray playersJson) {
+		List<Player> players = new ArrayList<Player>();
 		try {
-			for (int i = 0; i < conflicts.length; i++) {
-				conflicts[i] = parseJsonToConflict(conflictsJson.getJSONObject(i));
+			for (int i = 0; i < playersJson.length(); i++) {
+				players.add(parseJsonToPlayer(playersJson.getJSONObject(i)));
+			}
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return players;
+	}
+
+	public static List<Conflict> parseJsonToConflicts(JSONArray conflictsJson) {
+		List<Conflict> conflicts = new ArrayList<Conflict>();
+		try {
+			for (int i = 0; i < conflictsJson.length(); i++) {
+				conflicts.add(parseJsonToConflict(conflictsJson.getJSONObject(i)));
 			}
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());

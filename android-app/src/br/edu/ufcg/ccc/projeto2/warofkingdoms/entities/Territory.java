@@ -4,7 +4,7 @@ public class Territory {
 
 	// Name will be the primary key for this object
 	private String name;
-	private Player owner;
+	private House owner;
 
 	public Territory() {
 
@@ -14,11 +14,11 @@ public class Territory {
 		this.name = name;
 	}
 
-	public Player getOwner() {
+	public House getOwner() {
 		return owner;
 	}
 
-	public void setOwner(Player owner) {
+	public void setOwner(House owner) {
 		this.owner = owner;
 	}
 
@@ -37,5 +37,19 @@ public class Territory {
 
 	public boolean isFree() {
 		return owner == null;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
+		if (!(object instanceof Territory)) {
+			return false;
+		}
+
+		Territory other = (Territory) object;
+
+		return name == other.getName();
 	}
 }
