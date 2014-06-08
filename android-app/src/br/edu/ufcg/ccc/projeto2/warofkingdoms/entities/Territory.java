@@ -32,7 +32,7 @@ public class Territory {
 
 	@Override
 	public String toString() {
-		return name;
+		return "name:" + name + ",owner:" + owner;
 	}
 
 	public boolean isFree() {

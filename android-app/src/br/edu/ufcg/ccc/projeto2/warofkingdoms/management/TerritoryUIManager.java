@@ -113,7 +113,9 @@ public class TerritoryUIManager {
 		return territories;
 	}
 
-	public List<Territory> getAllTerritories() {
+	// TODO Remove this method
+	@SuppressWarnings("unused")
+	private List<Territory> getAllTerritories() {
 		List<Territory> territories = toTerritoryList(regionColorsToTerritories);
 		
 		// Removing the sea from the territories

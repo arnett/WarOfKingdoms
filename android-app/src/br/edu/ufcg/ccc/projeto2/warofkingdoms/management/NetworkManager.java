@@ -6,8 +6,9 @@ import android.os.AsyncTask;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.OnTaskCompleted;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectAsyncTask;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesAsyncTask;
 
 
@@ -31,10 +32,8 @@ public class NetworkManager {
 		sendMovesTask.execute(moves.toArray(new Move[0]));
 	}
 
-	public void connect(OnTaskCompleted listener, String id, String name, String sessionId, String territory) {
-		AsyncTask<String, Void, Territory> connectTask = new ConnectAsyncTask(listener);
-		connectTask.execute(id, name, sessionId, territory);
+	public void connect(OnTaskCompleted listener, Player player) {
+		AsyncTask<Player, Void, ConnectResult> connectTask = new ConnectAsyncTask(listener);
+		connectTask.execute(player);
 	}
-
-	
 }

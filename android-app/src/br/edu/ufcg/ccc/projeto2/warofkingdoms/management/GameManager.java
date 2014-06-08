@@ -23,12 +23,16 @@ public class GameManager {
 
 	private Game game;
 	private List<Move> currentMoves = new ArrayList<Move>();
+	private List<Player> currentPlayers;
 
 	private Player currentPlayer;
 
 	private GameManager() {
 		currentPlayer = new Player(NAME, ID);
-		game = new Game(TerritoryUIManager.getInstance().getAllTerritories());
+		game = new Game();
+
+		currentPlayers = new ArrayList<Player>();
+		currentPlayers.add(currentPlayer);
 	}
 
 	public synchronized static GameManager getInstance() {
@@ -38,22 +42,27 @@ public class GameManager {
 		return instance;
 	}
 
-	public void makeAttackMove(Territory target) {
-		getCurrentMoves().add(new Move(Action.ATTACK, target));
+	public void makeAttackMove(Territory origin, Territory target) {
+		getCurrentMoves().add(new Move(origin, target, Action.ATTACK));
 	}
 
 	public void makeDefendMove(Territory target) {
-		getCurrentMoves().add(new Move(Action.DEFEND, target));
+		getCurrentMoves().add(new Move(target, target, Action.DEFEND));
 	}
 
 	public void startNextPhase() {
 		getCurrentMoves().clear();
 	}
 
+	@Deprecated
 	public void updateTerritories(List<Territory> territories) {
 		for (Territory territory : territories) {
 			game.updateTerritory(territory);
 		}
+	}
+	
+	public void updateAllTerritories(List<Territory> territories) {
+		game.updateAllTerritories(territories);
 	}
 
 	public List<Move> getCurrentMoves() {
@@ -80,4 +89,7 @@ public class GameManager {
 		return game.getTerritories();
 	}
 
+	public void updateAllPlayers(List<Player> players) {
+		currentPlayers = players;
+	}
 }

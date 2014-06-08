@@ -23,11 +23,12 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseActionDialogFragm
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.ufcg.edu.ccc.projeto2.R;
 
 /**
@@ -143,13 +144,10 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	private void drawTerritoryOwnershipTokens() {
-		Map<Player, Integer> tokens = new HashMap<Player, Integer>();
-		tokens.put(gameManager.getCurrentPlayer(), R.drawable.ic_launcher);
-
-		// TODO erase drawn tokens
+		// TODO erase drawn tokens before drawing them again
 		for (Territory territory : gameManager.getAllTerritories()) {
 			if (!territory.isFree()) {
-				int tokenImage = tokens.get(territory.getOwner());
+				int tokenImage = getHouseTokenImage(territory.getOwner());
 				int centerX = TerritoryUIManager.getInstance()
 						.getTerritoryUICenter(territory)
 						.getCenterX(getMapWidth());
@@ -159,6 +157,12 @@ public class GameActivity extends Activity implements OnTouchListener,
 				addTokenToLayout(tokenImage, centerX, centerY, tokenLayout);
 			}
 		}
+	}
+
+	private int getHouseTokenImage(House house) {
+		Map<House, Integer> tokens = new HashMap<House, Integer>();
+		tokens.put(gameManager.getCurrentPlayer().getHouse(), R.drawable.ic_launcher);
+		return R.drawable.ic_launcher;
 	}
 
 	@Override
@@ -236,7 +240,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 		Territory touchedTerritory = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
-		gameManager.makeAttackMove(touchedTerritory);
+		gameManager.makeAttackMove(firstSelectedTerritoryForTheCurrentAction,
+				touchedTerritory);
 
 		int xTerritoryCenter = territoryManager.getTerritoryUICenter(
 				touchedTerritory).getCenterX(getMapWidth());
@@ -307,7 +312,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	@Override
-	public void onConnectTaskCompleted(Territory startingTerritory) {
+	public void onConnectTaskCompleted(ConnectResult result) {
 		// TODO Remove this method from OnTaskCompleted and create a global
 		// interface with a request id (as we do in startActivityForResult(act,
 		// i)) or create multiple listeners, each for a single asynchronous

@@ -1,6 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.RequestManager.requestPOST;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.FakeRequestManager.requestPOST;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.*;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_URI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,10 +10,9 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.OnTaskCompleted;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 
-public class ConnectAsyncTask extends AsyncTask<String, Void, Territory>{
+public class ConnectAsyncTask extends AsyncTask<Player, Void, ConnectResult> {
 
 	private final String LOG_TAG = "ConnectAsyncTask";
 
@@ -22,30 +23,21 @@ public class ConnectAsyncTask extends AsyncTask<String, Void, Territory>{
 	}
 
 	@Override
-	protected Territory doInBackground(String... params) {
-		JSONObject playerJson = new JSONObject();
-		Territory startingTerritory = null;
+	protected ConnectResult doInBackground(Player... params) {
+		ConnectResult connectResult = null;
 		try {
-			String id = params[0];
-			String name = params[1];
-			String sessionId = params[2];
-			String territory = params[3];
-			playerJson.put("id", id);
-			playerJson.put("name", name);
-			playerJson.put("session", sessionId);
-			playerJson.put("territory", territory);
-
-			String territoryJson = requestPOST(CONNECT_URI, playerJson.toString());
-			startingTerritory = JSONParser.parseJsonToTerritory(new JSONObject(territoryJson));
+			String connectResultJson = requestPOST(CONNECT_URI,
+					parsePlayerToJson(params[0]).toString());
+			connectResult = parseJsonToConnectResult(new JSONObject(connectResultJson));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
-		return startingTerritory;
+		return connectResult;
 	}
 
 	@Override
-	protected void onPostExecute(Territory startingTerritory) {
-		super.onPostExecute(startingTerritory);
-		taskCompletedListener.onConnectTaskCompleted(startingTerritory);
+	protected void onPostExecute(ConnectResult connectResult) {
+		super.onPostExecute(connectResult);
+		taskCompletedListener.onConnectTaskCompleted(connectResult);
 	}
 }

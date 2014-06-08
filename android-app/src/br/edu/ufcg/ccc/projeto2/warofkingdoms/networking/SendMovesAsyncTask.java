@@ -4,6 +4,7 @@ import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_U
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SERVER_URL;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -73,7 +74,7 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, List<Conflict>> {
 	@Override
 	protected List<Conflict> doInBackground(Move... moves) {
 		String response = requestPOST(SEND_MOVES_URI, JSONParser
-				.parseMovesToJson(moves).toString());
+				.parseMovesToJson(Arrays.asList(moves)).toString());
 
 		List<Conflict> conflicts = null;
 		try {

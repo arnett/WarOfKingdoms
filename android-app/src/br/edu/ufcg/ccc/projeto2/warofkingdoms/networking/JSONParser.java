@@ -24,16 +24,69 @@ public class JSONParser {
 
 	private static String LOG_TAG = "JSONParser";
 
+	/**
+	 * Parses the given conflict to a <tt>JSONObject</tt>.
+	 * @param conflict
+	 * @return
+	 */
+	public static JSONObject parseConflictToJson(Conflict conflict) {
+		JSONObject conflictJson = new JSONObject();
+		try {
+			conflictJson.put(CONFLICT_TERRITORY_TAG, parseTerritoryToJson(conflict.getTerritory()));
+			conflictJson.put(CONFLICT_HOUSES_TAG, parseHousesToJson(conflict.getHouses()));
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return conflictJson;
+	}
+
+	/**
+	 * Parses the given list of moves to a <tt>JSONArray</tt>.
+	 * 
+	 * @param conflicts
+	 * @return
+	 */
+	public static JSONArray parseConflictsToJson(List<Conflict> conflicts) {
+		JSONArray conflictsJsonArray = new JSONArray();
+		for (Conflict conflict : conflicts) {
+			conflictsJsonArray.put(parseConflictToJson(conflict));
+		}
+		return conflictsJsonArray;
+	}
+
+	/**
+	 * Parses the given player to a <tt>JSONObject</tt>.
+	 * @param player
+	 * @return
+	 */
 	public static JSONObject parsePlayerToJson(Player player) {
 		JSONObject playerJson = new JSONObject();
 		try {
 			playerJson.put(PLAYER_ID_TAG, player.getId());
 			playerJson.put(PLAYER_NAME_TAG, player.getName());
-			playerJson.put(PLAYER_HOUSE_TAG, parseHouseToJson(player.getHouse()));
+			if (player.getHouse() == null) {
+				playerJson.put(PLAYER_HOUSE_TAG, JSONObject.NULL);
+			} else {
+				playerJson.put(PLAYER_HOUSE_TAG, parseHouseToJson(player.getHouse()));
+			}
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return playerJson;
+	}
+
+	/**
+	 * Parses the given list of moves to a <tt>JSONArray</tt>.
+	 * 
+	 * @param players
+	 * @return
+	 */
+	public static JSONArray parsePlayersToJson(List<Player> players) {
+		JSONArray playersJsonArray = new JSONArray();
+		for (Player player : players) {
+			playersJsonArray.put(parsePlayerToJson(player));
+		}
+		return playersJsonArray;
 	}
 
 	/**
@@ -50,6 +103,20 @@ public class JSONParser {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return houseJson;
+	}
+
+	/**
+	 * Parses the given list of moves to a <tt>JSONArray</tt>.
+	 * 
+	 * @param moves
+	 * @return
+	 */
+	public static JSONArray parseHousesToJson(List<House> houses) {
+		JSONArray housesJsonArray = new JSONArray();
+		for (House house : houses) {
+			housesJsonArray.put(parseHouseToJson(house));
+		}
+		return housesJsonArray;
 	}
 
 	/**
@@ -73,6 +140,20 @@ public class JSONParser {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return territoryJson;
+	}
+
+	/**
+	 * Parses the given list of territories to a <tt>JSONArray</tt>.
+	 * 
+	 * @param territories
+	 * @return
+	 */
+	public static JSONArray parseTerritoriesToJson(List<Territory> territories) {
+		JSONArray territoriesJsonArray = new JSONArray();
+		for (Territory territory : territories) {
+			territoriesJsonArray.put(parseTerritoryToJson(territory));
+		}
+		return territoriesJsonArray;
 	}
 
 	/**
@@ -107,6 +188,19 @@ public class JSONParser {
 			movesJsonArray.put(parseMoveToJson(move));
 		}
 		return movesJsonArray;
+	}
+
+	public static ConnectResult parseJsonToConnectResult(JSONObject connectResult) {
+		ConnectResult result = new ConnectResult();
+		try {
+			List<Territory> territories = parseJsonToTerritories(connectResult.getJSONArray(CONNECT_RESULT_TERRITORIES_TAG));
+			List<Player> players = parseJsonToPlayers(connectResult.getJSONArray(CONNECT_RESULT_PLAYERS_TAG));
+			result.setTerritories(territories);
+			result.setPlayers(players);
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return result;
 	}
 
 	/**
@@ -264,4 +358,6 @@ public class JSONParser {
 		}
 		return houses;
 	}
+
+	
 }

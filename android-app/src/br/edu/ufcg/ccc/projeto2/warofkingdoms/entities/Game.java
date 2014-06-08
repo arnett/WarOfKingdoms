@@ -1,5 +1,6 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -9,12 +10,17 @@ public class Game {
 	public Game(List<Territory> territories) {
 		this.territories = territories;
 	}
+	
+	public Game() {
+		this.territories = new ArrayList<Territory>();
+	}
 
 	/**
 	 * Updates the provided territory if it exists.
 	 * 
 	 * @param territory
 	 */
+	@Deprecated
 	public boolean updateTerritory(Territory territory) {
 		int territoryPosition = territories.indexOf(territory);
 		if (territoryPosition != -1) {
@@ -23,6 +29,9 @@ public class Game {
 		return false;
 	}
 
+	public void updateAllTerritories(List<Territory> territories) {
+		this.territories = territories;
+	}
 	/**
 	 * Adds the provided territory to the map.
 	 * 
