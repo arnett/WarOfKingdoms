@@ -313,6 +313,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 			// TODO show the dice value for each conflict on the result
 		}
 
+		gameManager.updateAllTerritories(result.getUpdatedMap());
 		drawTerritoryOwnershipTokens();
 	}
 
