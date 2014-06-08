@@ -19,6 +19,7 @@ import br.ufcg.edu.ccc.projeto2.R;
 
 public class LoginActivity extends Activity {
 	
+	@SuppressWarnings("unused")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

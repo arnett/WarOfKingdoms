@@ -3,18 +3,14 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ChooseScreenActivity extends Activity {
@@ -34,6 +30,9 @@ public class ChooseScreenActivity extends Activity {
 								"Tubarao"};
 	
 	private ImageView imgAvatar;
+	
+	
+	@SuppressWarnings("unused")
 	private TextView nameAvatar;
 	
 	private Button nextPhaseButton;
