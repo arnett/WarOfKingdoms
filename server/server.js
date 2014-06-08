@@ -1,51 +1,12 @@
+//--------------------------------  IMPORTS -----------------------------------------//
 
-// POST function that receives the moves of the user
-/*
-	Usage Example:
-	[{"action": "Attack", "targetTerritory": {"name": "J"} }, {"action": "Attack", "targetTerritory": {"name": "E"}}]
-*/
-function sendMoves(req, res) {
-	var id      = req.body.id;
-	var session = req.body.session;
+// EXTERNAL-IMPORTS
+var gameLogicModule = require('./gameLogic.js');
+var utilsModule     = require('./utils.js');
 
-    var moveObjects = createMoveObjects(id, req.body.moves);
-
-    var session = sessionController.getSession(session)
-    if (session.getPlayerTerritories(id).length != moveObjects.length) {
-    	res.send("[]");
-    	return undefined
-    }
-
-    for (var i = 0; i < moveObjects.length; i++)
-    	session.movesInCurrentTurn.push(moveObjects[i])
-    // session.movesInCurrentTurn.push(moveObjects);
-    session.movesInCurrentTurnConsumed++;
-    if (session.movesInCurrentTurnConsumed >= session.playerList.length)
-    	session.movesInCurrentTurnComplete = true;
-
-    console.log(session.movesInCurrentTurn)
-    var interval = setInterval( function() {
-
-    	if (session.movesInCurrentTurnComplete) {
-    		clearInterval(interval);
-
-    		session.consumeMove()
-
-    		var conflict = "[ "
-    		for (var i = 0; i < session.playersInConflict.length; i++) {
-    			conflict = conflict.concat(session.playersInConflict[i]).concat(",")
-    		};
-    		conflict = conflict.concat("0 ]")
-
-    		res.send("{ 'user_in_conflict': ".concat(conflict).concat(" }"));
-
-    		//session.processMoves()
-    	} else {
-    		console.log('Waiting for users. '.concat(session.movesInCurrentTurnConsumed).concat('/').concat(session.playerList.length))
-    	}
-
-    }, 1000);
-}
+// REQUIRED-IMPORTS
+var express     = require('express');
+var bodyParser  = require('body-parser');
 
 // POST function that receives the dice value to check who won the conflict
 /*
@@ -67,65 +28,79 @@ function getIsGameFinished(req, res) {
     res.send("[]");
 }
 
-// POST function that create a new user
+// POST function that receives the moves of the user
+/*
+    Usage Example:
+
+    [
+        {
+            "origin":{
+                "name":"A", 
+                "owner":{"name":"Stark"}
+                }, 
+            "target":{
+                "name":"B", 
+                "owner":{"name":"Greyjoy"}
+                },
+            "action":"attack"
+        }
+    ]
+    
+*/
+
+function sendMoves(req, res) {
+
+    var playerMoves = utilsModule.createMoveObjects(req.body);
+    numPlayersThatSentMoves++;
+    allMovesRound = allMovesRound.concat(playerMoves);   // saving all moves in one list per round
+
+    var busyWait = setInterval(function(){
+        
+        if (numPlayersThatSentMoves == 1){//NUM_MAX_PLAYERS_ROOM) {
+
+            // this object is created to be possible to generate a JSONArray using JSON.stringify
+            var conflicts = utilsModule.generateConflicts(playerMoves);
+
+            res.send(utilsModule.objToJSON(conflicts));
+            clearInterval(busyWait);
+            allMovesRound = new Array();
+
+        } else {
+            // do nothing (waiting for the room to full up) - explicatory 'else'
+        }
+    },1000);
+}
+
+
+// POST function to connect the new user and send the start data
 /*
 	Usage Example:
-	{"name": "Player 1", "id": 1, "session": 1, "territory": "A"}
+	{"id": 1, "name": "Player 1", "house": {whatever cause I'm gonna define here in connect the players house}}
 */
+
 function connect(req, res) {
 
 	var id        = req.body.id;
 	var name      = req.body.name;
-  	var session   = req.body.session;
-  	var territory = req.body.territory;
+  	var house 	  = chooseHouse();
 
-	var aPlayer = new gameLogicModule.Player(id, name)
+	var aPlayer = new gameLogicModule.Player(id, name, house);
+	playerList.push(aPlayer);
 
-	sessionController.addPlayerToSession(session, aPlayer);
-  	
-	if (sessionController.isTerritoryOwned(session, territory)) {
-		//TODO use a meaningful error code, using this just to test passing error codes
-		// http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-		res.send(400, {});
-	} else {
-		var session = sessionController.getSession(session)
-		sessionController.addTerritoryToPlayerInSession(session.id, aPlayer.id, territory)
+	var busyWait = setInterval(function(){
 		
-		console.log(session)
-		res.send(objToJSON(session.getTerritory(territory)));
-	}
-}
+		if (playerList.length == NUM_MAX_PLAYERS_ROOM) {
 
-var count = 0;
+			// this object is created to be possible to generate a JSONArray using JSON.stringify
+			var returnObject = new utilsModule.ConnectReturnObj(territoriesList, playerList);
+			
+			res.send(utilsModule.objToJSON(returnObject));
 
-function teste(req, res) {
-	count++;
-	console.log(count)
-
-	
-	var interval = setInterval(
-		function() {
-			if (count == 2) {
-				clearInterval(interval);
-				res.send('{"count":' + count +'}');
-			} else {
-				console.log("Ainda não")
-			}
+			clearInterval(busyWait);
+		} else {
+			// do nothing (waiting for the room to full up) - explicatory 'else'
 		}
-		, 1000);
-	//setTimeout( function(){ if (count > 3) res.send('{"count":' + count +'}'); } , 1000);
-}
-
-// convert JSON into objects Move
-function createMoveObjects(player_id, movesJson) {
-	var formattedMoves = [];
-
-	for (var i = 0; i < movesJson.length; i++) {
-		var move = new gameLogicModule.Move(player_id, movesJson[i].action, movesJson[i].targetTerritoryName);
-		formattedMoves.push(move);
-	}
-
-	return formattedMoves;
+	},1000);
 }
 
 
@@ -138,51 +113,43 @@ Array.prototype.contains = function(elem)
    return false;
 }
 
-// this convert any "object" in JSON string 
-// (be careful with the attributes name to match with the application sintax)
-function objToJSON(object) {
-	return JSON.stringify(object);
+chooseHouse = function() {
+
+    var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
+    while (housesAlreadyChosen.contains(houseIndex)) {
+        houseIndex = Math.floor((Math.random() * 5) + 0);
+    }
+    housesAlreadyChosen.push(houseIndex);
+    return availableHouses[houseIndex];
 }
 
-// importing external module
-var gameLogicModule = require('./gameLogic.js');
-var utilsModule = require('./utils.js');
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// required imports
-var express = require('express');
-var bodyParser = require('body-parser');
-
+// NODE VARIABLES
 var app = express();
-
 app.use(bodyParser());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
 
-var sessionController = new gameLogicModule.SessionController()
-sessionController.addNewSession(new gameLogicModule.Session(1))
-sessionController.addTerritoriesToSession(1, utilsModule.createTerritories())
+// GAME VARIABLES
+var playerList              = new Array();
+var territoriesWithOwners   = new Array();
+var territoriesList         = utilsModule.createTerritories();
+var availableHouses         = utilsModule.createHouses();
+var NUM_MAX_PLAYERS_ROOM    = 2;
+var housesAlreadyChosen     = new Array();
+var numPlayersThatSentMoves = 0;
+var allMovesRound           = new Array();
 
-//var session = new gameLogicModule.Session(1)
-//var aPlayer = new gameLogicModule.Player(1, "Andre")
-//gameLogicModule.addSession(session)
-//gameLogicModule.addPlayerToSession(1, aPlayer);
-
-
-//var playerList = new Array();
-//var territories = utilsModule.createTerritories();
-var territoriesWithOwners = new Array();
 
 // POST functions
 app.post('/sendMoves'        , sendMoves);
 app.post('/sendDiceValue'    , sendDiceValue);
-app.get ('/getTerritories'   , getTerritories);
-app.get ('/getIsGameFinished', getIsGameFinished);
 app.post('/connect'          , connect);
-app.get ('/teste'            , teste);
-
 
 // GET functions
-// app.get('/getX', getX)
+app.get ('/getTerritories'   , getTerritories);
+app.get ('/getIsGameFinished', getIsGameFinished);
 
 // port that the server will be listening
 var port = 3000;
