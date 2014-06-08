@@ -1,7 +1,5 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +8,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 
 public class ConnectActivity extends Activity implements OnClickListener,
 		OnTaskCompleted {
@@ -46,7 +44,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onSendMovesTaskCompleted(List<Conflict> conflicts) {
+	public void onSendMovesTaskCompleted(SendMovesResult result) {
 
 	}
 

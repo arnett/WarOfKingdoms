@@ -27,10 +27,15 @@ public class Constants {
 	public final static String PLAYER_HOUSE_TAG = "house";
 
 	public final static String CONFLICT_TERRITORY_TAG = "territory";
-	public final static String CONFLICT_HOUSES_TAG = "houses";
+	public final static String CONFLICT_HOUSES_TAG = "houses";	
+	public final static String CONFLICT_DICE_VALUES_TAG = "diceValues";
 
 	public final static String HOUSE_NAME_TAG = "name";
 
 	public final static String CONNECT_RESULT_TERRITORIES_TAG = "territories";
 	public final static String CONNECT_RESULT_PLAYERS_TAG = "players";
+
+	public final static String SEND_MOVES_RESULT_CONFLICTS_TAG = "conflicts";
+	public final static String SEND_MOVES_RESULT_UPDATED_MAP_TAG = "updatedMap";
+
 }

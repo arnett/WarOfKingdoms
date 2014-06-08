@@ -73,7 +73,7 @@ public class GameManager {
 		if (territory.isFree()) {
 			return new Action[] {Action.ATTACK};
 		} else {
-			if (territory.getOwner().equals(currentPlayer)) {
+			if (territory.getOwner().equals(currentPlayer.getHouse())) {
 				return new Action[] {Action.ATTACK, Action.DEFEND};
 			} else {
 				return null;

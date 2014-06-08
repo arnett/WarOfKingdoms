@@ -4,12 +4,12 @@ import java.util.List;
 
 import android.os.AsyncTask;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.OnTaskCompleted;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectAsyncTask;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesAsyncTask;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 
 
 public class NetworkManager {
@@ -28,7 +28,7 @@ public class NetworkManager {
 	}
 
 	public void sendCurrentMoves(OnTaskCompleted listener, List<Move> moves) {
-		AsyncTask<Move, Void, List<Conflict>> sendMovesTask = new SendMovesAsyncTask(listener);
+		AsyncTask<Move, Void, SendMovesResult> sendMovesTask = new SendMovesAsyncTask(listener);
 		sendMovesTask.execute(moves.toArray(new Move[0]));
 	}
 
