@@ -50,4 +50,13 @@ public class Game {
 	public List<Territory> getTerritories() {
 		return territories;
 	}
+
+	public Territory getTerritoryByName(String territoryName) {
+		for (Territory territory : territories) {
+			if (territory.getName().equals(territoryName)) {
+				return territory;
+			}
+		}
+		return null;
+	}
 }

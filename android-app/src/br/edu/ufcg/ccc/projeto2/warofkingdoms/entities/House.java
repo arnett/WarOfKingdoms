@@ -16,4 +16,14 @@ public class House {
 	public String toString() {
 		return name;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof House)) {
+			return false;
+		}
+
+		House other = (House) o;
+		return other.getName().equals(this.getName());
+	}
 }

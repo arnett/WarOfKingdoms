@@ -1,8 +1,5 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -160,11 +157,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	private int getHouseTokenImage(House house) {
-		Map<House, Integer> tokens = new HashMap<House, Integer>();
-		tokens.put(gameManager.getCurrentPlayer().getHouse(),
-				R.drawable.ic_launcher);
-
-		return R.drawable.ic_launcher;
+		if (gameManager.getCurrentPlayer().getHouse().equals(house)) {
+			return R.drawable.token_current_player;
+		} else {
+			return R.drawable.token_enemy;
+		}
 	}
 
 	@Override
@@ -218,8 +215,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private void processFirstTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		firstSelectedTerritoryForTheCurrentMove = territoryManager
+		String touchedTerritoryName = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
+
+		firstSelectedTerritoryForTheCurrentMove = gameManager
+				.getTerritoryByName(touchedTerritoryName);
 
 		Log.d(LOG_TAG, "touched territory is "
 				+ firstSelectedTerritoryForTheCurrentMove);
@@ -237,8 +237,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private void processSecondTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		Territory touchedTerritory = territoryManager
+		String touchedTerritoryName = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
+
+		Territory touchedTerritory = gameManager
+				.getTerritoryByName(touchedTerritoryName);
 
 		gameManager.makeAttackMove(firstSelectedTerritoryForTheCurrentMove,
 				touchedTerritory);

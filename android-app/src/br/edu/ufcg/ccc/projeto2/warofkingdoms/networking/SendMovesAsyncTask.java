@@ -27,7 +27,13 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 	protected SendMovesResult doInBackground(Move... moves) {
 		String request = JSONParser.parseMovesToJson(Arrays.asList(moves))
 				.toString();
+		Log.v(LOG_TAG,
+				String.format("Request to %s = %s", SEND_MOVES_URI, request));
+
 		String response = requestPOST(SEND_MOVES_URI, request);
+		Log.v(LOG_TAG,
+				String.format("Result of %s = %s", SEND_MOVES_URI, response));
+
 		SendMovesResult result = null;
 
 		try {
@@ -37,10 +43,6 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 			Log.e(LOG_TAG, e.toString());
 		}
 
-		Log.v(LOG_TAG,
-				String.format("Request to %s = %s", SEND_MOVES_URI, request));
-		Log.v(LOG_TAG,
-				String.format("Result of %s = %s", SEND_MOVES_URI, response));
 		return result;
 	}
 

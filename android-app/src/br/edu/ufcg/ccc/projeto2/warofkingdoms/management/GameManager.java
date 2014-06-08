@@ -16,8 +16,9 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
  */
 public class GameManager {
 
-	private String NAME = "Player " + new Random().nextInt(100);
-	private String ID = "MAC" + new Random().nextInt(100);
+	private static final int RANDOM_ID = new Random().nextInt(Integer.MAX_VALUE);
+	private String NAME = "Player " + RANDOM_ID;
+	private String ID = "MAC " + RANDOM_ID;
 
 	private static GameManager instance;
 
@@ -90,6 +91,15 @@ public class GameManager {
 	}
 
 	public void updateAllPlayers(List<Player> players) {
+		for (Player player: players) {
+			if (player.getId().equals(currentPlayer.getId())) {
+				currentPlayer = player;
+			}
+		}
 		currentPlayers = players;
+	}
+
+	public Territory getTerritoryByName(String territoryName) {
+		return game.getTerritoryByName(territoryName);
 	}
 }

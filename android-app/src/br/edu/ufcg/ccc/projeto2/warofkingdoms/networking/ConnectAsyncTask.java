@@ -1,9 +1,9 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.RequestManager.requestPOST;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.*;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parseJsonToConnectResult;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parsePlayerToJson;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_URI;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_URI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +26,13 @@ public class ConnectAsyncTask extends AsyncTask<Player, Void, ConnectResult> {
 	@Override
 	protected ConnectResult doInBackground(Player... params) {
 		String request = parsePlayerToJson(params[0]).toString();
+		Log.v(LOG_TAG,
+				String.format("Request to %s = %s", CONNECT_URI, request));
+
 		String response = requestPOST(CONNECT_URI, request);
+		Log.v(LOG_TAG,
+				String.format("Result of %s = %s", CONNECT_URI, response));
+
 		ConnectResult connectResult = null;
 
 		try {
@@ -35,8 +41,6 @@ public class ConnectAsyncTask extends AsyncTask<Player, Void, ConnectResult> {
 			Log.e(LOG_TAG, e.toString());
 		}
 
-		Log.v(LOG_TAG, String.format("Request to %s = %s", SEND_MOVES_URI, request));
-		Log.v(LOG_TAG, String.format("Result of %s = %s", SEND_MOVES_URI, response));
 		return connectResult;
 	}
 
