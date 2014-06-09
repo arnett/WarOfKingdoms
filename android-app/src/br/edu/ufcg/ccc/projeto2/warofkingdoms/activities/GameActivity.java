@@ -364,11 +364,28 @@ public class GameActivity extends Activity implements OnTouchListener,
 		 */
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			while (getMapWidth() == 0) {
-
-			}
-
-			drawTerritoryOwnershipTokens();
+			/**
+			 * Only one thread should handle the UI.
+			 */
+			runOnUiThread(new Runnable() {
+				
+				/**
+				 * The map image is only plotted when the activity is loaded, i.e.
+				 * when the state of the activity is about to become "Running".
+				 * Since the centers of the territories are calculated based on the
+				 * current size of the map, the territory centers don't exist before
+				 * this.
+				 */
+				@Override
+				public void run() {
+					while (getMapWidth() == 0) {
+						
+					}
+					
+					drawTerritoryOwnershipTokens();
+				}
+				
+			});
 			return null;
 		}
 
