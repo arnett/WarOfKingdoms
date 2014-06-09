@@ -307,7 +307,66 @@ exports.ConnectReturnObj = function(territories, players) {
 	this.players = players;
 }
 
-exports.SendmovesReturnObj = function(conflicts, updatedMap) {
+exports.SendmovesReturnObj = function(conflicts, updatedMap, isGameEnd, winner) {
 	this.conflicts = conflicts;
 	this.updatedMap = updatedMap;
+	this.isGameEnd = isGameEnd;
+	this.winner = winner;
+}
+
+exports.isAllTerritoriesOwned = function(territories) {
+    for (var i = 0; i < territories.length; i++) {
+        if (territories[i].owner == null)
+            return false
+    };
+
+    return true;
+}
+
+getPlayerById = function(playerList, id) {
+    if (id == undefined)
+        return null
+
+    for (var i = 0; i < playerList.length; i++) {
+        var player = playerList[i];
+        if (player.id == id)
+            return player;
+    }
+
+    return null
+}
+
+indexWithMaxValue = function(array) {
+    var index = 0;
+    var oneMaxValue = true;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] > array[index]) {
+            index = i;
+            oneMaxValue = true;
+        } else if (array[i] == array[index]) {
+            oneMaxValue = false
+        }
+    }
+
+    if (oneMaxValue)
+        return index
+    return -1;
+}
+
+exports.getPlayerWithMostTerritoriesOwned = function(territories) {
+    playersCount = new Array()
+
+    for (var i = 0; i < territories.length; i++) {
+        var territory = territories[i]
+        if (territory.owner != null) {
+            if (playersCount[territory.owner.id] == undefined)
+                playersCount[territory.owner.id] = 0;
+            playersCount[territory.owner.id]++
+        }
+    };
+
+    var playerWithMostTerritoriesId = indexWithMaxValue(playersCount)
+    if (playerWithMostTerritoriesId == -1)
+        return null;
+    return getPlayerById(playerWithMostTerritoriesId)
 }

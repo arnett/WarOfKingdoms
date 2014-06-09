@@ -8,6 +8,11 @@ var utilsModule     = require('./utils.js');
 var express     = require('express');
 var bodyParser  = require('body-parser');
 
+isGameFinished = function() {
+
+    return utilsModule.isAllTerritoriesOwned(territoriesList) || 
+           actualTurn >= numTurns;
+}
 
 // POST function that receives the moves of the user
 /*
@@ -28,7 +33,6 @@ var bodyParser  = require('body-parser');
     ]
     
 */
-
 function sendMoves(req, res) {
 
     var playerMoves = utilsModule.createMoveObjects(req.body);
@@ -54,7 +58,10 @@ function sendMoves(req, res) {
             }
 
             // this object is created to be possible to generate a JSONArray using JSON.stringify
-            var returnObject = new utilsModule.SendmovesReturnObj(conflicts, territoriesList);
+            var returnObject = new utilsModule.SendmovesReturnObj(conflicts,
+                                                                  territoriesList,
+                                                                  isGameFinished(territoriesList),
+                                                                  utilsModule.getPlayerWithMostTerritoriesOwned(territoriesList));
 
             res.send(utilsModule.objToJSON(returnObject));
             responsesSentSendMovesCount++;
@@ -66,6 +73,7 @@ function sendMoves(req, res) {
                 conflicts = new Array();
             }
 
+            actualTurn++
             clearInterval(busyWait);
         } else {
             // do nothing (waiting for the room to full up) - explicatory 'else'
@@ -142,6 +150,8 @@ var territoriesList             = utilsModule.createTerritories();
 var availableHouses             = utilsModule.createHouses();
 var NUM_MAX_PLAYERS_ROOM        = 2;
 var housesAlreadyChosen         = new Array();
+var numTurns                    = 3;
+var actualTurn                  = 0;
 
 // SendMoves Global Variables
 var numPlayersThatSentMoves     = 0;
