@@ -61,7 +61,7 @@ public class GameManager {
 			game.updateTerritory(territory);
 		}
 	}
-	
+
 	public void updateAllTerritories(List<Territory> territories) {
 		game.updateAllTerritories(territories);
 	}
@@ -71,14 +71,13 @@ public class GameManager {
 	}
 
 	public Action[] getApplicableActions(Territory territory) {
-		if (territory.isFree()) {
-			return new Action[] {Action.ATTACK};
+		if (territory.getOwner() == null) {
+			return null;
+		}
+		if (territory.getOwner().equals(currentPlayer.getHouse())) {
+			return new Action[] {Action.ATTACK, Action.DEFEND};
 		} else {
-			if (territory.getOwner().equals(currentPlayer.getHouse())) {
-				return new Action[] {Action.ATTACK, Action.DEFEND};
-			} else {
-				return null;
-			}
+			return null;
 		}
 	}
 
