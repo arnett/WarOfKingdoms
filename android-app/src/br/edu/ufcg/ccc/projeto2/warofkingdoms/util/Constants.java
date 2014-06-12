@@ -7,8 +7,6 @@ public class Constants {
 	public final static String CHOOSE_ACTION_DIALOG_FRAGMENT_LOG_TAG = "ChooseActionDialogFragment";
 
 	// Networking constants
-	// public static String SERVER_URL =
-	// "http://ec2-54-207-113-191.sa-east-1.compute.amazonaws.com:4000";
 	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
 
 	public final static String CONNECT_URI = "/connect";
@@ -38,4 +36,11 @@ public class Constants {
 	public final static String SEND_MOVES_RESULT_CONFLICTS_TAG = "conflicts";
 	public final static String SEND_MOVES_RESULT_UPDATED_MAP_TAG = "updatedMap";
 
+	// House names
+	public final static String STARK = "Stark";
+	public final static String LANNISTER = "Lannister";
+	public final static String BARATHEON = "Baratheon";
+	public final static String TYRELL = "Tyrell";
+	public final static String MARTELL = "Martell";
+	public final static String GREYJOY = "Greyjoy";
 }
