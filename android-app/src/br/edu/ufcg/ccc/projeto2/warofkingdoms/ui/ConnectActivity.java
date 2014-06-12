@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
@@ -21,6 +22,9 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 	private NetworkManager networkManager = NetworkManager.getInstance();
 	private GameManager gameManager = GameManager.getInstance();
+	private HouseTokenManager houseTokenManager = HouseTokenManager
+			.getInstance();
+
 	private Player currentPlayer = gameManager.getCurrentPlayer();
 
 	@Override
@@ -55,6 +59,8 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 		gameManager.updateAllTerritories(result.getTerritories());
 		gameManager.updateAllPlayers(result.getPlayers());
+
+		houseTokenManager.setStartingHouseTerritories(result.getTerritories());
 
 		Intent intent = new Intent(this, GameActivity.class);
 		startActivity(intent);

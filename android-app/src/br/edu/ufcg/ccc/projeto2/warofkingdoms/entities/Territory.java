@@ -50,6 +50,11 @@ public class Territory {
 
 		Territory other = (Territory) object;
 
-		return name == other.getName();
+		return other.getName().equals(this.getName());
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 }

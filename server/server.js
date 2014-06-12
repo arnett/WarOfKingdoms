@@ -122,7 +122,6 @@ Array.prototype.contains = function(elem)
 chooseHouse = function() {
 
     var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
-    var houseIndex = 0
     while (housesAlreadyChosen.contains(houseIndex)) {
         houseIndex = Math.floor((Math.random() * 5) + 0);
     }

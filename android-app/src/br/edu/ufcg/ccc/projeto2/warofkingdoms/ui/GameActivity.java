@@ -16,10 +16,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
@@ -54,6 +54,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private GameManager gameManager;
 	private NetworkManager networkManager;
 	private TerritoryUIManager territoryManager;
+	private HouseTokenManager houseTokenManager;
 
 	private Territory firstSelectedTerritoryForTheCurrentMove;
 
@@ -64,6 +65,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		gameManager = GameManager.getInstance();
 		networkManager = NetworkManager.getInstance();
 		territoryManager = TerritoryUIManager.getInstance();
+		houseTokenManager = HouseTokenManager.getInstance();
 
 		setContentView(R.layout.activity_game);
 
@@ -145,7 +147,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		tokenLayout.removeAllViews();
 		for (Territory territory : gameManager.getAllTerritories()) {
 			if (!territory.isFree()) {
-				int tokenImage = getHouseTokenImage(territory.getOwner());
+				int tokenImage = houseTokenManager.getTokenImage(territory);
 				int centerX = TerritoryUIManager.getInstance()
 						.getTerritoryUICenter(territory)
 						.getCenterX(getMapWidth());
@@ -154,14 +156,6 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 						.getCenterY(getMapHeight());
 				addTokenToLayout(tokenImage, centerX, centerY, tokenLayout);
 			}
-		}
-	}
-
-	private int getHouseTokenImage(House house) {
-		if (gameManager.getCurrentPlayer().getHouse().equals(house)) {
-			return R.drawable.token_current_player;
-		} else {
-			return R.drawable.token_enemy;
 		}
 	}
 
