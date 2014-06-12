@@ -141,7 +141,6 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void drawTerritoryOwnershipTokens() {
-		// TODO erase drawn tokens before drawing them again
 		tokenLayout.removeAllViews();
 		for (Territory territory : gameManager.getAllTerritories()) {
 			if (!territory.isFree()) {
