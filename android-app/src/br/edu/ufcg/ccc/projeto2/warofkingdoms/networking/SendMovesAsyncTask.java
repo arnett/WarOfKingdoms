@@ -10,8 +10,8 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.OnTaskCompleted;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.OnTaskCompleted;
 
 public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 

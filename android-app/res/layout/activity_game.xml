@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
-    tools:context="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.GameActivity" >
+    tools:context="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.GameActivity" >
 
     <ImageView
         android:id="@+id/map_mask"

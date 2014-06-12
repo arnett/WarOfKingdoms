@@ -1,4 +1,4 @@
-package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums;
+package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums;
 
 public enum SelectionState {
 

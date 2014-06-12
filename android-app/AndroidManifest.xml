@@ -17,13 +17,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.GameActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.GameActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ConnectActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity"
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,22 +32,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.LoginActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.LoginActivity"
             android:configChanges="keyboardHidden"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.RegisterPlayerActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.RegisterPlayerActivity"
             android:configChanges="keyboardHidden"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseScreenActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseScreenActivity"
             android:configChanges="keyboardHidden"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.PanelActivity"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.PanelActivity"
             android:configChanges="keyboardHidden"
             android:screenOrientation="landscape" >
         </activity>
