@@ -9,7 +9,9 @@ public class Constants {
 	// Networking constants
 	// public static String SERVER_URL =
 	// "http://ec2-54-207-113-191.sa-east-1.compute.amazonaws.com:4000";
-	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
+//	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
+//	public final static String SERVER_URL = "http://10.0.2:3000";
+	public final static String SERVER_URL = "http://192.168.0.107:3000";
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
@@ -30,6 +32,11 @@ public class Constants {
 	public final static String CONFLICT_HOUSES_TAG = "houses";	
 	public final static String CONFLICT_DICE_VALUES_TAG = "diceValues";
 
+	public final static String GAME_STATE_IS_GAME_END_TAG = "isGameEnd";
+	public final static String GAME_STATE_WINNER_LIST_TAG = "winnerList";
+	public final static String GAME_STATE_CURRENT_TURN_TAG = "currentTurn";
+	public final static String GAME_STATE_TOTAL_TURNS_TAG = "totalTurns";
+	
 	public final static String HOUSE_NAME_TAG = "name";
 
 	public final static String CONNECT_RESULT_TERRITORIES_TAG = "territories";
@@ -37,5 +44,6 @@ public class Constants {
 
 	public final static String SEND_MOVES_RESULT_CONFLICTS_TAG = "conflicts";
 	public final static String SEND_MOVES_RESULT_UPDATED_MAP_TAG = "updatedMap";
+	public final static String SEND_MOVES_RESULT_GAME_STATE_TAG = "gameState";
 
 }

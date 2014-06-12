@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
@@ -343,6 +344,25 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		gameManager.updateAllTerritories(result.getUpdatedMap());
 		drawTerritoryOwnershipTokens();
+		
+		Toast.makeText(getBaseContext(),
+				"Turn: " + result.getGameState().getCurrentTurn() + "/" + result.getGameState().getTotalTurns(),
+				Toast.LENGTH_SHORT).show();
+		
+		if (result.getGameState().isGameEnd()) {
+			String gameStatus = "Game Finished\n";
+			if (result.getGameState().getWinnerList().size() > 0) {
+				gameStatus += "Winner(s):";
+				for (Player p : result.getGameState().getWinnerList()) {
+					gameStatus += p.getName() + "\n";
+				}
+			} else {
+				gameStatus += "Draw";
+			}
+			Toast.makeText(getBaseContext(),
+					gameStatus,
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override

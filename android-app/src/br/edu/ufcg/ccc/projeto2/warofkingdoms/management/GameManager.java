@@ -29,7 +29,7 @@ public class GameManager {
 	private Player currentPlayer;
 
 	private GameManager() {
-		currentPlayer = new Player(NAME, ID);
+		currentPlayer = new Player(ID, NAME);
 		game = new Game();
 
 		currentPlayers = new ArrayList<Player>();

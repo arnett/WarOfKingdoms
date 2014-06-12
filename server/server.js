@@ -8,12 +8,6 @@ var utilsModule     = require('./utils.js');
 var express     = require('express');
 var bodyParser  = require('body-parser');
 
-isGameFinished = function() {
-
-    return utilsModule.isAllTerritoriesOwned(territoriesList) || 
-           actualTurn >= numTurns;
-}
-
 // POST function that receives the moves of the user
 /*
     Usage Example:
@@ -60,8 +54,7 @@ function sendMoves(req, res) {
             // this object is created to be possible to generate a JSONArray using JSON.stringify
             var returnObject = new utilsModule.SendmovesReturnObj(conflicts,
                                                                   territoriesList,
-                                                                  isGameFinished(territoriesList),
-                                                                  utilsModule.getPlayerWithMostTerritoriesOwned(territoriesList));
+                                                                  utilsModule.generateGameState(territoriesList, playerList, actualTurn, numTurns));
 
             res.send(utilsModule.objToJSON(returnObject));
             responsesSentSendMovesCount++;
@@ -98,7 +91,7 @@ function connect(req, res) {
 	var aPlayer = new gameLogicModule.Player(id, name, house);
 	playerList.push(aPlayer);
 
-    console.log(id + "Player Connected");
+    console.log(id + " Player Connected");
 
 	var busyWait = setInterval(function(){
 		
@@ -129,6 +122,7 @@ Array.prototype.contains = function(elem)
 chooseHouse = function() {
 
     var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
+    var houseIndex = 0
     while (housesAlreadyChosen.contains(houseIndex)) {
         houseIndex = Math.floor((Math.random() * 5) + 0);
     }
@@ -148,10 +142,10 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 var playerList                  = new Array();
 var territoriesList             = utilsModule.createTerritories();
 var availableHouses             = utilsModule.createHouses();
-var NUM_MAX_PLAYERS_ROOM        = 2;
+var NUM_MAX_PLAYERS_ROOM        = 1;
 var housesAlreadyChosen         = new Array();
-var numTurns                    = 3;
-var actualTurn                  = 0;
+var numTurns                    = 8;
+var actualTurn                  = 1;
 
 // SendMoves Global Variables
 var numPlayersThatSentMoves     = 0;

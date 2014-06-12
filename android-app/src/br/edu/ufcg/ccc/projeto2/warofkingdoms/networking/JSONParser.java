@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
@@ -228,8 +229,11 @@ public class JSONParser {
 					.getJSONArray(SEND_MOVES_RESULT_CONFLICTS_TAG));
 			List<Territory> updatedMap = parseJsonToTerritories(jsonSendMovesResult
 					.getJSONArray(SEND_MOVES_RESULT_UPDATED_MAP_TAG));
+			GameState gameState = parseJsonToGameState(jsonSendMovesResult
+					.getJSONObject(SEND_MOVES_RESULT_GAME_STATE_TAG));
 			result.setConflicts(conflicts);
 			result.setUpdatedMap(updatedMap);
+			result.setGameState(gameState);
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
@@ -316,6 +320,27 @@ public class JSONParser {
 			Log.e(LOG_TAG, e.toString());
 		}
 		return players;
+	}
+	
+	/**
+	 * Parses the given <tt>JSONObject</tt> to a GameState.
+	 * 
+	 * @param gameStateJson
+	 * @return
+	 */
+	public static GameState parseJsonToGameState(JSONObject gameStateJson) {
+		GameState gameState = new GameState();
+		
+		try {
+			gameState.setGameEnd(gameStateJson.getBoolean(GAME_STATE_IS_GAME_END_TAG));
+			gameState.setWinnerList(parseJsonToPlayers(gameStateJson.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
+			gameState.setCurrentTurn(gameStateJson.getInt(GAME_STATE_CURRENT_TURN_TAG));
+			gameState.setTotalTurns(gameStateJson.getInt(GAME_STATE_TOTAL_TURNS_TAG));
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		
+		return gameState;
 	}
 
 	/**

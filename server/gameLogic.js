@@ -1,6 +1,6 @@
 
 exports.House = function (name) {
-  this.name = name;
+		this.name = name;
 }
 
 exports.Move = function (origin, target, action) {
@@ -24,4 +24,11 @@ exports.Conflict = function (territory, houses, diceValues) {
   this.territory = territory;
   this.houses = houses;
   this.diceValues = diceValues
+}
+
+exports.GameState = function (isGameEnd, winnerList, currentTurn, totalTurns) {
+  this.isGameEnd   = isGameEnd;
+  this.winnerList  = winnerList;
+  this.currentTurn = currentTurn;
+  this.totalTurns  = totalTurns;
 }

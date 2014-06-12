@@ -6,6 +6,7 @@ exports.createTerritories = function () {
 	var territory = null;
 	var territoriesArray = new Array();
 
+	// NORTH
 	territory = new gameLogicModule.Territory("A");
 	territory.owner = null;
 	territoriesArray.push(territory);
@@ -38,6 +39,7 @@ exports.createTerritories = function () {
 	territory.owner = null;
 	territoriesArray.push(territory);
 
+	// CENTER
 	territory = new gameLogicModule.Territory("I");
 	territory.owner = null;
 	territoriesArray.push(territory);
@@ -74,6 +76,7 @@ exports.createTerritories = function () {
 	territory.owner = null;
 	territoriesArray.push(territory);
 
+	// SOUTH
 	territory = new gameLogicModule.Territory("R");
 	territory.owner = new gameLogicModule.House("Baratheon");
 	territoriesArray.push(territory);
@@ -103,7 +106,7 @@ exports.createTerritories = function () {
 	territoriesArray.push(territory);
 
 	territory = new gameLogicModule.Territory("Y");
-	territory.owner = new gameLogicModule.House("Martell");;
+	territory.owner = new gameLogicModule.House("Martell");
 	territoriesArray.push(territory);
 
     return territoriesArray;
@@ -307,11 +310,10 @@ exports.ConnectReturnObj = function(territories, players) {
 	this.players = players;
 }
 
-exports.SendmovesReturnObj = function(conflicts, updatedMap, isGameEnd, winner) {
+exports.SendmovesReturnObj = function(conflicts, updatedMap, gameState) {
 	this.conflicts = conflicts;
 	this.updatedMap = updatedMap;
-	this.isGameEnd = isGameEnd;
-	this.winner = winner;
+	this.gameState = gameState;
 }
 
 exports.isAllTerritoriesOwned = function(territories) {
@@ -369,4 +371,124 @@ exports.getPlayerWithMostTerritoriesOwned = function(territories) {
     if (playerWithMostTerritoriesId == -1)
         return null;
     return getPlayerById(playerWithMostTerritoriesId)
+}
+
+territoriesInRegions = function() {
+	var territoriesPerRegion  = new Array()
+
+	var north = new Array()
+	north.push("A")
+	north.push("B")
+	north.push("C")
+	north.push("D")
+	north.push("E")
+	north.push("F")
+	north.push("G")
+	north.push("H")
+	
+	var center = new Array()
+	center.push("I")
+	center.push("J")
+	center.push("K")
+	center.push("L")
+	center.push("M")
+	center.push("N")
+	center.push("O")
+	center.push("P")
+	center.push("Q")
+
+	var south = new Array()
+	south.push("R")
+	south.push("S")
+	south.push("T")
+	south.push("U")
+	south.push("V")
+	south.push("W")
+	south.push("X")
+	south.push("Y")
+	south.push("Z")
+
+	territoriesPerRegion.push(north)
+	territoriesPerRegion.push(center)
+	territoriesPerRegion.push(south)
+
+	return territoriesPerRegion
+}
+
+isItemInArray = function(item, array) {
+	for (var i = 0; i < array.length; i++) {
+		if (item == array[i])
+			return true
+	};
+
+	return false;
+}
+
+isTerritoryInRegion = function(territoryName, regionName) {
+	regions = territoriesInRegions()
+	if (regionName == "N") {
+		return isItemInArray(territoryName, regions[0])
+	} else if (regionName == "C") {
+		return isItemInArray(territoryName, regions[1])
+	} else if (regionName == "S") {
+		return isItemInArray(territoryName, regions[2])
+	}
+}
+
+doesPlayerHasSelectedTerritoriesOwned = function(player, territories, numTerritoriesInEachRegionToConquer) {
+	var numberOfOwnedTerritories = new Array()
+
+	numberOfOwnedTerritories.push(0)
+	numberOfOwnedTerritories.push(0)
+	numberOfOwnedTerritories.push(0)
+
+	for (var i = 0; i < territories.length; i++) {
+		if (territories[i].owner != null) {
+			if (territories[i].owner.name == player.house.name) {
+				if (isTerritoryInRegion(territories[i].name, "N")) {
+					numberOfOwnedTerritories[0]++
+				} else if (isTerritoryInRegion(territories[i].name, "C")) {
+					numberOfOwnedTerritories[1]++
+				} else if (isTerritoryInRegion(territories[i].name, "S")) {
+					numberOfOwnedTerritories[2]++
+				}
+			}
+		}
+	};
+
+	for (var i = 0; i < numTerritoriesInEachRegionToConquer.length; i++) {
+		if (numberOfOwnedTerritories[i] < numTerritoriesInEachRegionToConquer[i])
+			return false;
+	};
+
+	return true;
+}
+
+getWinners = function(playerList, territories, numTerritoriesInEachRegionToConquer) {
+	var winners = new Array();
+
+	for (var i = 0; i < playerList.length; i++) {
+		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, numTerritoriesInEachRegionToConquer)) {
+			winners.push(playerList[i])
+		}
+	};
+
+	return winners;
+}
+
+isGameEnd = function(winnerList, currentTurn, totalTurns) {
+	return winnerList.length > 0 || currentTurn >= totalTurns;
+}
+
+exports.generateGameState = function(territories, playerlist, currentTurn, totalTurns) {
+	var territoryIndex = getTerritoryIndex(territories, "C");
+	var numTerritoriesInEachRegionToConquer = new Array()
+	
+	numTerritoriesInEachRegionToConquer.push(3)
+	numTerritoriesInEachRegionToConquer.push(3)
+	numTerritoriesInEachRegionToConquer.push(3)
+
+	var winners = getWinners(playerlist, territories, numTerritoriesInEachRegionToConquer)
+
+    return new gameLogicModule.GameState(isGameEnd(winners, currentTurn, totalTurns), winners, currentTurn, totalTurns)
 }
