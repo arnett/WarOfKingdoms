@@ -61,7 +61,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		gameManager.updateAllPlayers(result.getPlayers());
 
 		houseTokenManager.setStartingHouseTerritories(result.getTerritories());
-		
+
 		Intent intent = new Intent(this, GameActivity.class);
 		startActivity(intent);
 	}

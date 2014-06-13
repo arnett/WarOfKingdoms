@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
@@ -86,8 +85,6 @@ public class HouseTokenManager {
 	 */
 	public int getTokenImage(Territory territory) {
 		if (territoryIsOwnedByFirstOwner(territory)) {
-			Log.w("", " aloha " + territory.getOwner().getName());
-			Log.w("", " aloha " + houseTokens.get(territory.getOwner()).toString());
 			return houseTokens.get(territory.getOwner()).getCastleToken();
 		} else {
 			return houseTokens.get(territory.getOwner()).getFlagToken();
