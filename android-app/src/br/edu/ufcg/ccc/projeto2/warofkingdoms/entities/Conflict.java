@@ -5,7 +5,16 @@ import java.util.List;
 public class Conflict {
 
 	private List<House> houses;
+	private List<Integer> diceValues;
 	private Territory territory;
+
+	public List<Integer> getDiceValues() {
+		return diceValues;
+	}
+
+	public void setDiceValues(List<Integer> diceValues) {
+		this.diceValues = diceValues;
+	}
 
 	public List<House> getHouses() {
 		return houses;
@@ -22,6 +31,5 @@ public class Conflict {
 	public void setTerritory(Territory territory) {
 		this.territory = territory;
 	}
-
 
 }

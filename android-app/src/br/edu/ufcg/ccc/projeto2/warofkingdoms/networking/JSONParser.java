@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
@@ -26,14 +27,18 @@ public class JSONParser {
 
 	/**
 	 * Parses the given conflict to a <tt>JSONObject</tt>.
+	 * 
 	 * @param conflict
 	 * @return
 	 */
 	public static JSONObject parseConflictToJson(Conflict conflict) {
 		JSONObject conflictJson = new JSONObject();
 		try {
-			conflictJson.put(CONFLICT_TERRITORY_TAG, parseTerritoryToJson(conflict.getTerritory()));
-			conflictJson.put(CONFLICT_HOUSES_TAG, parseHousesToJson(conflict.getHouses()));
+			conflictJson.put(CONFLICT_TERRITORY_TAG,
+					parseTerritoryToJson(conflict.getTerritory()));
+			conflictJson.put(CONFLICT_HOUSES_TAG,
+					parseHousesToJson(conflict.getHouses()));
+			conflictJson.put(CONFLICT_DICE_VALUES_TAG, parseIntegersToJson(conflict.getDiceValues()));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
@@ -54,8 +59,17 @@ public class JSONParser {
 		return conflictsJsonArray;
 	}
 
+	public static JSONArray parseIntegersToJson(List<Integer> diceValues) {
+		JSONArray integersArray = new JSONArray();
+		for (Integer diceValue : diceValues) {
+			integersArray.put(diceValue);
+		}
+		return integersArray;
+	}
+
 	/**
 	 * Parses the given player to a <tt>JSONObject</tt>.
+	 * 
 	 * @param player
 	 * @return
 	 */
@@ -67,7 +81,8 @@ public class JSONParser {
 			if (player.getHouse() == null) {
 				playerJson.put(PLAYER_HOUSE_TAG, JSONObject.NULL);
 			} else {
-				playerJson.put(PLAYER_HOUSE_TAG, parseHouseToJson(player.getHouse()));
+				playerJson.put(PLAYER_HOUSE_TAG,
+						parseHouseToJson(player.getHouse()));
 			}
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
@@ -190,16 +205,39 @@ public class JSONParser {
 		return movesJsonArray;
 	}
 
-	public static ConnectResult parseJsonToConnectResult(JSONObject connectResult) {
+	public static ConnectResult parseJsonToConnectResult(
+			JSONObject connectResult) {
 		ConnectResult result = new ConnectResult();
 		try {
-			List<Territory> territories = parseJsonToTerritories(connectResult.getJSONArray(CONNECT_RESULT_TERRITORIES_TAG));
-			List<Player> players = parseJsonToPlayers(connectResult.getJSONArray(CONNECT_RESULT_PLAYERS_TAG));
+			List<Territory> territories = parseJsonToTerritories(connectResult
+					.getJSONArray(CONNECT_RESULT_TERRITORIES_TAG));
+			List<Player> players = parseJsonToPlayers(connectResult
+					.getJSONArray(CONNECT_RESULT_PLAYERS_TAG));
 			result.setTerritories(territories);
 			result.setPlayers(players);
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
+		return result;
+	}
+
+	public static SendMovesResult parseJsonToSendMovesResult(
+			JSONObject jsonSendMovesResult) {
+		SendMovesResult result = new SendMovesResult();
+		try {
+			List<Conflict> conflicts = parseJsonToConflicts(jsonSendMovesResult
+					.getJSONArray(SEND_MOVES_RESULT_CONFLICTS_TAG));
+			List<Territory> updatedMap = parseJsonToTerritories(jsonSendMovesResult
+					.getJSONArray(SEND_MOVES_RESULT_UPDATED_MAP_TAG));
+			GameState gameState = parseJsonToGameState(jsonSendMovesResult
+					.getJSONObject(SEND_MOVES_RESULT_GAME_STATE_TAG));
+			result.setConflicts(conflicts);
+			result.setUpdatedMap(updatedMap);
+			result.setGameState(gameState);
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+
 		return result;
 	}
 
@@ -283,6 +321,27 @@ public class JSONParser {
 		}
 		return players;
 	}
+	
+	/**
+	 * Parses the given <tt>JSONObject</tt> to a GameState.
+	 * 
+	 * @param gameStateJson
+	 * @return
+	 */
+	public static GameState parseJsonToGameState(JSONObject gameStateJson) {
+		GameState gameState = new GameState();
+		
+		try {
+			gameState.setGameEnd(gameStateJson.getBoolean(GAME_STATE_IS_GAME_END_TAG));
+			gameState.setWinnerList(parseJsonToPlayers(gameStateJson.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
+			gameState.setCurrentTurn(gameStateJson.getInt(GAME_STATE_CURRENT_TURN_TAG));
+			gameState.setTotalTurns(gameStateJson.getInt(GAME_STATE_TOTAL_TURNS_TAG));
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		
+		return gameState;
+	}
 
 	/**
 	 * Parses the given <tt>JSONObject</tt> to a conflict.
@@ -300,6 +359,10 @@ public class JSONParser {
 			List<House> houses = parseJsonToHouses(conflictJson
 					.getJSONArray(CONFLICT_HOUSES_TAG));
 			conflict.setHouses(houses);
+
+			List<Integer> diceValues = parseJsonToIntegerList(conflictJson
+					.getJSONArray(CONFLICT_DICE_VALUES_TAG));
+			conflict.setDiceValues(diceValues);
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
@@ -359,5 +422,16 @@ public class JSONParser {
 		return houses;
 	}
 
-	
+	public static List<Integer> parseJsonToIntegerList(JSONArray jsonArray) {
+		List<Integer> integers = new ArrayList<Integer>();
+		try {
+			for (int i = 0; i < jsonArray.length(); i++) {
+				integers.add(jsonArray.getInt(i));
+			}
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		return integers;
+	}
+
 }

@@ -18,7 +18,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.TerritoryCenter;
 public class TerritoryUIManager {
 
 	@SuppressLint("UseSparseArrays")
-	private Map<Integer, Territory> regionColorsToTerritories = new HashMap<Integer, Territory>();
+	private Map<Integer, String> regionColorsToTerritories = new HashMap<Integer, String>();
 	private Map<String, TerritoryCenter> territoriesCenters = new HashMap<String, TerritoryCenter>();
 
 	private ColorMatcher colorMatcher;
@@ -83,8 +83,7 @@ public class TerritoryUIManager {
 	}
 
 	private void addNewTerritory(String territoryName, int x, int y, int color) {
-		Territory newTerritory = new Territory(territoryName);
-		regionColorsToTerritories.put(color, newTerritory);
+		regionColorsToTerritories.put(color, territoryName);
 		territoriesCenters.put(territoryName, new TerritoryCenter(x, y));
 	}
 
@@ -96,7 +95,7 @@ public class TerritoryUIManager {
 	 *            any ARGB color
 	 * @return
 	 */
-	public Territory getTerritoryByClosestColor(int color) {
+	public String getTerritoryByClosestColor(int color) {
 		int colorMatch = colorMatcher.closestMatch(color);
 		return regionColorsToTerritories.get(colorMatch);
 	}
@@ -105,21 +104,12 @@ public class TerritoryUIManager {
 		return territoriesCenters.get(territory.getName());
 	}
 
+	@SuppressWarnings("unused")
 	private List<Territory> toTerritoryList(Map<Integer, Territory> territoriesMap) {
 		List<Territory> territories = new ArrayList<Territory>();
 		for (Integer territoryName : territoriesMap.keySet()) {
 			territories.add(territoriesMap.get(territoryName));
 		}
-		return territories;
-	}
-
-	// TODO Remove this method
-	@SuppressWarnings("unused")
-	private List<Territory> getAllTerritories() {
-		List<Territory> territories = toTerritoryList(regionColorsToTerritories);
-		
-		// Removing the sea from the territories
-		territories.remove(null);
 		return territories;
 	}
 }

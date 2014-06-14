@@ -7,9 +7,7 @@ public class Constants {
 	public final static String CHOOSE_ACTION_DIALOG_FRAGMENT_LOG_TAG = "ChooseActionDialogFragment";
 
 	// Networking constants
-	// public static String SERVER_URL =
-	// "http://ec2-54-207-113-191.sa-east-1.compute.amazonaws.com:4000";
-	public final static String SERVER_URL = "http://192.168.2.1:3000";
+	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
@@ -27,10 +25,28 @@ public class Constants {
 	public final static String PLAYER_HOUSE_TAG = "house";
 
 	public final static String CONFLICT_TERRITORY_TAG = "territory";
-	public final static String CONFLICT_HOUSES_TAG = "houses";
+	public final static String CONFLICT_HOUSES_TAG = "houses";	
+	public final static String CONFLICT_DICE_VALUES_TAG = "diceValues";
 
+	public final static String GAME_STATE_IS_GAME_END_TAG = "isGameEnd";
+	public final static String GAME_STATE_WINNER_LIST_TAG = "winnerList";
+	public final static String GAME_STATE_CURRENT_TURN_TAG = "currentTurn";
+	public final static String GAME_STATE_TOTAL_TURNS_TAG = "totalTurns";
+	
 	public final static String HOUSE_NAME_TAG = "name";
 
 	public final static String CONNECT_RESULT_TERRITORIES_TAG = "territories";
 	public final static String CONNECT_RESULT_PLAYERS_TAG = "players";
+
+	public final static String SEND_MOVES_RESULT_CONFLICTS_TAG = "conflicts";
+	public final static String SEND_MOVES_RESULT_UPDATED_MAP_TAG = "updatedMap";
+	public final static String SEND_MOVES_RESULT_GAME_STATE_TAG = "gameState";
+
+	// House names
+	public final static String STARK = "Stark";
+	public final static String LANNISTER = "Lannister";
+	public final static String BARATHEON = "Baratheon";
+	public final static String TYRELL = "Tyrell";
+	public final static String MARTELL = "Martell";
+	public final static String GREYJOY = "Greyjoy";
 }

@@ -1,13 +1,8 @@
-package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,16 +14,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.ChooseActionDialogFragment.OnActionSelectedListener;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.activities.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseActionDialogFragment.OnActionSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums.SelectionState;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
 
 /**
@@ -56,8 +53,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private GameManager gameManager;
 	private NetworkManager networkManager;
 	private TerritoryUIManager territoryManager;
+	private HouseTokenManager houseTokenManager;
 
-	private Territory firstSelectedTerritoryForTheCurrentAction;
+	private Territory firstSelectedTerritoryForTheCurrentMove;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +64,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		gameManager = GameManager.getInstance();
 		networkManager = NetworkManager.getInstance();
 		territoryManager = TerritoryUIManager.getInstance();
+		houseTokenManager = HouseTokenManager.getInstance();
 
 		setContentView(R.layout.activity_game);
 
@@ -88,9 +87,27 @@ public class GameActivity extends Activity implements OnTouchListener,
 			}
 		});
 
-		new WaitUntilMapIsDrawnAsyncTask().execute();
 	}
 
+	private boolean areFirstTokensDrawn = true;
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+
+		/**
+		 * The map image is only plotted when the activity is loaded, i.e. when the
+		 * state of the activity is about to become "Running". Since the centers of
+		 * the territories are calculated based on the current size of the map, the
+		 * territory centers don't exist before this.
+		 */
+		if (areFirstTokensDrawn) {
+			drawTerritoryOwnershipTokens();
+			areFirstTokensDrawn = false;
+		}
+	}
+
+	
 	/**
 	 * Method to recreate the maskImageBitmap, it is used when the layout
 	 * changes (mainly for screen rotation).
@@ -144,10 +161,10 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	private void drawTerritoryOwnershipTokens() {
-		// TODO erase drawn tokens before drawing them again
+		tokenLayout.removeAllViews();
 		for (Territory territory : gameManager.getAllTerritories()) {
 			if (!territory.isFree()) {
-				int tokenImage = getHouseTokenImage(territory.getOwner());
+				int tokenImage = getTokenImage(territory);
 				int centerX = TerritoryUIManager.getInstance()
 						.getTerritoryUICenter(territory)
 						.getCenterX(getMapWidth());
@@ -159,17 +176,16 @@ public class GameActivity extends Activity implements OnTouchListener,
 		}
 	}
 
-	private int getHouseTokenImage(House house) {
-		Map<House, Integer> tokens = new HashMap<House, Integer>();
-		tokens.put(gameManager.getCurrentPlayer().getHouse(), R.drawable.ic_launcher);
-		return R.drawable.ic_launcher;
+	private int getTokenImage(Territory territory) {
+		if (territory.getOwner().equals(
+				gameManager.getCurrentPlayer().getHouse())) {
+		}
+		return houseTokenManager.getTokenImage(territory);
 	}
 
 	@Override
 	public boolean onTouch(View touchedView, MotionEvent event) {
 		double DEBUG_StartTime = System.nanoTime();
-
-		drawTerritoryOwnershipTokens();
 
 		int action = event.getAction();
 		int motionEventX = (int) event.getX();
@@ -218,39 +234,84 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private void processFirstTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		firstSelectedTerritoryForTheCurrentAction = territoryManager
+		String touchedTerritoryName = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
+		firstSelectedTerritoryForTheCurrentMove = gameManager
+				.getTerritoryByName(touchedTerritoryName);
+
 		Log.d(LOG_TAG, "touched territory is "
-				+ firstSelectedTerritoryForTheCurrentAction);
+				+ firstSelectedTerritoryForTheCurrentMove);
 
-		Action[] appliableActionsToThisTerritory = gameManager
-				.getApplicableActions(firstSelectedTerritoryForTheCurrentAction);
+		RulesChecker rulesChecker = RulesChecker.getInstance();
 
-		if (appliableActionsToThisTerritory != null) {
-			startActionPopup(appliableActionsToThisTerritory);
-		} else {
-			// TODO Print a message stating that the user can't start an action
-			// from an enemy's territory
+		if (rulesChecker
+				.checkTerritorryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
+			Toast.makeText(
+					getBaseContext(),
+					"Invalid move: "
+							+ "This territory was already used during this turn",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		else if (!rulesChecker
+				.checkOriginIsOwnedByPlayer(firstSelectedTerritoryForTheCurrentMove)) {
+			Toast.makeText(
+					getBaseContext(),
+					"Invalid move: "
+							+ "The first territory must be owned by you",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		else {
+
+			Action[] applicableActionsToThisTerritory = gameManager
+					.getApplicableActions(firstSelectedTerritoryForTheCurrentMove);
+
+			startActionPopup(applicableActionsToThisTerritory);
 		}
 	}
 
 	private void processSecondTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		Territory touchedTerritory = territoryManager
+		String touchedTerritoryName = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
-		gameManager.makeAttackMove(firstSelectedTerritoryForTheCurrentAction,
-				touchedTerritory);
+		Territory touchedTerritory = gameManager
+				.getTerritoryByName(touchedTerritoryName);
 
-		int xTerritoryCenter = territoryManager.getTerritoryUICenter(
-				touchedTerritory).getCenterX(getMapWidth());
-		int yTerritoryCenter = territoryManager.getTerritoryUICenter(
-				touchedTerritory).getCenterY(getMapHeight());
-		addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
-				yTerritoryCenter, tokenLayout);
+		RulesChecker rulesChecker = RulesChecker.getInstance();
 
-		currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
+		if (rulesChecker.checkTargetIsOwnedByPlayer(touchedTerritory)) {
+			Toast.makeText(getBaseContext(),
+					"Invalid move: " + "This territory is owned by you.",
+					Toast.LENGTH_SHORT).show();
+		} else if (!rulesChecker.checkTargetIsAdjacentToOrigin(
+				firstSelectedTerritoryForTheCurrentMove, touchedTerritory)) {
+			Toast.makeText(getBaseContext(),
+					"Invalid move: " + "Target is not adjacent to the origin.",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		else if (rulesChecker.checkTerritorryAlreadyATarget(touchedTerritory)) {
+			Toast.makeText(getBaseContext(),
+					"Invalid move: " + "You already attacked this territory.",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		else {
+			gameManager.makeAttackMove(firstSelectedTerritoryForTheCurrentMove,
+					touchedTerritory);
+
+			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
+					touchedTerritory).getCenterX(getMapWidth());
+			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
+					touchedTerritory).getCenterY(getMapHeight());
+			addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
+					yTerritoryCenter, tokenLayout);
+
+			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
+		}
 	}
 
 	private void startActionPopup(Action[] actions) {
@@ -267,14 +328,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 			currentActionSelectionState = SelectionState.SELECTING_TARGET;
 			break;
 		case DEFEND:
-			gameManager
-					.makeDefendMove(firstSelectedTerritoryForTheCurrentAction);
+			gameManager.makeDefendMove(firstSelectedTerritoryForTheCurrentMove);
 
 			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
-					firstSelectedTerritoryForTheCurrentAction).getCenterX(
+					firstSelectedTerritoryForTheCurrentMove).getCenterX(
 					getMapWidth());
 			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
-					firstSelectedTerritoryForTheCurrentAction).getCenterY(
+					firstSelectedTerritoryForTheCurrentMove).getCenterY(
 					getMapHeight());
 			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
@@ -290,6 +350,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		case R.id.nextPhaseButton:
 			networkManager
 					.sendCurrentMoves(this, gameManager.getCurrentMoves());
+			gameManager.startNextPhase();
 			break;
 		default:
 			return;
@@ -298,16 +359,39 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	@Override
-	public void onSendMovesTaskCompleted(List<Conflict> conflicts) {
+	public void onSendMovesTaskCompleted(SendMovesResult result) {
 		// TODO close loading dialog window
 		// TODO manage conflicts here
 
-		if (conflicts == null || conflicts.size() == 0) {
-			// TODO get updated map
-			Toast.makeText(
-					getBaseContext(),
-					"teve resultado o nosso trabalho; length do conflicts = "
-							+ conflicts.size(), Toast.LENGTH_SHORT).show();
+		if (result.getConflicts() == null || result.getConflicts().size() != 0) {
+			Toast.makeText(getBaseContext(),
+					"number of conflicts = " + result.getConflicts().size(),
+					Toast.LENGTH_SHORT).show();
+
+			// TODO show the dice value for each conflict on the result
+		}
+
+		gameManager.updateAllTerritories(result.getUpdatedMap());
+		drawTerritoryOwnershipTokens();
+
+		Toast.makeText(
+				getBaseContext(),
+				"Turn: " + result.getGameState().getCurrentTurn() + "/"
+						+ result.getGameState().getTotalTurns(),
+				Toast.LENGTH_SHORT).show();
+
+		if (result.getGameState().isGameEnd()) {
+			String gameStatus = "Game Finished\n";
+			if (result.getGameState().getWinnerList().size() > 0) {
+				gameStatus += "Winner(s):";
+				for (Player p : result.getGameState().getWinnerList()) {
+					gameStatus += p.getName() + "\n";
+				}
+			} else {
+				gameStatus += "Draw";
+			}
+			Toast.makeText(getBaseContext(), gameStatus, Toast.LENGTH_LONG)
+					.show();
 		}
 	}
 
@@ -345,26 +429,5 @@ public class GameActivity extends Activity implements OnTouchListener,
 		}
 
 		return ih;
-	}
-
-	private class WaitUntilMapIsDrawnAsyncTask extends
-			AsyncTask<Void, Void, Void> {
-
-		/**
-		 * The map image is only plotted when the activity is loaded, i.e. when
-		 * the state of the activity is about to become "Running". Since the
-		 * centers of the territories are calculated based on the current size
-		 * of the map, the territory centers don't exist before this.
-		 */
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			while (getMapWidth() == 0) {
-
-			}
-
-			drawTerritoryOwnershipTokens();
-			return null;
-		}
-
 	}
 }

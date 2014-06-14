@@ -2,10 +2,7 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.management;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parsePlayersToJson;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parseTerritoriesToJson;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_PLAYERS_TAG;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_TERRITORIES_TAG;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_URI;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_URI;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +21,8 @@ public class FakeRequestManager {
 
 	private final static String LOG_TAG = "RequestManager";
 
+	private final static int NUMBER_OF_PLAYERS = 3;
+
 	private static RandomEntities generator = new RandomEntities();
 	private static Random random = new Random();
 
@@ -38,7 +37,13 @@ public class FakeRequestManager {
 	}
 
 	private static String createFakeSendMovesResponse() {
-		JSONArray result = new JSONArray();
+		JSONObject result = new JSONObject();
+		try {
+			result.put(SEND_MOVES_RESULT_CONFLICTS_TAG, new JSONArray());
+			result.put(SEND_MOVES_RESULT_UPDATED_MAP_TAG, new JSONArray());
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
 		return result.toString();
 	}
 
@@ -47,7 +52,7 @@ public class FakeRequestManager {
 		List<Territory> territories = createFakeTerritoryList();
 		List<Player> players = createFakePlayerResponse();
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
 			Player randomPlayer = players.get(random.nextInt(players.size() - 1));
 			Territory randomTerritory = territories.get(random.nextInt(territories
 					.size() - 1));
@@ -66,7 +71,7 @@ public class FakeRequestManager {
 
 	private static ArrayList<Player> createFakePlayerResponse() {
 		ArrayList<Player> players = new ArrayList<Player>();
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
 			players.add(generator.nextPlayer());
 		}
 		return players;

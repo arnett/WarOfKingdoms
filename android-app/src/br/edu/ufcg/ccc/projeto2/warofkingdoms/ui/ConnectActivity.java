@@ -1,6 +1,4 @@
-package br.edu.ufcg.ccc.projeto2.warofkingdoms.activities;
-
-import java.util.List;
+package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,11 +8,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 
 public class ConnectActivity extends Activity implements OnClickListener,
 		OnTaskCompleted {
@@ -23,6 +22,9 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 	private NetworkManager networkManager = NetworkManager.getInstance();
 	private GameManager gameManager = GameManager.getInstance();
+	private HouseTokenManager houseTokenManager = HouseTokenManager
+			.getInstance();
+
 	private Player currentPlayer = gameManager.getCurrentPlayer();
 
 	@Override
@@ -46,18 +48,18 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onSendMovesTaskCompleted(List<Conflict> conflicts) {
+	public void onSendMovesTaskCompleted(SendMovesResult result) {
 
 	}
 
 	@Override
 	public void onConnectTaskCompleted(ConnectResult result) {
-		Log.v(LOG_TAG, result.getTerritories().toString());
-		Log.v(LOG_TAG, result.getPlayers().toString());
-
 		gameManager.updateAllTerritories(result.getTerritories());
 		gameManager.updateAllPlayers(result.getPlayers());
 
+		houseTokenManager.setStartingHouseTerritories(result.getTerritories());
+
+		Log.v(LOG_TAG, "Starting GameActivity");
 		Intent intent = new Intent(this, GameActivity.class);
 		startActivity(intent);
 	}
