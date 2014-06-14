@@ -8,26 +8,6 @@ var utilsModule     = require('./utils.js');
 var express     = require('express');
 var bodyParser  = require('body-parser');
 
-// POST function that receives the dice value to check who won the conflict
-/*
-	Usage Example:
-	{"conflict": true, "diceValue": 1}
-*/
-function sendDiceValue(req, res) {
-    console.log(req.body);
-    res.send("[]");
-}
-
-// GET function that returns the territories and its owner
-function getTerritories(req, res) {
-    res.send("[]");
-}
-
-// GET function that returns if the game ended
-function getIsGameFinished(req, res) {
-    res.send("[]");
-}
-
 // POST function that receives the moves of the user
 /*
     Usage Example:
@@ -47,29 +27,53 @@ function getIsGameFinished(req, res) {
     ]
     
 */
-
 function sendMoves(req, res) {
 
     var playerMoves = utilsModule.createMoveObjects(req.body);
     numPlayersThatSentMoves++;
+
     allMovesRound = allMovesRound.concat(playerMoves);   // saving all moves in one list per round
 
+    console.log("Moves Sent");
+    console.log(playerMoves);
+
     var busyWait = setInterval(function(){
-        
-        if (numPlayersThatSentMoves == 1){//NUM_MAX_PLAYERS_ROOM) {
+
+        if (numPlayersThatSentMoves == NUM_MAX_PLAYERS_ROOM) {
+
+            // first thread to process moves data
+            if (responsesSentSendMovesCount == 0) { 
+
+                // this object is created to be possible to generate a JSONArray using JSON.stringify
+                conflicts = utilsModule.generateConflicts(allMovesRound);
+                var nonConflictingMoves = utilsModule.getNonConflictingMoves(allMovesRound, conflicts);
+
+                territoriesList = utilsModule.updateTerritories(territoriesList, conflicts, nonConflictingMoves);
+            }
 
             // this object is created to be possible to generate a JSONArray using JSON.stringify
-            var conflicts = utilsModule.generateConflicts(playerMoves);
+            var returnObject = new utilsModule.SendmovesReturnObj(conflicts,
+                                                                  territoriesList,
+                                                                  utilsModule.generateGameState(territoriesList, playerList, actualTurn, numTurns));
 
-            res.send(utilsModule.objToJSON(conflicts));
+            res.send(utilsModule.objToJSON(returnObject));
+            responsesSentSendMovesCount++;
+
+            if (responsesSentSendMovesCount == NUM_MAX_PLAYERS_ROOM) {
+                numPlayersThatSentMoves = 0;
+                responsesSentSendMovesCount = 0;
+                allMovesRound = new Array();
+                conflicts = new Array();
+                actualTurn++
+            }
+
             clearInterval(busyWait);
-            allMovesRound = new Array();
-
         } else {
             // do nothing (waiting for the room to full up) - explicatory 'else'
         }
     },1000);
 }
+
 
 
 // POST function to connect the new user and send the start data
@@ -86,6 +90,8 @@ function connect(req, res) {
 
 	var aPlayer = new gameLogicModule.Player(id, name, house);
 	playerList.push(aPlayer);
+
+    console.log(id + " Player Connected");
 
 	var busyWait = setInterval(function(){
 		
@@ -132,24 +138,27 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
 
 // GAME VARIABLES
-var playerList              = new Array();
-var territoriesWithOwners   = new Array();
-var territoriesList         = utilsModule.createTerritories();
-var availableHouses         = utilsModule.createHouses();
-var NUM_MAX_PLAYERS_ROOM    = 2;
-var housesAlreadyChosen     = new Array();
-var numPlayersThatSentMoves = 0;
-var allMovesRound           = new Array();
+var playerList                  = new Array();
+var territoriesList             = utilsModule.createTerritories();
+var availableHouses             = utilsModule.createHouses();
+var NUM_MAX_PLAYERS_ROOM        = 2;
+var housesAlreadyChosen         = new Array();
+var numTurns                    = 8;
+var actualTurn                  = 1;
+
+// SendMoves Global Variables
+var numPlayersThatSentMoves     = 0;
+var responsesSentSendMovesCount = 0;
+var conflicts                   = new Array();
+var allMovesRound               = new Array();
 
 
 // POST functions
 app.post('/sendMoves'        , sendMoves);
-app.post('/sendDiceValue'    , sendDiceValue);
 app.post('/connect'          , connect);
 
 // GET functions
-app.get ('/getTerritories'   , getTerritories);
-app.get ('/getIsGameFinished', getIsGameFinished);
+
 
 // port that the server will be listening
 var port = 3000;
