@@ -1,6 +1,5 @@
-
 exports.House = function (name) {
-		this.name = name;
+	this.name = name;
 }
 
 exports.Move = function (origin, target, action) {

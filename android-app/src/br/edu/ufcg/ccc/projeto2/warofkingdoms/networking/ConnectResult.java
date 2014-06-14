@@ -7,17 +7,19 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 
 public class ConnectResult {
 	
-	public ConnectResult(List<Territory> territories, List<Player> players) {
+	private List<Territory> territories;
+	private List<Player> players;
+	private String roomId;
+	
+	public ConnectResult(List<Territory> territories, List<Player> players, String roomId) {
 		this.territories = territories;
 		this.players = players;
+		this.roomId = roomId;
 	}
 
 	public ConnectResult() {
 		
 	}
-
-	private List<Territory> territories;
-	private List<Player> players;
 
 	public List<Territory> getTerritories() {
 		return territories;
@@ -35,4 +37,11 @@ public class ConnectResult {
 		this.players = players;
 	}
 
+	public String getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
+	}
 }

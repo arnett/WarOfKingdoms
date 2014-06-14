@@ -95,4 +95,8 @@ public class HouseTokenManager {
 		return territory.getOwner().equals(
 				startingHouseTerritories.get(territory));
 	}
+
+	public HouseToken getHouseToken(House house) {
+		return houseTokens.get(house);
+	}
 }

@@ -1,16 +1,18 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.RequestManager.requestPOST;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_URI;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
 import java.util.Arrays;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.OnTaskCompleted;
 
 public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
@@ -25,8 +27,19 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 
 	@Override
 	protected SendMovesResult doInBackground(Move... moves) {
-		String request = JSONParser.parseMovesToJson(Arrays.asList(moves))
-				.toString();
+		JSONArray movesJson = JSONParser.parseMovesToJson(Arrays.asList(moves));
+		JSONObject requestJson = new JSONObject();
+
+		try {
+			requestJson.put(SEND_MOVES_REQUEST_MOVES_TAG, movesJson.toString());
+			requestJson.put(SEND_MOVES_REQUEST_ROOM_ID_TAG, GameManager
+					.getInstance().getRoomId());
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+
+		String request = requestJson.toString();
+
 		Log.v(LOG_TAG,
 				String.format("Request to %s = %s", SEND_MOVES_URI, request));
 

@@ -25,6 +25,7 @@ public class GameManager {
 	private Game game;
 	private List<Move> currentMoves = new ArrayList<Move>();
 	private List<Player> currentPlayers;
+	private String roomId;
 
 	private Player currentPlayer;
 
@@ -100,5 +101,13 @@ public class GameManager {
 
 	public Territory getTerritoryByName(String territoryName) {
 		return game.getTerritoryByName(territoryName);
+	}
+
+	public String getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
 	}
 }

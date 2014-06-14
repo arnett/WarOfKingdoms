@@ -305,9 +305,10 @@ exports.objToJSON = function(object) {
 	return JSON.stringify(object);
 }
 
-exports.ConnectReturnObj = function(territories, players) {
+exports.ConnectReturnObj = function(territories, players, roomId) {
 	this.territories = territories;
 	this.players = players;
+    this.roomId = roomId;
 }
 
 exports.SendmovesReturnObj = function(conflicts, updatedMap, gameState) {
@@ -481,7 +482,6 @@ isGameEnd = function(winnerList, currentTurn, totalTurns) {
 }
 
 exports.generateGameState = function(territories, playerlist, currentTurn, totalTurns) {
-	var territoryIndex = getTerritoryIndex(territories, "C");
 	var numTerritoriesInEachRegionToConquer = new Array()
 	
 	numTerritoriesInEachRegionToConquer.push(3)

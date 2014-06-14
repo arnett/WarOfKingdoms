@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
@@ -24,6 +25,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseActionDialogFragment.OnActionSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
@@ -57,6 +59,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private Territory firstSelectedTerritoryForTheCurrentMove;
 
+	private ImageView currentPlayerToken;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,6 +82,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 		mapImage.setOnTouchListener(this);
 		nextPhaseButton.setOnClickListener(this);
 
+		currentPlayerToken = (ImageView) findViewById(R.id.currentPlayerToken);
+		drawCurrentPlayerToken();
+
 		mapImageMask.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 			@Override
 			public void onLayoutChange(View v, int left, int top, int right,
@@ -89,6 +96,14 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	}
 
+	private void drawCurrentPlayerToken() {
+		House currentHouse = GameManager.getInstance().getCurrentPlayer()
+				.getHouse();
+		HouseToken playerHouseToken = houseTokenManager
+				.getHouseToken(currentHouse);
+		currentPlayerToken.setImageResource(playerHouseToken.getCastleToken());
+	}
+
 	private boolean areFirstTokensDrawn = true;
 
 	@Override
@@ -96,10 +111,10 @@ public class GameActivity extends Activity implements OnTouchListener,
 		super.onWindowFocusChanged(hasFocus);
 
 		/**
-		 * The map image is only plotted when the activity is loaded, i.e. when the
-		 * state of the activity is about to become "Running". Since the centers of
-		 * the territories are calculated based on the current size of the map, the
-		 * territory centers don't exist before this.
+		 * The map image is only plotted when the activity is loaded, i.e. when
+		 * the state of the activity is about to become "Running". Since the
+		 * centers of the territories are calculated based on the current size
+		 * of the map, the territory centers don't exist before this.
 		 */
 		if (areFirstTokensDrawn) {
 			drawTerritoryOwnershipTokens();
@@ -107,7 +122,6 @@ public class GameActivity extends Activity implements OnTouchListener,
 		}
 	}
 
-	
 	/**
 	 * Method to recreate the maskImageBitmap, it is used when the layout
 	 * changes (mainly for screen rotation).
@@ -177,9 +191,6 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	private int getTokenImage(Territory territory) {
-		if (territory.getOwner().equals(
-				gameManager.getCurrentPlayer().getHouse())) {
-		}
 		return houseTokenManager.getTokenImage(territory);
 	}
 

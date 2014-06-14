@@ -57,6 +57,9 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		gameManager.updateAllTerritories(result.getTerritories());
 		gameManager.updateAllPlayers(result.getPlayers());
 
+		Log.v(LOG_TAG, "RoomId is " + result.getRoomId());
+		gameManager.setRoomId(result.getRoomId());
+
 		houseTokenManager.setStartingHouseTerritories(result.getTerritories());
 
 		Log.v(LOG_TAG, "Starting GameActivity");

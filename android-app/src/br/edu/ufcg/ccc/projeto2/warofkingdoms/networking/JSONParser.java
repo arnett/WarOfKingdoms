@@ -38,7 +38,8 @@ public class JSONParser {
 					parseTerritoryToJson(conflict.getTerritory()));
 			conflictJson.put(CONFLICT_HOUSES_TAG,
 					parseHousesToJson(conflict.getHouses()));
-			conflictJson.put(CONFLICT_DICE_VALUES_TAG, parseIntegersToJson(conflict.getDiceValues()));
+			conflictJson.put(CONFLICT_DICE_VALUES_TAG,
+					parseIntegersToJson(conflict.getDiceValues()));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
@@ -213,8 +214,11 @@ public class JSONParser {
 					.getJSONArray(CONNECT_RESULT_TERRITORIES_TAG));
 			List<Player> players = parseJsonToPlayers(connectResult
 					.getJSONArray(CONNECT_RESULT_PLAYERS_TAG));
+			String roomId = connectResult.getString(CONNECT_RESULT_ROOM_ID_TAG);
+
 			result.setTerritories(territories);
 			result.setPlayers(players);
+			result.setRoomId(roomId);
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
@@ -321,7 +325,7 @@ public class JSONParser {
 		}
 		return players;
 	}
-	
+
 	/**
 	 * Parses the given <tt>JSONObject</tt> to a GameState.
 	 * 
@@ -330,16 +334,20 @@ public class JSONParser {
 	 */
 	public static GameState parseJsonToGameState(JSONObject gameStateJson) {
 		GameState gameState = new GameState();
-		
+
 		try {
-			gameState.setGameEnd(gameStateJson.getBoolean(GAME_STATE_IS_GAME_END_TAG));
-			gameState.setWinnerList(parseJsonToPlayers(gameStateJson.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
-			gameState.setCurrentTurn(gameStateJson.getInt(GAME_STATE_CURRENT_TURN_TAG));
-			gameState.setTotalTurns(gameStateJson.getInt(GAME_STATE_TOTAL_TURNS_TAG));
+			gameState.setGameEnd(gameStateJson
+					.getBoolean(GAME_STATE_IS_GAME_END_TAG));
+			gameState.setWinnerList(parseJsonToPlayers(gameStateJson
+					.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
+			gameState.setCurrentTurn(gameStateJson
+					.getInt(GAME_STATE_CURRENT_TURN_TAG));
+			gameState.setTotalTurns(gameStateJson
+					.getInt(GAME_STATE_TOTAL_TURNS_TAG));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
-		
+
 		return gameState;
 	}
 
