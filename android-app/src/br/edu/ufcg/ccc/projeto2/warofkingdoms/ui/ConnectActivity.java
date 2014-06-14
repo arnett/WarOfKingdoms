@@ -54,14 +54,12 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onConnectTaskCompleted(ConnectResult result) {
-		Log.v(LOG_TAG, result.getTerritories().toString());
-		Log.v(LOG_TAG, result.getPlayers().toString());
-
 		gameManager.updateAllTerritories(result.getTerritories());
 		gameManager.updateAllPlayers(result.getPlayers());
 
 		houseTokenManager.setStartingHouseTerritories(result.getTerritories());
 
+		Log.v(LOG_TAG, "Starting GameActivity");
 		Intent intent = new Intent(this, GameActivity.class);
 		startActivity(intent);
 	}
