@@ -89,19 +89,25 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	}
 
-	/**
-	 * The map image is only plotted when the activity is loaded, i.e. when the
-	 * state of the activity is about to become "Running". Since the centers of
-	 * the territories are calculated based on the current size of the map, the
-	 * territory centers don't exist before this.
-	 */
+	private boolean areFirstTokensDrawn = true;
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 
-		drawTerritoryOwnershipTokens();
+		/**
+		 * The map image is only plotted when the activity is loaded, i.e. when the
+		 * state of the activity is about to become "Running". Since the centers of
+		 * the territories are calculated based on the current size of the map, the
+		 * territory centers don't exist before this.
+		 */
+		if (areFirstTokensDrawn) {
+			drawTerritoryOwnershipTokens();
+			areFirstTokensDrawn = false;
+		}
 	}
 
+	
 	/**
 	 * Method to recreate the maskImageBitmap, it is used when the layout
 	 * changes (mainly for screen rotation).
