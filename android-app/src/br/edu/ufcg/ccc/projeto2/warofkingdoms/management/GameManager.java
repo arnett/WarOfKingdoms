@@ -9,6 +9,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Game;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 
 /**
  * A singleton that manages the game state.
@@ -72,8 +73,12 @@ public class GameManager {
 	}
 
 	public Action[] getApplicableActions(Territory territory) {
+		RulesChecker runChecker = RulesChecker.getInstance();
 		if (territory.getOwner() == null) {
 			return null;
+		}
+		if (runChecker.checkAllAdjacentIsOwnedByPlayer(territory, getAllTerritories()))	 {
+			return new Action[] {Action.DEFEND};
 		}
 		if (territory.getOwner().equals(currentPlayer.getHouse())) {
 			return new Action[] {Action.ATTACK, Action.DEFEND};
