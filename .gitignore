@@ -27,3 +27,7 @@ proguard/
 
 # Auto generated server modules
 server/node_modules/
+
+
+# Gedit backup files
+server/*~
