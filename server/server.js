@@ -9,8 +9,6 @@ var roomModule      = require('./room.js');
 var express     = require('express');
 var bodyParser  = require('body-parser');
 
-var rooms = Array();
-
 function sendMoves(req, res) {
     var roomId = parseInt(req.body.roomId);
     rooms[roomId].sendMoves(req, res);
@@ -47,6 +45,7 @@ app.post('/connect'          , connect);
 var port = 3000;
 app.listen(port);
 
+var rooms                = Array();
 var NUM_MAX_PLAYERS_ROOM = 2;
 
 console.log("Server running...");

@@ -465,11 +465,23 @@ doesPlayerHasSelectedTerritoriesOwned = function(player, territories, numTerrito
 	return true;
 }
 
+isPlayerLastSurvivor = function(player, territories) {
+	for (var i = 0; i < territories.length; i++) {
+		territory = territories[i];
+		if (territory.owner != null && territory.owner != players) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 getWinners = function(playerList, territories, numTerritoriesInEachRegionToConquer) {
 	var winners = new Array();
 
 	for (var i = 0; i < playerList.length; i++) {
-		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, numTerritoriesInEachRegionToConquer)) {
+		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, numTerritoriesInEachRegionToConquer) ||
+			isPlayerLastSurvivor(playerlist[i])) {
 			winners.push(playerList[i])
 		}
 	};
