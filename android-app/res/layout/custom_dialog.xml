@@ -30,11 +30,14 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
+            android:id="@+id/action_dialog_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:orientation="horizontal"/>
 
         <LinearLayout
+            android:id="@+id/action_attack_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical" >
@@ -85,7 +88,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/action_dialog_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
 			android:layout_weight="1" 

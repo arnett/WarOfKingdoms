@@ -22,6 +22,7 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 	private ImageView defenseActionBtn;
 	
 	private LinearLayout actionDefenseLayout;
+	private LinearLayout actionAttackLayout;
 	private LinearLayout actionDialogDesignLayout;
 
 	@Override
@@ -45,6 +46,7 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		
 		actionDefenseLayout = (LinearLayout) view.findViewById(R.id.action_defense_layout);
+		actionAttackLayout = (LinearLayout) view.findViewById(R.id.action_attack_layout);
 		actionDialogDesignLayout = (LinearLayout) view.findViewById(R.id.action_dialog_layout);
 		
 		attackActionBtn = (ImageView) view.findViewById(R.id.attack_action_button);
@@ -58,7 +60,7 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 		
 		if (actions.length == 1) {	// only attack - hiding the defense action
 			
-			actionDefenseLayout.setVisibility(View.GONE);
+			actionAttackLayout.setVisibility(View.GONE);
 			actionDialogDesignLayout.setVisibility(View.GONE);
 		}
 		
