@@ -166,4 +166,17 @@ public class RulesChecker {
 		}
 		return false;
 	}
+
+	public boolean checkAllAdjacentIsOwnedByPlayer(Territory territory, List<Territory> territoriesList) {
+		List<String> adjacentList = territoriesBorders.get(territory.getName());
+		for (String string : adjacentList) {
+			Territory territoryToCheck = new Territory(string);
+			for (Territory t : territoriesList) {
+				if(t.equals(territoryToCheck) && (t.getOwner() == null || !t.getOwner().equals(territory.getOwner()))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

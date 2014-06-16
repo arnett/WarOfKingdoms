@@ -35,6 +35,8 @@ public class GameOverDialogFragment extends DialogFragment implements OnClickLis
 		winnersTextView = (TextView) view.findViewById(R.id.winners_text_view);
 		winnersTextView.setText(winners);
 		
+		setCancelable(false);
+		
 		return view;
 	}
 
