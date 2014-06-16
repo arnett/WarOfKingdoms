@@ -1,9 +1,13 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,9 +42,14 @@ import br.ufcg.edu.ccc.projeto2.R;
 public class GameActivity extends Activity implements OnTouchListener,
 		OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
+	private static final int UPDATE_MAP_NOW = 0;
+	
+	private boolean isOpenningConflictActivity = false;	// to just close the waitDialog when the activity is started
+
 	private String LOG_TAG = "GameActivity";
 
 	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "ChooseActionDialogFragmentTag";
+	private String GAME_OVER_DIALOG_FRAGMENT_TAG = "GameOverDialogFragmentTag";
 
 	private RelativeLayout tokenLayout;
 	private Bitmap imageToken;
@@ -60,6 +69,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private Territory firstSelectedTerritoryForTheCurrentMove;
 
 	private ImageView currentPlayerToken;
+	
+	private CustomProgressDialog waitDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +82,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 		houseTokenManager = HouseTokenManager.getInstance();
 
 		setContentView(R.layout.activity_game);
+		
+		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
@@ -95,7 +108,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		});
 
 	}
-
+	
 	private void drawCurrentPlayerToken() {
 		House currentHouse = GameManager.getInstance().getCurrentPlayer()
 				.getHouse();
@@ -105,6 +118,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 	}
 
 	private boolean areFirstTokensDrawn = true;
+
+	private SendMovesResult sendMovesResult;
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
@@ -321,8 +336,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 			addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
 
-			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 		}
+		currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 	}
 
 	private void startActionPopup(Action[] actions) {
@@ -359,53 +374,98 @@ public class GameActivity extends Activity implements OnTouchListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.nextPhaseButton:
-			networkManager
-					.sendCurrentMoves(this, gameManager.getCurrentMoves());
+			
+			waitDialog.show();
+			
+			networkManager.sendCurrentMoves(
+											this, 
+											gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 			break;
 		default:
 			return;
 		}
-		// TODO make a loading dialog
 	}
 
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
-		// TODO close loading dialog window
-		// TODO manage conflicts here
 
-		if (result.getConflicts() == null || result.getConflicts().size() != 0) {
-			Toast.makeText(getBaseContext(),
-					"number of conflicts = " + result.getConflicts().size(),
-					Toast.LENGTH_SHORT).show();
-
-			// TODO show the dice value for each conflict on the result
+		sendMovesResult = result;
+		
+		if (result.getConflicts() != null && result.getConflicts().size() != 0) {
+			
+			isOpenningConflictActivity = true;
+			
+			Intent intent = new Intent(this, ConflictActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putParcelableArrayList("conflicts", (ArrayList<? extends Parcelable>) result.getConflicts());
+			intent.putExtras(bundle);
+			startActivityForResult(intent, UPDATE_MAP_NOW);
+		} else {
+			isOpenningConflictActivity = false;
+			doActionsAfterSendMovesReturned();
 		}
 
-		gameManager.updateAllTerritories(result.getUpdatedMap());
+		if (!isOpenningConflictActivity) {
+			waitDialog.dismiss();
+		}
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		if (isOpenningConflictActivity) {
+			waitDialog.dismiss();
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		doActionsAfterSendMovesReturned();
+		
+		isOpenningConflictActivity = false;
+	}
+	
+	private void doActionsAfterSendMovesReturned() {
+		
+		gameManager.updateAllTerritories(sendMovesResult.getUpdatedMap());
 		drawTerritoryOwnershipTokens();
 
-		Toast.makeText(
-				getBaseContext(),
-				"Turn: " + result.getGameState().getCurrentTurn() + "/"
-						+ result.getGameState().getTotalTurns(),
-				Toast.LENGTH_SHORT).show();
 
-		if (result.getGameState().isGameEnd()) {
-			String gameStatus = "Game Finished\n";
-			if (result.getGameState().getWinnerList().size() > 0) {
-				gameStatus += "Winner(s):";
-				for (Player p : result.getGameState().getWinnerList()) {
-					gameStatus += p.getName() + "\n";
-				}
-			} else {
-				gameStatus += "Draw";
-			}
-			Toast.makeText(getBaseContext(), gameStatus, Toast.LENGTH_LONG)
-					.show();
+		if (sendMovesResult.getGameState().isGameEnd()) {
+			
+			openGameFinishedDialog();
 		}
 	}
 
+	private void openGameFinishedDialog() {
+		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
+		gameOverDialog.setWinners(getWinners());
+		gameOverDialog.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
+	}
+	
+	private String getWinners() {
+		String winners = "";
+		for (Player p : sendMovesResult.getGameState().getWinnerList()) {
+			winners += p.getName() + " ("+ p.getHouse().getName() +") won!\n";
+		}
+		return winners;
+	}
+
+	@Override
+	protected void onDestroy() {
+		if (waitDialog.isShowing() ) {
+			waitDialog.dismiss();
+		}
+		
+		Log.v(LOG_TAG, "Destroying activity");
+		
+		super.onDestroy();
+	}
+	
 	@Override
 	public void onConnectTaskCompleted(ConnectResult result) {
 		// TODO Remove this method from OnTaskCompleted and create a global

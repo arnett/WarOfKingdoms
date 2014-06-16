@@ -1,8 +1,15 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
-    <color name="black">#000</color>
-    <color name="white">#FFF</color>
-    <color name="red">#FF0000</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#BB433A</color>
+    <color name="green">#009940</color>
+    <color name="gray">#838383</color>
+    <color name="dark_gray">#333333</color>
+    
+    <color name="map_sea_color">#558FCE</color>
+    <color name="mainBackgroundColor">#6BA0B0</color>
+ 	<color name="purple">#7B66A1</color>
 
 </resources>

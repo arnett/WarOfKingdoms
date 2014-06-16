@@ -33,7 +33,11 @@ public class HouseTokenManager {
 		}
 		return instance;
 	}
-
+	
+	public void reset() {
+		instance = null;
+	}
+	
 	private Map<House, HouseToken> generateAllTokens() {
 		Map<House, HouseToken> tokens = new HashMap<House, HouseToken>();
 

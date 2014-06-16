@@ -21,7 +21,7 @@ this.Room.prototype.reset = function() {
     this.playerList = new Array();
     this.housesAlreadyChosen = new Array();
     this.territoriesList = utilsModule.createTerritories();
-    this.numTurns = 2;
+    this.numTurns = 20;
     this.actualTurn = 1;
     this.availableHouses = utilsModule.createHouses();
 

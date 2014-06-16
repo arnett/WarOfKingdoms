@@ -3,7 +3,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="@color/map_sea_color"
     tools:context="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.GameActivity" >
 
     <ImageView

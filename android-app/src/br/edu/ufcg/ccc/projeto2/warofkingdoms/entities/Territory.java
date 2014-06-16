@@ -1,6 +1,11 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
-public class Territory {
+import java.io.Serializable;
+
+
+public class Territory implements Serializable {
+
+	private static final long serialVersionUID = 7372701183207637457L;
 
 	// Name will be the primary key for this object
 	private String name;

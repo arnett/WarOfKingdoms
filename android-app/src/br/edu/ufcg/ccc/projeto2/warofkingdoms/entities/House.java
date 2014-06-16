@@ -1,6 +1,11 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.entities;
 
-public class House {
+import java.io.Serializable;
+
+
+public class House implements Serializable {
+
+	private static final long serialVersionUID = 3065642888337391736L;
 
 	private String name;
 

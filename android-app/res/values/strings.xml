@@ -4,5 +4,20 @@
     <string name="app_name">War of Kingdoms</string>
     <string name="title_activity_game">War of Kingdoms</string>
     <string name="choose_an_action">Choose an action</string>
-
+    
+    <string name="play_label">Play</string>
+    <string name="profile_label">Profile</string>
+    <string name="about_label">About</string>
+    <string name="conflicts_label">Conflicts</string>
+    <string name="next_conflict_label">Next</string>
+    <string name="tap_to_throw_dice">Tap to Throw</string>
+    
+    <string name="game_over_label">The Game is Over</string>
+    <string name="ok_label">Ok</string>
+    
+    <string name="action_label">Action</string>
+	<string name="attack_action_label">Attack</string>
+	<string name="defense_action_label">Defense</string>
+	
+	
 </resources>

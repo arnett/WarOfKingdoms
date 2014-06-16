@@ -1,13 +1,16 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
+import java.io.Serializable;
 import java.util.List;
 
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 
-public class SendMovesResult {
-
+public class SendMovesResult implements Serializable {
+	
+	private static final long serialVersionUID = -3610087591458179658L;
+	
 	private List<Conflict> conflicts;
 	private List<Territory> updatedMap;
 	private GameState gameState;

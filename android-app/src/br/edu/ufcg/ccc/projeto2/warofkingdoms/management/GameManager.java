@@ -43,6 +43,10 @@ public class GameManager {
 		}
 		return instance;
 	}
+	
+	public void reset() {
+		instance = null;
+	}
 
 	public void makeAttackMove(Territory origin, Territory target) {
 		getCurrentMoves().add(new Move(origin, target, Action.ATTACK));
@@ -110,4 +114,5 @@ public class GameManager {
 	public void setRoomId(String roomId) {
 		this.roomId = roomId;
 	}
+
 }
