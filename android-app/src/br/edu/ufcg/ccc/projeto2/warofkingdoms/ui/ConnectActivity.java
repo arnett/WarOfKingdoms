@@ -33,6 +33,7 @@ OnTaskCompleted {
 	private Player currentPlayer;
 
 	private ImageView playBtn;
+	private ImageView aboutBtn;
 
 	private CustomProgressDialog waitDialog;
 
@@ -51,6 +52,9 @@ OnTaskCompleted {
 
 		playBtn = (ImageView) findViewById(R.id.playButton);
 		playBtn.setOnClickListener(this);
+		
+		aboutBtn = (ImageView) findViewById(R.id.aboutButton);
+		aboutBtn.setOnClickListener(this);
 
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
@@ -80,6 +84,11 @@ OnTaskCompleted {
                         "You don't have internet connection.", false);
 			}
 		}	
+		
+		else if (v == aboutBtn) {
+			
+			startActivity(new Intent(this, AboutActivity.class));
+		}
 	}
 	
     /**
