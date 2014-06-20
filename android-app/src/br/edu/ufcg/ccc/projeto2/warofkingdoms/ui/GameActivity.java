@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
@@ -45,10 +48,10 @@ import br.ufcg.edu.ccc.projeto2.R;
  * 
  */
 public class GameActivity extends Activity implements OnTouchListener,
-		OnActionSelectedListener, OnClickListener, OnTaskCompleted {
+OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private static final int UPDATE_MAP_NOW = 0;
-	
+
 	private boolean isOpenningConflictActivity = false;	// to just close the waitDialog when the activity is started
 
 	private String LOG_TAG = "GameActivity";
@@ -63,6 +66,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
 	private Button nextPhaseButton;
+	private TextView timeCounter;
 
 	private SelectionState currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 
@@ -74,8 +78,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private Territory firstSelectedTerritoryForTheCurrentMove;
 
 	private ImageView currentPlayerToken;
-	
+
 	private CustomProgressDialog waitDialog;
+	
+	private long startTime = 30 * 1000;
+	private long interval = 1 * 1000;
+	private long seconds = startTime/1000;
+	private long minutes = seconds/60;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +96,14 @@ public class GameActivity extends Activity implements OnTouchListener,
 		houseTokenManager = HouseTokenManager.getInstance();
 
 		setContentView(R.layout.activity_game);
-		
+
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
 
 		nextPhaseButton = (Button) findViewById(R.id.nextPhaseButton);
+		timeCounter = (TextView) findViewById(R.id.time_counter);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);
 
@@ -112,8 +122,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 			}
 		});
 
+		long seconds = startTime/1000;
+		long minutes = seconds/60;
+		timeCounter.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+		MyCountDownTimer countDown = new MyCountDownTimer(startTime, interval, this);
+		countDown.start();
 	}
-	
+
 	private void drawCurrentPlayerToken() {
 		House currentHouse = GameManager.getInstance().getCurrentPlayer()
 				.getHouse();
@@ -126,6 +141,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	private SendMovesResult sendMovesResult;
 
+	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
@@ -282,7 +298,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 					getBaseContext(),
 					"Invalid move: "
 							+ "This territory was already used during this turn",
-					Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();
 		}
 
 		else if (!rulesChecker
@@ -291,7 +307,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 					getBaseContext(),
 					"Invalid move: "
 							+ "The first territory must be owned by you",
-					Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();
 		}
 
 		else {
@@ -363,10 +379,10 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentMove).getCenterX(
-					getMapWidth());
+							getMapWidth());
 			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentMove).getCenterY(
-					getMapHeight());
+							getMapHeight());
 			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
 
@@ -379,12 +395,12 @@ public class GameActivity extends Activity implements OnTouchListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.nextPhaseButton:
-			
+
 			waitDialog.show();
-			
+
 			networkManager.sendCurrentMoves(
-											this, 
-											gameManager.getCurrentMoves());
+					this, 
+					gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 			break;
 		default:
@@ -396,11 +412,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 
 		sendMovesResult = result;
-		
+
 		if (result.getConflicts() != null && result.getConflicts().size() != 0) {
-			
+
 			isOpenningConflictActivity = true;
-			
+
 			Intent intent = new Intent(this, ConflictActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putParcelableArrayList("conflicts", (ArrayList<? extends Parcelable>) result.getConflicts());
@@ -414,28 +430,31 @@ public class GameActivity extends Activity implements OnTouchListener,
 		if (!isOpenningConflictActivity) {
 			waitDialog.dismiss();
 		}
+		timeCounter.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+		MyCountDownTimer countDown = new MyCountDownTimer(startTime, interval, this);
+		countDown.start();
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+
 		if (isOpenningConflictActivity) {
 			waitDialog.dismiss();
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		doActionsAfterSendMovesReturned();
-		
+
 		isOpenningConflictActivity = false;
 	}
-	
+
 	private void doActionsAfterSendMovesReturned() {
-		
+
 		gameManager.updateAllTerritories(sendMovesResult.getUpdatedMap());
 		drawTerritoryOwnershipTokens();
 
@@ -491,7 +510,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		gameOverDialog.setWinners(getWinners());
 		gameOverDialog.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
 	}
-	
+
 	private String getWinners() {
 		String winners = "";
 		for (Player p : sendMovesResult.getGameState().getWinnerList()) {
@@ -505,12 +524,12 @@ public class GameActivity extends Activity implements OnTouchListener,
 		if (waitDialog.isShowing() ) {
 			waitDialog.dismiss();
 		}
-		
+
 		Log.v(LOG_TAG, "Destroying activity");
-		
+
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onConnectTaskCompleted(ConnectResult result) {
 		// TODO Remove this method from OnTaskCompleted and create a global
@@ -545,5 +564,38 @@ public class GameActivity extends Activity implements OnTouchListener,
 		}
 
 		return ih;
+	}
+
+	public class MyCountDownTimer extends CountDownTimer {
+		
+		private GameActivity gameActivity;
+		
+		public MyCountDownTimer(long startTime, long interval, GameActivity gameActivity) {
+			super(startTime, interval);
+			this.gameActivity = gameActivity;
+		}
+
+		@Override
+		public void onFinish() {
+			waitDialog.show();
+
+			networkManager.sendCurrentMoves(gameActivity
+					, 
+					gameManager.getCurrentMoves());
+			gameManager.startNextPhase();
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			long seconds = millisUntilFinished/1000;
+			long minutes = seconds/60;
+			if (minutes == 0 && seconds <= 10) {
+				timeCounter.setTextColor(Color.parseColor("#FF0000"));
+			}
+			else {
+				timeCounter.setTextColor(Color.parseColor("#000000"));
+			}
+			timeCounter.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+		}
 	}
 }
