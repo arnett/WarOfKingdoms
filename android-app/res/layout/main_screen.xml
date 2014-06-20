@@ -1,91 +1,224 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackgroundColor">
+    android:background="@color/mainBackgroundColor"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/logo_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/playButton"
-        android:layout_marginBottom="19dp"
-        android:layout_toRightOf="@+id/playButton"
-        android:text="@string/play_label"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+        android:baselineAligned="false"
+        android:layout_marginTop="10dp" >
 
-    <ImageView
-        android:id="@+id/profileBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/playButton"
-        android:layout_below="@+id/playButton"
-        android:layout_marginTop="19dp"
-        android:background="@color/mainBackgroundColor"
-        android:src="@drawable/smaller_profile_button" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+        </LinearLayout>
 
-    <ImageView
-        android:id="@+id/playButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_marginRight="21dp"
-        android:layout_marginTop="80dp"
-        android:layout_toLeftOf="@+id/imageView1"
-        android:background="@color/mainBackgroundColor"
-        android:src="@drawable/smaller_play_button" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/smaller_game_icon" />
+        </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:src="@drawable/smaller_game_icon" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+        </LinearLayout>
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/aboutBtn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/app_name_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/profileBtn"
-        android:layout_below="@+id/profileBtn"
-        android:layout_marginTop="17dp"
-        android:background="@color/mainBackgroundColor"
-        android:src="@drawable/smaller_about_button" />
+        android:baselineAligned="false"
+        android:layout_marginTop="5dp" >
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/profileBtn"
-        android:layout_marginBottom="16dp"
-        android:layout_toRightOf="@+id/playButton"
-        android:text="@string/profile_label"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/aboutBtn"
-        android:layout_marginBottom="18dp"
-        android:layout_toRightOf="@+id/playButton"
-        android:text="@string/about_label"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+        android:orientation="vertical" 
+        android:layout_weight="1">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/play_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:baselineAligned="false"
+        android:layout_marginTop="20dp"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" 
+            android:layout_weight="60">
+
+            <ImageView
+                android:id="@+id/playButton"
+                android:contentDescription="@string/play_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/smaller_play_button" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/play_label"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_marginTop="20dp"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" 
+            android:layout_weight="60">
+
+            <ImageView
+                android:id="@+id/profileButton"
+                android:contentDescription="@string/profile_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/smaller_profile_button" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/profile_label"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/about_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_marginTop="20dp"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" 
+            android:layout_weight="60">
+
+            <ImageView
+                android:id="@+id/aboutButton"
+                android:contentDescription="@string/about_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/smaller_about_button" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/about_label"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+        </LinearLayout>
+
+    </LinearLayout>
     
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:layout_weight="1">
+    </LinearLayout>
+    
+</LinearLayout>

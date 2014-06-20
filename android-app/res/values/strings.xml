@@ -11,6 +11,8 @@
     <string name="conflicts_label">Conflicts</string>
     <string name="next_conflict_label">Next</string>
     <string name="tap_to_throw_dice">Tap to Throw</string>
+    <string name="developers_label">Developers</string>
+    <string name="support_feedback_label">Support and Feedback</string>
     
     <string name="game_over_label">The Game is Over</string>
     <string name="ok_label">Ok</string>
@@ -19,5 +21,12 @@
 	<string name="attack_action_label">Attack</string>
 	<string name="defense_action_label">Defense</string>
 	
+	
+	<string name="andre_label">André</string>
+	<string name="arnett_label">Arnett</string>
+	<string name="luan_label">Luan</string>
+	<string name="rafael_label">Rafael</string>
+	
+	<string name="game_email_label">wofk@gmail.com</string>
 	
 </resources>
