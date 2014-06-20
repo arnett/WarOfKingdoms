@@ -55,4 +55,8 @@ public class Constants {
 	public final static String TYRELL = "Tyrell";
 	public final static String MARTELL = "Martell";
 	public final static String GREYJOY = "Greyjoy";
+	
+	public final static String NUM_TIMES_PLAYED_KEY = "timesPlayed";
+	public final static String NUM_VICTORIES_KEY = "numVictories";
+	public static final String VICTORY_TRACK_SHARED_PREFERENCE = "victoryTrackPreference";
 }

@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +19,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ConnectActivity extends Activity implements OnClickListener,
@@ -34,6 +37,7 @@ OnTaskCompleted {
 
 	private ImageView playBtn;
 	private ImageView aboutBtn;
+	private ImageView profileBtn;
 
 	private CustomProgressDialog waitDialog;
 
@@ -56,6 +60,9 @@ OnTaskCompleted {
 		aboutBtn = (ImageView) findViewById(R.id.aboutButton);
 		aboutBtn.setOnClickListener(this);
 
+		profileBtn = (ImageView) findViewById(R.id.profileButton);
+		profileBtn.setOnClickListener(this);
+		
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
 		isOpenningGameActivity = false;
@@ -86,8 +93,12 @@ OnTaskCompleted {
 		}	
 		
 		else if (v == aboutBtn) {
-			
 			startActivity(new Intent(this, AboutActivity.class));
+		}
+		
+		else if (v == profileBtn) {
+			
+			startActivity(new Intent(this, ProfileActivity.class));
 		}
 	}
 	

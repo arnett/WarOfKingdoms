@@ -38,6 +38,9 @@
         <activity
             android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.AboutActivity">
         </activity>
+        <activity
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ProfileActivity">
+        </activity>
     </application>
 
 </manifest>
