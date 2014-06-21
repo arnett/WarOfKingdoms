@@ -7,6 +7,7 @@ import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -96,6 +97,12 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		
 	}
 
+	@Override
+	protected void onPause() {
+		startActivity(new Intent(this, ConnectActivity.class));
+		super.onPause();
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
