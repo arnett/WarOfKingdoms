@@ -577,10 +577,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		@Override
 		public void onFinish() {
+			timeCounter.setText("00:00");
 			waitDialog.show();
-
-			networkManager.sendCurrentMoves(gameActivity
-					, 
+			networkManager.sendCurrentMoves(gameActivity, 
 					gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 		}
