@@ -1,8 +1,6 @@
 //--------------------------------  IMPORTS -----------------------------------------//
 
 // EXTERNAL-IMPORTS
-var gameLogicModule = require('./gameLogic.js');
-var utilsModule     = require('./utils.js');
 var roomModule      = require('./room.js');
 
 // REQUIRED-IMPORTS
