@@ -1,8 +1,9 @@
 var gameLogicModule = require('./gameLogic.js');
 
+////
+// CRUD FUNCTIONS
+////
 exports.createTerritories = function () {
-
-
 	var territory = null;
 	var territoriesArray = new Array();
 
@@ -153,17 +154,53 @@ exports.createMoveObjects = function(movesJson) {
 	return formattedMoves;
 }
 
-conclitAlreadyExists = function (move, conflicts) {
+exports.updateTerritories = function(territories, conflicts, nonConflicting) {
 
-	for (var i = 0; i < conflicts.length; i++) {
+	// updating map with nonConflicing moves
+	for (var i = 0; i < nonConflicting.length; i++) {
 
-		// a conflic for this territory was already created
-		if (conflicts[i].territory.name == move.target.name) {
-			return true;
+		var territoryIndex = getTerritoryIndex(territories, nonConflicting[i].target.name);
+		territories[territoryIndex].owner = nonConflicting[i].origin.owner;
+	}		
+
+	// updating map with the result of the conflicts
+	for (var i = 0; i < conflicts.length; i++) {	
+
+		var biggestDiceValue = getBiggestDiceValueIndex(conflicts[i].diceValues);
+
+		if (biggestDiceValue != -1) {
+			
+			var territoryIndex = getTerritoryIndex(territories, conflicts[i].territory.name);
+
+			territories[territoryIndex].owner = conflicts[i].houses[biggestDiceValue];
 		}
 	}
-	return false;
+
+	return territories;
 }
+
+////
+// GENERAL FUNCTIONS
+////
+
+// this convert any "object" in JSON string 
+exports.objToJSON = function(object) {
+	return JSON.stringify(object);
+}
+
+////
+// CONNECT FUNCTIONS
+////
+
+exports.ConnectReturnObj = function(territories, players, roomId) {
+	this.territories = territories;
+	this.players = players;
+    this.roomId = roomId;
+}
+
+////
+// SEND MOVES FUNCTIONS
+////
 
 // get ready for a big ass function ;)
 exports.generateConflicts = function(moves) {
@@ -233,29 +270,38 @@ exports.getNonConflictingMoves = function(moves, conflicts) {
 	return nonConflictingMoves;
 }
 
-exports.updateTerritories = function(territories, conflicts, nonConflicting) {
+exports.generateGameState = function(territories, playerlist, currentTurn, totalTurns) {
+	var numTerritoriesInEachRegionToConquer = new Array()
+	
+	numTerritoriesInEachRegionToConquer.push(3)
+	numTerritoriesInEachRegionToConquer.push(3)
+	numTerritoriesInEachRegionToConquer.push(3)
 
-	// updating map with nonConflicing moves
-	for (var i = 0; i < nonConflicting.length; i++) {
+	var winners = getWinners(playerlist, territories, numTerritoriesInEachRegionToConquer)
 
-		var territoryIndex = getTerritoryIndex(territories, nonConflicting[i].target.name);
-		territories[territoryIndex].owner = nonConflicting[i].origin.owner;
-	}		
+    return new gameLogicModule.GameState(isGameEnd(winners, currentTurn, totalTurns), winners, currentTurn, totalTurns)
+}
 
-	// updating map with the result of the conflicts
-	for (var i = 0; i < conflicts.length; i++) {	
+exports.SendmovesReturnObj = function(conflicts, updatedMap, gameState) {
+	this.conflicts = conflicts;
+	this.updatedMap = updatedMap;
+	this.gameState = gameState;
+}
 
-		var biggestDiceValue = getBiggestDiceValueIndex(conflicts[i].diceValues);
+////
+// OTHERS
+////
 
-		if (biggestDiceValue != -1) {
-			
-			var territoryIndex = getTerritoryIndex(territories, conflicts[i].territory.name);
+conclitAlreadyExists = function (move, conflicts) {
 
-			territories[territoryIndex].owner = conflicts[i].houses[biggestDiceValue];
+	for (var i = 0; i < conflicts.length; i++) {
+
+		// a conflic for this territory was already created
+		if (conflicts[i].territory.name == move.target.name) {
+			return true;
 		}
 	}
-
-	return territories;
+	return false;
 }
 
 // the diceValue index is important cause the diceValue index is equal to its house index
@@ -299,33 +345,6 @@ getRandomDiceValue = function() {
 	return Math.floor((Math.random() * 6) + 1);
 }
 
-
-// this convert any "object" in JSON string 
-exports.objToJSON = function(object) {
-	return JSON.stringify(object);
-}
-
-exports.ConnectReturnObj = function(territories, players, roomId) {
-	this.territories = territories;
-	this.players = players;
-    this.roomId = roomId;
-}
-
-exports.SendmovesReturnObj = function(conflicts, updatedMap, gameState) {
-	this.conflicts = conflicts;
-	this.updatedMap = updatedMap;
-	this.gameState = gameState;
-}
-
-exports.isAllTerritoriesOwned = function(territories) {
-    for (var i = 0; i < territories.length; i++) {
-        if (territories[i].owner == null)
-            return false
-    };
-
-    return true;
-}
-
 getPlayerById = function(playerList, id) {
     if (id == undefined)
         return null
@@ -339,39 +358,21 @@ getPlayerById = function(playerList, id) {
     return null
 }
 
-indexWithMaxValue = function(array) {
-    var index = 0;
-    var oneMaxValue = true;
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] > array[index]) {
-            index = i;
-            oneMaxValue = true;
-        } else if (array[i] == array[index]) {
-            oneMaxValue = false
-        }
-    }
+getWinners = function(playerList, territories, numTerritoriesInEachRegionToConquer) {
+	var winners = new Array();
 
-    if (oneMaxValue)
-        return index
-    return -1;
+	for (var i = 0; i < playerList.length; i++) {
+		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, 
+                numTerritoriesInEachRegionToConquer) || isPlayerLastSurvivor(playerList[i], territories)) {
+			winners.push(playerList[i])
+		}
+	}
+
+	return winners;
 }
 
-exports.getPlayerWithMostTerritoriesOwned = function(territories) {
-    playersCount = new Array()
-
-    for (var i = 0; i < territories.length; i++) {
-        var territory = territories[i]
-        if (territory.owner != null) {
-            if (playersCount[territory.owner.id] == undefined)
-                playersCount[territory.owner.id] = 0;
-            playersCount[territory.owner.id]++
-        }
-    };
-
-    var playerWithMostTerritoriesId = indexWithMaxValue(playersCount)
-    if (playerWithMostTerritoriesId == -1)
-        return null;
-    return getPlayerById(playerWithMostTerritoriesId)
+isGameEnd = function(winnerList, currentTurn, totalTurns) {
+	return winnerList.length > 0 || currentTurn >= totalTurns;
 }
 
 territoriesInRegions = function() {
@@ -476,31 +477,6 @@ isPlayerLastSurvivor = function(player, territories) {
 	return true;
 }
 
-getWinners = function(playerList, territories, numTerritoriesInEachRegionToConquer) {
-	var winners = new Array();
-
-	for (var i = 0; i < playerList.length; i++) {
-		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, 
-                numTerritoriesInEachRegionToConquer) || isPlayerLastSurvivor(playerList[i], territories)) {
-			winners.push(playerList[i])
-		}
-	}
-
-	return winners;
-}
-
-isGameEnd = function(winnerList, currentTurn, totalTurns) {
-	return winnerList.length > 0 || currentTurn >= totalTurns;
-}
-
-exports.generateGameState = function(territories, playerlist, currentTurn, totalTurns) {
-	var numTerritoriesInEachRegionToConquer = new Array()
-	
-	numTerritoriesInEachRegionToConquer.push(3)
-	numTerritoriesInEachRegionToConquer.push(3)
-	numTerritoriesInEachRegionToConquer.push(3)
-
-	var winners = getWinners(playerlist, territories, numTerritoriesInEachRegionToConquer)
-
-    return new gameLogicModule.GameState(isGameEnd(winners, currentTurn, totalTurns), winners, currentTurn, totalTurns)
-}
+////
+// THE END
+////

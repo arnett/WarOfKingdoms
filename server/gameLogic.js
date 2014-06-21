@@ -25,9 +25,7 @@ exports.Conflict = function (territory, houses, diceValues) {
   this.diceValues = diceValues
 }
 
-exports.GameState = function (isGameEnd, winnerList, currentTurn, totalTurns) {
+exports.GameState = function (isGameEnd, winnerList) {
   this.isGameEnd   = isGameEnd;
   this.winnerList  = winnerList;
-  this.currentTurn = currentTurn;
-  this.totalTurns  = totalTurns;
 }
