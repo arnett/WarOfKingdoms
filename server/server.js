@@ -14,6 +14,23 @@ function sendMoves(req, res) {
     rooms[roomId].sendMoves(req, res);
 }
 
+function newconnect(req, res) {
+    var roomId = 0;
+    var num_players = req.body.num_players;
+
+    for (;roomId < rooms.length; roomId++) {
+        var room = rooms[roomId];
+        if (!room.isFull() && room.NUM_MAX_PLAYERS_ROOM == num_players) {
+            room.connect(req, res);
+            return;
+        }
+    }
+
+    var room = new roomModule.Room(num_players, roomId);
+    rooms.push(room);
+    room.connect(req, res);
+}
+
 function connect(req, res) {
     var roomId = 0;
 
