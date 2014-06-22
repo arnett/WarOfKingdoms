@@ -95,7 +95,8 @@ OnTaskCompleted {
 		
 		else if (v == profileBtn) {
 			
-			startActivity(new Intent(this, ProfileActivity.class));
+			Intent intent = new Intent(this, ProfileActivity.class); 
+			startActivity(intent);
 		}
 	}
 	

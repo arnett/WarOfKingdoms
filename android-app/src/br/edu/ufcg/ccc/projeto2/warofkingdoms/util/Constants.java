@@ -59,4 +59,5 @@ public class Constants {
 	public final static String NUM_TIMES_PLAYED_KEY = "timesPlayed";
 	public final static String NUM_VICTORIES_KEY = "numVictories";
 	public static final String VICTORY_TRACK_SHARED_PREFERENCE = "victoryTrackPreference";
+	public static final String TEN_LAST_GAMES = "tenLastGames";
 }

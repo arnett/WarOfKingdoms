@@ -120,4 +120,15 @@ public class GameManager {
 		this.roomId = roomId;
 	}
 
+	public boolean currentPlayerWon(List<Player> winners) {
+
+		for (Player player : winners) {
+			
+			if (currentPlayer.getId().equals(player.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

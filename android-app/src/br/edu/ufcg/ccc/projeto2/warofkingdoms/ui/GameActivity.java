@@ -1,18 +1,15 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,20 +22,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.ProfileManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums.SelectionState;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
 
@@ -74,12 +70,14 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private NetworkManager networkManager;
 	private TerritoryUIManager territoryManager;
 	private HouseTokenManager houseTokenManager;
+	private ProfileManager profileManager;
 
 	private Territory firstSelectedTerritoryForTheCurrentMove;
 
 	private ImageView currentPlayerToken;
 
 	private CustomProgressDialog waitDialog;
+	private ChooseActionDialogFragment chooseActionDialogFragment;
 	
 	private long startTime = 30 * 1000;
 	private long interval = 1 * 1000;
@@ -94,6 +92,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		networkManager = NetworkManager.getInstance();
 		territoryManager = TerritoryUIManager.getInstance();
 		houseTokenManager = HouseTokenManager.getInstance();
+		profileManager = ProfileManager.getInstance();
 
 		setContentView(R.layout.activity_game);
 
@@ -362,7 +361,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void startActionPopup(Action[] actions) {
-		ChooseActionDialogFragment chooseActionDialogFragment = new ChooseActionDialogFragment();
+		chooseActionDialogFragment = new ChooseActionDialogFragment();
 		chooseActionDialogFragment.setActions(actions);
 		chooseActionDialogFragment.show(getFragmentManager(),
 				CHOOSE_ACTION_DIALOG_FRAGMENT_TAG);
@@ -412,6 +411,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 
 		sendMovesResult = result;
+		if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
+			chooseActionDialogFragment.dismiss();
+		}
+		firstSelectedTerritoryForTheCurrentMove = null;
 
 		if (result.getConflicts() != null && result.getConflicts().size() != 0) {
 
@@ -461,48 +464,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		if (sendMovesResult.getGameState().isGameEnd()) {
 			
-			saveGameStatistics(sendMovesResult.getGameState());
+			profileManager.saveGameStatistics(sendMovesResult.getGameState(), getApplicationContext());
 			openGameFinishedDialog();
 		}
-	}
-
-	private void saveGameStatistics(GameState gameState) {
-		
-		int numTimesPlayed = loadInt(Constants.NUM_TIMES_PLAYED_KEY);
-		int numVictories = loadInt(Constants.NUM_VICTORIES_KEY);
-		
-		if (currentPlayerWon(gameState.getWinnerList())) {
-
-			numVictories++;
-			saveInt(Constants.NUM_VICTORIES_KEY, numVictories);
-		}
-		
-		numTimesPlayed++;
-		saveInt(Constants.NUM_TIMES_PLAYED_KEY, numTimesPlayed);
-	}
-	
-	public void saveInt(String key, int value){
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putInt(key, value);
-		editor.commit();
-	}
-	
-	public int loadInt(String key){
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		return sharedPreferences.getInt(key, 0);
-	}
-
-	private boolean currentPlayerWon(List<Player> winners) {
-
-		for (Player player : winners) {
-			
-			if (gameManager.getCurrentPlayer().getId().equals(player.getId())) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 
 	private void openGameFinishedDialog() {

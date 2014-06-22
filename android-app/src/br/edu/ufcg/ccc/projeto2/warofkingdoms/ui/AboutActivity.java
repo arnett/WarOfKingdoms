@@ -19,11 +19,11 @@ public class AboutActivity extends Activity implements OnClickListener{
 	}
 	
 	@Override
-	protected void onPause() {
+	public void onBackPressed() {
 		startActivity(new Intent(this, ConnectActivity.class));
-		super.onPause();
+		super.onBackPressed();
 	}
-
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
