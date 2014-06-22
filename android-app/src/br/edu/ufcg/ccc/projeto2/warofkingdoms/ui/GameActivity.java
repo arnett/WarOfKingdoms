@@ -115,9 +115,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 		Bundle a = getIntent().getExtras();
 		String gameMode = a.getString(Constants.GAME_MODE);
 
-		if (gameMode.equals(Constants.CPU_GAME_MODE)) {
+		if (gameMode.equals(Constants.SINGLEPLAYER_GAME_MODE)) {
 			communicationManager = AIManager.getInstance();
-		} else if (gameMode.equals(Constants.HUMAN_GAME_MODE)) {
+		} else if (gameMode.equals(Constants.MULTIPLAYER_GAME_MODE)) {
 			communicationManager = NetworkManager.getInstance();
 		} else {
 			Log.e(LOG_TAG, "Game type error");

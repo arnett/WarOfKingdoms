@@ -12,6 +12,7 @@ public class Constants {
 	// Networking constants
 
 	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
+	//public final static String SERVER_URL = "http://10.0.0.4:3000";
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
@@ -65,6 +66,6 @@ public class Constants {
 
 	// Activity parameters
 	public static final String GAME_MODE = "gameMode";
-	public static final String CPU_GAME_MODE = "cpu";
-	public static final String HUMAN_GAME_MODE = "human";
+	public static final String SINGLEPLAYER_GAME_MODE = "Singleplayer";
+	public static final String MULTIPLAYER_GAME_MODE = "Multiplayer";
 }

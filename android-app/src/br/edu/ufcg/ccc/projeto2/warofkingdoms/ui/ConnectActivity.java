@@ -1,8 +1,10 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_MODE;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.MULTIPLAYER_GAME_MODE;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SINGLEPLAYER_GAME_MODE;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,10 +22,9 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseGameDialogFragment.OnGameSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseGameModeDialogFragment.OnGameSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
 import br.ufcg.edu.ccc.projeto2.R;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
 public class ConnectActivity extends Activity implements OnClickListener,
 		OnTaskCompleted, OnGameSelectedListener {
@@ -102,7 +103,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	private void startChooseGameDialog() {
-		DialogFragment chooseGameDialogFragment = new ChooseGameDialogFragment();
+		DialogFragment chooseGameDialogFragment = new ChooseGameModeDialogFragment();
 		chooseGameDialogFragment.show(getFragmentManager(),
 				CHOOSE_GAME_DIALOG_FRAGMENT_TAG);
 	}
@@ -206,46 +207,12 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	public void onGameSelected(String selectedGame) {
 		gameMode = selectedGame;
 
-		if (selectedGame.equals(HUMAN_GAME_MODE)) {
+		if (selectedGame.equals(MULTIPLAYER_GAME_MODE)) {
 			communicationManager = NetworkManager.getInstance();
 			startNetworkGame();
-		} else if (selectedGame.equals(CPU_GAME_MODE)) {
+		} else if (selectedGame.equals(SINGLEPLAYER_GAME_MODE)) {
 			communicationManager = AIManager.getInstance();
 			startAIGame();
 		}
-	}
-}
-
-class ChooseGameDialogFragment extends DialogFragment {
-
-	private OnGameSelectedListener gameListener;
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			this.gameListener = (OnGameSelectedListener) activity;
-		} catch (final ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnCompleteListener");
-		}
-	}
-
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		final String[] GAME_TYPES = new String[] { CPU_GAME_MODE,
-				HUMAN_GAME_MODE };
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Choose your enemy").setItems(GAME_TYPES,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						gameListener.onGameSelected(GAME_TYPES[which]);
-					}
-				});
-		return builder.create();
-	}
-
-	public static interface OnGameSelectedListener {
-		public void onGameSelected(String gameSelected);
 	}
 }
