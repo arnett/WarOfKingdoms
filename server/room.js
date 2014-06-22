@@ -86,7 +86,11 @@ this.Room.prototype.sendMoves = function(req, res) {
 }
 
 this.Room.prototype.chooseHouse = function() {
-    var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
+    var houseIndex = 1;
+    //var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
+    if (this.housesAlreadyChosen.contains(houseIndex))
+        houseIndex = 3;
+
     while (this.housesAlreadyChosen.contains(houseIndex)) {
         houseIndex = Math.floor((Math.random() * 5) + 0);
     }
@@ -101,6 +105,8 @@ this.Room.prototype.connect = function(req, res) {
 
 	var aPlayer = new gameLogicModule.Player(id, name, house);
 	this.playerList.push(aPlayer);
+
+    utilsModule.addHouseOwnerInTerritories(aPlayer.house, this.territoriesList);
 
     console.log(id + " Player Connected");
 
