@@ -14,6 +14,12 @@ public class Conflict implements Parcelable{
 
 	public Conflict() {}
 	
+	public Conflict(Territory territory, List<House> houses, List<Integer> diceValues) {
+		this.territory = territory;
+		this.houses = houses;
+		this.diceValues = diceValues;
+	}
+	
 	public List<Integer> getDiceValues() {
 		return diceValues;
 	}

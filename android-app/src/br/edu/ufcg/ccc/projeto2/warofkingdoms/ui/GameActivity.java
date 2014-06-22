@@ -54,7 +54,7 @@ import br.ufcg.edu.ccc.projeto2.R;
 public class GameActivity extends Activity implements OnTouchListener,
 		OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
-	private static final int UPDATE_MAP_NOW = 0;
+	private static final int SOLVE_CONFLICT_RETURN = 1;
 
 	private boolean isOpenningConflictActivity = false; // to just close the
 														// waitDialog when the
@@ -486,7 +486,8 @@ public class GameActivity extends Activity implements OnTouchListener,
 			bundle.putParcelableArrayList("conflicts",
 					(ArrayList<? extends Parcelable>) result.getConflicts());
 			intent.putExtras(bundle);
-			startActivityForResult(intent, UPDATE_MAP_NOW);
+			startActivityForResult(intent, SOLVE_CONFLICT_RETURN);
+			
 		} else {
 			isOpenningConflictActivity = false;
 			doActionsAfterSendMovesReturned();
@@ -516,9 +517,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		doActionsAfterSendMovesReturned();
+		if (requestCode == SOLVE_CONFLICT_RETURN) {
+			doActionsAfterSendMovesReturned();
+			isOpenningConflictActivity = false;
+		}
 
-		isOpenningConflictActivity = false;
 	}
 
 	private void doActionsAfterSendMovesReturned() {
