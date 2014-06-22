@@ -9,6 +9,7 @@ import br.ufcg.edu.ccc.projeto2.R;
 
 public class AboutActivity extends Activity implements OnClickListener{
 
+	@SuppressWarnings("unused")
 	private String LOG_TAG = "AboutActivity";
 
 	@Override

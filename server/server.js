@@ -1,8 +1,6 @@
 //--------------------------------  IMPORTS -----------------------------------------//
 
 // EXTERNAL-IMPORTS
-var gameLogicModule = require('./gameLogic.js');
-var utilsModule     = require('./utils.js');
 var roomModule      = require('./room.js');
 
 // REQUIRED-IMPORTS
@@ -14,18 +12,29 @@ function sendMoves(req, res) {
     rooms[roomId].sendMoves(req, res);
 }
 
-function connect(req, res) {
+function getNextAvailableRoom(num_players, rooms) {
     var roomId = 0;
 
     for (;roomId < rooms.length; roomId++) {
         var room = rooms[roomId];
-        if (!room.isFull()) {
-            room.connect(req, res);
-            return;
+        if (!room.isFull() && room.NUM_MAX_PLAYERS_ROOM == num_players) {
+            return room;
         }
     }
 
-    var room = new roomModule.Room(NUM_MAX_PLAYERS_ROOM, roomId);
+    return new roomModule.Room(num_players, roomId);
+}
+
+function newconnect(req, res) {
+    var num_players = req.body.num_players;
+
+    var room = getNextAvailableRoom(num_players, rooms);
+    rooms.push(room);
+    room.connect(req, res);
+}
+
+function connect(req, res) {
+    var room = getNextAvailableRoom(NUM_MAX_PLAYERS_ROOM, rooms);
     rooms.push(room);
     room.connect(req, res);
 }
