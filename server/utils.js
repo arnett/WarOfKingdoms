@@ -369,14 +369,61 @@ getWinners = function(playerList, territories, numTerritoriesInEachRegionToConqu
 
 	for (var i = 0; i < playerList.length; i++) {
 		//doPlayerOwnInitialHouse(playerList[i], territories)
-		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, 
+		if ((doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, 
                 numTerritoriesInEachRegionToConquer) || 
-				isPlayerLastSurvivor(playerList[i], territories)) {
+				isPlayerLastSurvivor(playerList[i], territories)) &&
+				doPlayerOwnInitialHouse(playerList[i], territories)) {
 			winners.push(playerList[i])
 		}
 	}
 
 	return winners;
+}
+
+getNumberOfTerritoriesOwnedByPlayerInRegion = function(player, region) {
+	qtd = 0;
+	// North
+	territories = territoriesInRegions()[0];
+	if (region == "C")
+		territories = territoriesInRegions()[1];
+	else if (region == "S")
+		territories = territoriesInRegions()[2];
+
+	for (var i = 0; i < territories.length; i++) {
+		var t = territories[i];
+		
+	}
+
+return qtd;
+}
+
+doesPlayerHasSelectedTerritoriesOwned = function(player, territories, numTerritoriesInEachRegionToConquer) {
+	var numberOfOwnedTerritories = new Array()
+
+	numberOfOwnedTerritories.push(0)
+	numberOfOwnedTerritories.push(0)
+	numberOfOwnedTerritories.push(0)
+
+	for (var i = 0; i < territories.length; i++) {
+		if (territories[i].owner != null) {
+			if (territories[i].owner.name == player.house.name) {
+				if (isTerritoryInRegion(territories[i].name, "N")) {
+					numberOfOwnedTerritories[0]++
+				} else if (isTerritoryInRegion(territories[i].name, "C")) {
+					numberOfOwnedTerritories[1]++
+				} else if (isTerritoryInRegion(territories[i].name, "S")) {
+					numberOfOwnedTerritories[2]++
+				}
+			}
+		}
+	};
+
+	for (var i = 0; i < numTerritoriesInEachRegionToConquer.length; i++) {
+		if (numberOfOwnedTerritories[i] < numTerritoriesInEachRegionToConquer[i])
+			return false;
+	};
+
+	return true;
 }
 
 isGameEnd = function(winnerList) {
@@ -445,35 +492,6 @@ isTerritoryInRegion = function(territoryName, regionName) {
 	}
 }
 
-doesPlayerHasSelectedTerritoriesOwned = function(player, territories, numTerritoriesInEachRegionToConquer) {
-	var numberOfOwnedTerritories = new Array()
-
-	numberOfOwnedTerritories.push(0)
-	numberOfOwnedTerritories.push(0)
-	numberOfOwnedTerritories.push(0)
-
-	for (var i = 0; i < territories.length; i++) {
-		if (territories[i].owner != null) {
-			if (territories[i].owner.name == player.house.name) {
-				if (isTerritoryInRegion(territories[i].name, "N")) {
-					numberOfOwnedTerritories[0]++
-				} else if (isTerritoryInRegion(territories[i].name, "C")) {
-					numberOfOwnedTerritories[1]++
-				} else if (isTerritoryInRegion(territories[i].name, "S")) {
-					numberOfOwnedTerritories[2]++
-				}
-			}
-		}
-	};
-
-	for (var i = 0; i < numTerritoriesInEachRegionToConquer.length; i++) {
-		if (numberOfOwnedTerritories[i] < numTerritoriesInEachRegionToConquer[i])
-			return false;
-	};
-
-	return true;
-}
-
 doPlayerOwnInitialHouse = function(player, territories) {
 	var house = player.house
 
@@ -481,7 +499,7 @@ doPlayerOwnInitialHouse = function(player, territories) {
 
 		if (territories[i].house != null && territories[i].owner != null) {
 			if (territories[i].house.name == house.name &&
-				territories[i].owner.name == player.name) {
+				territories[i].owner.name == player.house.name) {
 				return true;
 			}
 		}
