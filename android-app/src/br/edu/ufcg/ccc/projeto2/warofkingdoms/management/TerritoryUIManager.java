@@ -105,7 +105,8 @@ public class TerritoryUIManager {
 	}
 
 	@SuppressWarnings("unused")
-	private List<Territory> toTerritoryList(Map<Integer, Territory> territoriesMap) {
+	private List<Territory> toTerritoryList(
+			Map<Integer, Territory> territoriesMap) {
 		List<Territory> territories = new ArrayList<Territory>();
 		for (Integer territoryName : territoriesMap.keySet()) {
 			territories.add(territoriesMap.get(territoryName));

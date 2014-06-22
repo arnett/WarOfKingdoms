@@ -340,10 +340,6 @@ public class JSONParser {
 					.getBoolean(GAME_STATE_IS_GAME_END_TAG));
 			gameState.setWinnerList(parseJsonToPlayers(gameStateJson
 					.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
-			gameState.setCurrentTurn(gameStateJson
-					.getInt(GAME_STATE_CURRENT_TURN_TAG));
-			gameState.setTotalTurns(gameStateJson
-					.getInt(GAME_STATE_TOTAL_TURNS_TAG));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}

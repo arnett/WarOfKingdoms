@@ -2,14 +2,17 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.util;
 
 public class Constants {
 
+	// Game Constants
+	public final static int NUM_PLAYERS = 2;
+
 	public final static String ACTIONS_KEY = "actions";
 
 	public final static String CHOOSE_ACTION_DIALOG_FRAGMENT_LOG_TAG = "ChooseActionDialogFragment";
 
 	// Networking constants
 
-	//public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
-	public final static String SERVER_URL = "http://10.0.0.4:3000";
+	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
+	// public final static String SERVER_URL = "http://10.0.0.4:3000";
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
@@ -27,14 +30,14 @@ public class Constants {
 	public final static String PLAYER_HOUSE_TAG = "house";
 
 	public final static String CONFLICT_TERRITORY_TAG = "territory";
-	public final static String CONFLICT_HOUSES_TAG = "houses";	
+	public final static String CONFLICT_HOUSES_TAG = "houses";
 	public final static String CONFLICT_DICE_VALUES_TAG = "diceValues";
 
 	public final static String GAME_STATE_IS_GAME_END_TAG = "isGameEnd";
 	public final static String GAME_STATE_WINNER_LIST_TAG = "winnerList";
 	public final static String GAME_STATE_CURRENT_TURN_TAG = "currentTurn";
 	public final static String GAME_STATE_TOTAL_TURNS_TAG = "totalTurns";
-	
+
 	public final static String HOUSE_NAME_TAG = "name";
 
 	public final static String CONNECT_RESULT_TERRITORIES_TAG = "territories";
@@ -55,8 +58,13 @@ public class Constants {
 	public final static String TYRELL = "Tyrell";
 	public final static String MARTELL = "Martell";
 	public final static String GREYJOY = "Greyjoy";
-	
+
 	public final static String NUM_TIMES_PLAYED_KEY = "timesPlayed";
 	public final static String NUM_VICTORIES_KEY = "numVictories";
 	public static final String VICTORY_TRACK_SHARED_PREFERENCE = "victoryTrackPreference";
+
+	// Activity parameters
+	public static final String GAME_MODE = "gameMode";
+	public static final String CPU_GAME_MODE = "cpu";
+	public static final String HUMAN_GAME_MODE = "human";
 }

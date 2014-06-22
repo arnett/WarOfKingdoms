@@ -21,6 +21,7 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 	private ImageView attackActionBtn;
 	private ImageView defenseActionBtn;
 	
+	@SuppressWarnings("unused")
 	private LinearLayout actionDefenseLayout;
 	private LinearLayout actionAttackLayout;
 	private LinearLayout actionDialogDesignLayout;
@@ -71,10 +72,6 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 		this.actions = actions;
 	}
 
-	public static interface OnActionSelectedListener {
-		public void onActionSelected(Action chosenAction);
-	}
-
 	@Override
 	public void onClick(View v) {
 		
@@ -86,5 +83,9 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 			choiceListener.onActionSelected(Action.DEFEND);
 			dismiss();
 		}
+	}
+
+	public static interface OnActionSelectedListener {
+		public void onActionSelected(Action chosenAction);
 	}
 }

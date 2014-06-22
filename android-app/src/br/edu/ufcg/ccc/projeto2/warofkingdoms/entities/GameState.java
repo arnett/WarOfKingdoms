@@ -6,15 +6,14 @@ public class GameState {
 	
 	private boolean isGameEnd;
 	private List<Player> winnerList;
-	private int currentTurn, totalTurns;
 	
-	public GameState() {}
+	public GameState() {
+
+	}
 	
-	public GameState(boolean isGameEnd, List<Player> winnerList, int currentTurn, int totalTurns) {
+	public GameState(boolean isGameEnd, List<Player> winnerList) {
 		this.isGameEnd = isGameEnd;
 		this.winnerList = winnerList;
-		this.currentTurn = currentTurn;
-		this.totalTurns = totalTurns;
 	}
 
 	public boolean isGameEnd() {
@@ -32,20 +31,4 @@ public class GameState {
 	public void setWinnerList(List<Player> winnerList) {
 		this.winnerList = winnerList;
 	}
-
-	public int getCurrentTurn() {
-		return currentTurn;
-	}
-
-	public void setCurrentTurn(int currentTurn) {
-		this.currentTurn = currentTurn;
-	}
-
-	public int getTotalTurns() {
-		return totalTurns;
-	}
-
-	public void setTotalTurns(int totalTurns) {
-		this.totalTurns = totalTurns;
-	}	
 }
