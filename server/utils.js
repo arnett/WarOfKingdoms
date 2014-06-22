@@ -18,6 +18,7 @@ exports.createTerritories = function () {
 
 	territory = new gameLogicModule.Territory("C");
 	territory.owner = new gameLogicModule.House("Stark");
+	territory.house = new gameLogicModule.House("Stark");
 	territoriesArray.push(territory);
 
 	territory = new gameLogicModule.Territory("D");
@@ -47,6 +48,7 @@ exports.createTerritories = function () {
 
 	territory = new gameLogicModule.Territory("J");
 	territory.owner = new gameLogicModule.House("Greyjoy");
+	territory.house = new gameLogicModule.House("Greyjoy");
 	territoriesArray.push(territory);
 
 	territory = new gameLogicModule.Territory("K");
@@ -59,6 +61,7 @@ exports.createTerritories = function () {
 
 	territory = new gameLogicModule.Territory("M");
 	territory.owner = new gameLogicModule.House("Lannister");
+	territory.house = new gameLogicModule.House("Lannister");
 	territoriesArray.push(territory);
 
 	territory = new gameLogicModule.Territory("N");
@@ -80,6 +83,7 @@ exports.createTerritories = function () {
 	// SOUTH
 	territory = new gameLogicModule.Territory("R");
 	territory.owner = new gameLogicModule.House("Baratheon");
+	territory.house = new gameLogicModule.House("Baratheon");
 	territoriesArray.push(territory);
 
 	territory = new gameLogicModule.Territory("S");
@@ -88,6 +92,7 @@ exports.createTerritories = function () {
 
 	territory = new gameLogicModule.Territory("T");
 	territory.owner = new gameLogicModule.House("Tyrell");
+	territory.house = new gameLogicModule.House("Tyrell");
 	territoriesArray.push(territory);
 
 	territory = new gameLogicModule.Territory("U");
@@ -108,6 +113,7 @@ exports.createTerritories = function () {
 
 	territory = new gameLogicModule.Territory("Y");
 	territory.owner = new gameLogicModule.House("Martell");
+	territory.house = new gameLogicModule.House("Martell");
 	territoriesArray.push(territory);
 
     return territoriesArray;
@@ -270,7 +276,7 @@ exports.getNonConflictingMoves = function(moves, conflicts) {
 	return nonConflictingMoves;
 }
 
-exports.generateGameState = function(territories, playerlist, currentTurn, totalTurns) {
+exports.generateGameState = function(territories, playerlist) {
 	var numTerritoriesInEachRegionToConquer = new Array()
 	
 	numTerritoriesInEachRegionToConquer.push(3)
@@ -279,7 +285,7 @@ exports.generateGameState = function(territories, playerlist, currentTurn, total
 
 	var winners = getWinners(playerlist, territories, numTerritoriesInEachRegionToConquer)
 
-    return new gameLogicModule.GameState(isGameEnd(winners, currentTurn, totalTurns), winners, currentTurn, totalTurns)
+    return new gameLogicModule.GameState(isGameEnd(winners), winners)
 }
 
 exports.SendmovesReturnObj = function(conflicts, updatedMap, gameState) {
@@ -362,8 +368,10 @@ getWinners = function(playerList, territories, numTerritoriesInEachRegionToConqu
 	var winners = new Array();
 
 	for (var i = 0; i < playerList.length; i++) {
+		//doPlayerOwnInitialHouse(playerList[i], territories)
 		if (doesPlayerHasSelectedTerritoriesOwned(playerList[i], territories, 
-                numTerritoriesInEachRegionToConquer) || isPlayerLastSurvivor(playerList[i], territories)) {
+                numTerritoriesInEachRegionToConquer) || 
+				isPlayerLastSurvivor(playerList[i], territories)) {
 			winners.push(playerList[i])
 		}
 	}
@@ -371,8 +379,8 @@ getWinners = function(playerList, territories, numTerritoriesInEachRegionToConqu
 	return winners;
 }
 
-isGameEnd = function(winnerList, currentTurn, totalTurns) {
-	return winnerList.length > 0 || currentTurn >= totalTurns;
+isGameEnd = function(winnerList) {
+	return winnerList.length > 0;
 }
 
 territoriesInRegions = function() {
@@ -464,6 +472,22 @@ doesPlayerHasSelectedTerritoriesOwned = function(player, territories, numTerrito
 	};
 
 	return true;
+}
+
+doPlayerOwnInitialHouse = function(player, territories) {
+	var house = player.house
+
+	for (var i = 0; i < territories.length; i++) {
+
+		if (territories[i].house != null && territories[i].owner != null) {
+			if (territories[i].house.name == house.name &&
+				territories[i].owner.name == player.name) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 isPlayerLastSurvivor = function(player, territories) {

@@ -33,6 +33,13 @@
             android:layout_marginRight="12dp"
             android:text="Next" />
 
+        <Button
+            android:id="@+id/objectiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:text="Objective" />
+
         <ImageView
             android:id="@+id/currentPlayerToken"
             android:layout_width="wrap_content"

@@ -64,6 +64,8 @@ this.Room.prototype.sendMoves = function(req, res) {
             roomObject.responsesSentSendMovesCount++;
 
             if (roomObject.responsesSentSendMovesCount == roomObject.NUM_MAX_PLAYERS_ROOM) {
+                console.log("GAME STATE")
+                console.log(gamestate)
                 roomObject.numPlayersThatSentMoves = 0;
                 roomObject.responsesSentSendMovesCount = 0;
                 roomObject.allMovesRound = new Array();

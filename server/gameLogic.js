@@ -8,9 +8,10 @@ exports.Move = function (origin, target, action) {
 	this.action = action;
 }
 
-exports.Territory = function (name, owner) {
+exports.Territory = function (name, owner, house) {
 	this.name = name;
 	this.owner = owner;
+  this.house = house;
 }
 
 exports.Player = function (id, name, house) {
