@@ -39,6 +39,89 @@ public class AIManager implements CommunicationManager {
 		}
 		return instance;
 	}
+	
+	/*
+	 * Fake sendCurrentMoves (POST) server method
+	 */
+	@Override
+	public void sendCurrentMoves(OnTaskCompleted listener, List<Move> moves) {
+		
+		moves.addAll(getAIRoundMoves());
+		
+		// TODO - pseudo-server here!
+		
+		SendMovesResult sendMovesResult = new SendMovesResult();
+		sendMovesResult.setConflicts(new ArrayList<Conflict>());
+		sendMovesResult.setGameState(new GameState(false,
+				new ArrayList<Player>()));
+		sendMovesResult.setUpdatedMap(updatedMap);
+		listener.onSendMovesTaskCompleted(sendMovesResult);
+	}
+
+	private List<Move> getAIRoundMoves() {
+		
+		List<Move> AIMoves = new ArrayList<Move>();
+		
+		for (AIPlayer bot : bots) {
+			AIMoves.addAll(bot.getGeneratedRoundMoves());
+		}
+		return AIMoves;
+	}
+
+	/*
+	 * Fake connect (POST) server method
+	 */
+	@Override
+	public void connect(OnTaskCompleted listener, Player player) {
+		human = player;
+
+		updatedMap = generateFirstMap();
+		this.bots = generateBots(Constants.NUM_PLAYERS - 1);
+		setHumanHouse();
+
+		ConnectResult connectResult = new ConnectResult();
+		connectResult.setTerritories(updatedMap);
+		connectResult.setPlayers(getAllPlayers());
+		connectResult.setRoomId(DEFAULT_ROOM_ID);
+
+		listener.onConnectTaskCompleted(connectResult);
+	}
+
+	private List<AIPlayer> generateBots(int numBots) {
+		List<AIPlayer> bots = new ArrayList<AIPlayer>();
+		List<House> chosenHouses = new ArrayList<House>();
+		for (int i = 0; i < numBots; i++) {
+			AIPlayer randomAiPlayer = nextRandomAiPlayer(chosenHouses);
+			chosenHouses.add(randomAiPlayer.getHouse());
+			bots.add(randomAiPlayer);
+		}
+		return bots;
+	}
+
+	private AIPlayer nextRandomAiPlayer(List<House> chosenHouses) {
+		Player nextPlayer = generator.nextPlayer(chosenHouses);
+		AIPlayer randomAiPlayer = new AIPlayer(updatedMap);
+		randomAiPlayer.setName(nextPlayer.getName());
+		randomAiPlayer.setId(nextPlayer.getId());
+		return randomAiPlayer;
+	}
+
+	private void setHumanHouse() {
+		List<House> chosenHouses = new ArrayList<House>();
+		for (AIPlayer bot : bots) {
+			chosenHouses.add(bot.getHouse());
+		}
+		human.setHouse(generator.nextHouse(chosenHouses));
+	}
+
+	private List<Player> getAllPlayers() {
+		List<Player> players = new ArrayList<Player>();
+		for (Player bot : bots) {
+			players.add(bot);
+		}
+		players.add(human);
+		return players;
+	}
 
 	private List<Territory> generateFirstMap() {
 		List<Territory> territories = new ArrayList<Territory>();
@@ -76,67 +159,4 @@ public class AIManager implements CommunicationManager {
 		territories.get(23).setOwner(new House("Martell"));
 		return territories;
 	}
-
-	private List<AIPlayer> generateBots(int numBots) {
-		List<AIPlayer> bots = new ArrayList<AIPlayer>();
-		List<House> chosenHouses = new ArrayList<House>();
-		for (int i = 0; i < numBots; i++) {
-			AIPlayer randomAiPlayer = nextRandomAiPlayer(chosenHouses);
-			chosenHouses.add(randomAiPlayer.getHouse());
-			bots.add(randomAiPlayer);
-		}
-		return bots;
-	}
-
-	private AIPlayer nextRandomAiPlayer(List<House> chosenHouses) {
-		Player nextPlayer = generator.nextPlayer(chosenHouses);
-		AIPlayer randomAiPlayer = new AIPlayer(updatedMap);
-		randomAiPlayer.setName(nextPlayer.getName());
-		randomAiPlayer.setId(nextPlayer.getId());
-		return randomAiPlayer;
-	}
-
-	@Override
-	public void sendCurrentMoves(OnTaskCompleted listener, List<Move> moves) {
-		SendMovesResult sendMovesResult = new SendMovesResult();
-		sendMovesResult.setConflicts(new ArrayList<Conflict>());
-		sendMovesResult.setGameState(new GameState(false,
-				new ArrayList<Player>()));
-		sendMovesResult.setUpdatedMap(updatedMap);
-		listener.onSendMovesTaskCompleted(sendMovesResult);
-	}
-
-	@Override
-	public void connect(OnTaskCompleted listener, Player player) {
-		human = player;
-
-		updatedMap = generateFirstMap();
-		this.bots = generateBots(Constants.NUM_PLAYERS - 1);
-		setHumanHouse();
-
-		ConnectResult connectResult = new ConnectResult();
-		connectResult.setTerritories(updatedMap);
-		connectResult.setPlayers(getAllPlayers());
-		connectResult.setRoomId(DEFAULT_ROOM_ID);
-
-		listener.onConnectTaskCompleted(connectResult);
-	}
-
-	private void setHumanHouse() {
-		List<House> chosenHouses = new ArrayList<House>();
-		for (AIPlayer bot : bots) {
-			chosenHouses.add(bot.getHouse());
-		}
-		human.setHouse(generator.nextHouse(chosenHouses));
-	}
-
-	private List<Player> getAllPlayers() {
-		List<Player> players = new ArrayList<Player>();
-		for (Player bot : bots) {
-			players.add(bot);
-		}
-		players.add(human);
-		return players;
-	}
-
 }
