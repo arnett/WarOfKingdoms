@@ -471,7 +471,6 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
-//		countDown.cancel();
 		sendMovesResult = result;
 		if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
 			chooseActionDialogFragment.dismiss();
@@ -507,7 +506,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 	@Override
 	protected void onStop() {
 		super.onStop();
-
+		countDown.cancel();
 		if (isOpenningConflictActivity) {
 			waitDialog.dismiss();
 		}
@@ -593,6 +592,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 	@Override
 	protected void onDestroy() {
+		countDown.cancel();
 		if (waitDialog.isShowing()) {
 			waitDialog.dismiss();
 		}
