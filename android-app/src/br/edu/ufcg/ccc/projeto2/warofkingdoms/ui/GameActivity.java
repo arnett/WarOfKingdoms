@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -70,6 +71,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
 	private Button nextPhaseButton;
+	private Button objectiveButton;
 	private TextView timeCounter;
 
 	private SelectionState currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
@@ -91,6 +93,11 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private long interval = 1 * 1000;
 	private long seconds = startTime / 1000;
 	private long minutes = seconds / 60;
+	
+//	TODO MOVE TO ANOTHER CLASS
+	private String[] NorthTerritories = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
+	private String[] CenterTerritories = new String[] {"I", "J", "K", "L", "M", "N", "O", "P", "Q"};
+	private String[] SouthTerritories = new String[] {"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,12 +126,14 @@ public class GameActivity extends Activity implements OnTouchListener,
 		mapImageMask = findViewById(R.id.map_mask);
 
 		nextPhaseButton = (Button) findViewById(R.id.nextPhaseButton);
+		objectiveButton = (Button) findViewById(R.id.objectiveButton);
 		timeCounter = (TextView) findViewById(R.id.time_counter);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);
 
 		mapImage.setOnTouchListener(this);
 		nextPhaseButton.setOnClickListener(this);
+		objectiveButton.setOnClickListener(this);
 
 		currentPlayerToken = (ImageView) findViewById(R.id.currentPlayerToken);
 		drawCurrentPlayerToken();
@@ -142,8 +151,22 @@ public class GameActivity extends Activity implements OnTouchListener,
 		long minutes = seconds / 60;
 		timeCounter.setText(String.format("%02d", minutes) + ":"
 				+ String.format("%02d", seconds));
+
 		countDown = new MyCountDownTimer(startTime, interval);
+
 		countDown.start();
+
+		showDialog(
+				"Objective",
+				"You have to conquer at least 3 territories in each region (North, Center and South), and keep you initial territory");
+	}
+
+	private void showDialog(String title, String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(title);
+		builder.setMessage(message);
+		builder.setPositiveButton("OK", null);
+		builder.create().show();
 	}
 
 	private void drawCurrentPlayerToken() {
@@ -401,6 +424,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 			break;
 		}
 	}
+	
+	private boolean contains(String[] array, String element) {
+		for (String string : array)
+			if (string.equalsIgnoreCase(element))
+				return true;
+		return false;
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -408,10 +438,26 @@ public class GameActivity extends Activity implements OnTouchListener,
 		case R.id.nextPhaseButton:
 			countDown.cancel();
 			waitDialog.show();
-
+			
 			communicationManager
 					.sendCurrentMoves(this, gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
+			break;
+		case R.id.objectiveButton:
+			int north = 0, center = 0, south = 0;
+			for (Territory territory : gameManager.getAllTerritories()) {
+				if (!territory.isFree() && territory.getOwner().getName().equals(gameManager.getCurrentPlayer().getHouse().getName())) {
+					if (contains(NorthTerritories, territory.getName()))
+						north++;
+					else if (contains(CenterTerritories, territory.getName()))
+						center++;
+					else if (contains(SouthTerritories, territory.getName()))
+						south++;
+				}
+			}
+			showDialog(
+					"Objective",
+					"North:" + north + "/3\nCenter:" + center + "/3\nSouth:" + south + "/3");
 			break;
 		default:
 			return;
@@ -445,6 +491,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		countDown = new MyCountDownTimer(startTime, interval);
 		timeCounter.setText(String.format("%02d", minutes) + ":"
 				+ String.format("%02d", seconds));
+
 		countDown.start();
 	}
 

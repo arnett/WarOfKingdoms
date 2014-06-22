@@ -20,10 +20,12 @@
             android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.GameActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:theme="@style/noAnimTheme">
         </activity>
         <activity
             android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity"
+            android:theme="@style/noAnimTheme"
             android:noHistory="true">
             
             <intent-filter>
@@ -33,13 +35,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/noAnimTheme"
             android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConflictActivity">
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.AboutActivity">
+            android:theme="@style/noAnimTheme"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.AboutActivity" >
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ProfileActivity">
+            android:theme="@style/noAnimTheme"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ProfileActivity" >
         </activity>
     </application>
 

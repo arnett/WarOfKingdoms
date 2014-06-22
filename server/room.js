@@ -21,8 +21,6 @@ this.Room.prototype.reset = function() {
     this.playerList = new Array();
     this.housesAlreadyChosen = new Array();
     this.territoriesList = utilsModule.createTerritories();
-    this.numTurns = 20;
-    this.actualTurn = 1;
     this.availableHouses = utilsModule.createHouses();
 
     // SendMoves Global Variables
@@ -56,7 +54,7 @@ this.Room.prototype.sendMoves = function(req, res) {
                 territoriesList = utilsModule.updateTerritories(roomObject.territoriesList, roomObject.conflicts, nonConflictingMoves);
             }
 
-            var gamestate = utilsModule.generateGameState(roomObject.territoriesList, roomObject.playerList, roomObject.actualTurn, roomObject.numTurns)
+            var gamestate = utilsModule.generateGameState(roomObject.territoriesList, roomObject.playerList)
 
             // this object is created to be possible to generate a JSONArray using JSON.stringify
             var returnObject = new utilsModule.SendmovesReturnObj(roomObject.conflicts, roomObject.territoriesList,
@@ -66,11 +64,12 @@ this.Room.prototype.sendMoves = function(req, res) {
             roomObject.responsesSentSendMovesCount++;
 
             if (roomObject.responsesSentSendMovesCount == roomObject.NUM_MAX_PLAYERS_ROOM) {
+                console.log("GAME STATE")
+                console.log(gamestate)
                 roomObject.numPlayersThatSentMoves = 0;
                 roomObject.responsesSentSendMovesCount = 0;
                 roomObject.allMovesRound = new Array();
                 roomObject.conflicts = new Array();
-                roomObject.actualTurn++
 
                 if (gamestate.isGameEnd) {
                     roomObject.reset()
