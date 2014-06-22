@@ -10,13 +10,13 @@ import android.os.Bundle;
 
 public class ChooseGameModeDialogFragment extends DialogFragment {
 
-	private OnGameSelectedListener gameListener;
+	private OnGameModeSelectedListener gameListener;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			this.gameListener = (OnGameSelectedListener) activity;
+			this.gameListener = (OnGameModeSelectedListener) activity;
 		} catch (final ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnCompleteListener");
@@ -34,13 +34,13 @@ public class ChooseGameModeDialogFragment extends DialogFragment {
 		builder.setItems(GAME_TYPES,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						gameListener.onGameSelected(GAME_TYPES[which]);
+						gameListener.onGameModeSelected(GAME_TYPES[which]);
 					}
 				});
 		return builder.create();
 	}
 
-	public static interface OnGameSelectedListener {
-		public void onGameSelected(String gameSelected);
+	public static interface OnGameModeSelectedListener {
+		public void onGameModeSelected(String gameSelected);
 	}
 }

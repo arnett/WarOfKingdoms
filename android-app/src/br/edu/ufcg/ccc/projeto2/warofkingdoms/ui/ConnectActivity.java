@@ -22,12 +22,12 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseGameModeDialogFragment.OnGameSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseGameModeDialogFragment.OnGameModeSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ConnectActivity extends Activity implements OnClickListener,
-		OnTaskCompleted, OnGameSelectedListener {
+		OnTaskCompleted, OnGameModeSelectedListener {
 
 	private final String LOG_TAG = "ConnectActivity";
 
@@ -90,7 +90,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		if (v == playBtn) {
 
-			startChooseGameDialog();
+			startChooseGameModeDialog();
 		} else if (v == aboutBtn) {
 			
 			startActivity(new Intent(this, AboutActivity.class));
@@ -102,7 +102,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	private void startChooseGameDialog() {
+	private void startChooseGameModeDialog() {
 		DialogFragment chooseGameDialogFragment = new ChooseGameModeDialogFragment();
 		chooseGameDialogFragment.show(getFragmentManager(),
 				CHOOSE_GAME_DIALOG_FRAGMENT_TAG);
@@ -204,13 +204,13 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onGameSelected(String selectedGame) {
-		gameMode = selectedGame;
+	public void onGameModeSelected(String selectedMode) {
+		gameMode = selectedMode;
 
-		if (selectedGame.equals(MULTIPLAYER_GAME_MODE)) {
+		if (selectedMode.equals(MULTIPLAYER_GAME_MODE)) {
 			communicationManager = NetworkManager.getInstance();
 			startNetworkGame();
-		} else if (selectedGame.equals(SINGLEPLAYER_GAME_MODE)) {
+		} else if (selectedMode.equals(SINGLEPLAYER_GAME_MODE)) {
 			communicationManager = AIManager.getInstance();
 			startAIGame();
 		}
