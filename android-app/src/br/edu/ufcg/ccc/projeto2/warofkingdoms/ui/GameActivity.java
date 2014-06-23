@@ -655,12 +655,19 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		return ih;
 	}
 
+	/**
+	 * @author Rafael
+	 *	A class to manipulate the game's countdown timer.
+	 */
 	private class MyCountDownTimer extends CountDownTimer {
 
 		public MyCountDownTimer(long startTime, long interval) {
 			super(startTime, interval);
 		}
 
+		/* (non-Javadoc)
+		 * @see android.os.CountDownTimer#onFinish()
+		 */
 		@Override
 		public void onFinish() {
 			timeCounter.setText("00:00");
@@ -670,6 +677,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			gameManager.startNextPhase();
 		}
 
+		/* (non-Javadoc)
+		 * @see android.os.CountDownTimer#onTick(long)
+		 */
 		@Override
 		public void onTick(long millisUntilFinished) {
 			long seconds = millisUntilFinished / 1000;
