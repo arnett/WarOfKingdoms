@@ -3,8 +3,10 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.RequestManager.requestPOST;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,12 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 
 	@Override
 	protected SendMovesResult doInBackground(Move... moves) {
-		JSONArray movesJson = JSONParser.parseMovesToJson(Arrays.asList(moves));
+		JSONArray movesJson = null;
+		try {
+			movesJson = JSONParser.parseMovesToJson(Arrays.asList(moves));
+		} catch (JSONException e2) {
+			Log.e(LOG_TAG, e2.toString());
+		}
 		JSONObject requestJson = new JSONObject();
 
 		try {
@@ -43,17 +50,25 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 		Log.v(LOG_TAG,
 				String.format("Request to %s = %s", SEND_MOVES_URI, request));
 
-		String response = requestPOST(SEND_MOVES_URI, request);
+		String response = null;
+		try {
+			response = requestPOST(SEND_MOVES_URI, request);
+		} catch (ClientProtocolException e1) {
+			Log.e(LOG_TAG, e1.toString());
+		} catch (IOException e1) {
+			Log.e(LOG_TAG, e1.toString());
+		}
 		Log.v(LOG_TAG,
 				String.format("Result of %s = %s", SEND_MOVES_URI, response));
 
 		SendMovesResult result = null;
-
-		try {
-			result = JSONParser.parseJsonToSendMovesResult(new JSONObject(
-					response));
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		if (response != null) {
+			try {
+				result = JSONParser.parseJsonToSendMovesResult(new JSONObject(
+						response));
+			} catch (JSONException e) {
+				Log.e(LOG_TAG, e.toString());
+			}
 		}
 
 		return result;

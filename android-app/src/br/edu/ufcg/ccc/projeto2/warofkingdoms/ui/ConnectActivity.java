@@ -4,10 +4,7 @@ import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_MODE;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.MULTIPLAYER_GAME_MODE;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SINGLEPLAYER_GAME_MODE;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,12 +24,12 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ConnectActivity extends Activity implements OnClickListener,
-		OnTaskCompleted, OnGameModeSelectedListener {
+OnTaskCompleted, OnGameModeSelectedListener {
 
 	private final String LOG_TAG = "ConnectActivity";
 
 	private boolean isOpenningGameActivity; // to just close the waitDialog when
-											// the activity is started
+	// the activity is started
 
 	private CommunicationManager communicationManager;
 	private GameManager gameManager;
@@ -92,11 +89,11 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 			startChooseGameModeDialog();
 		} else if (v == aboutBtn) {
-			
+
 			startActivity(new Intent(this, AboutActivity.class));
 		}
 		else if (v == profileBtn) {
-			
+
 			Intent intent = new Intent(this, ProfileActivity.class); 
 			startActivity(intent);
 		}
@@ -115,49 +112,14 @@ public class ConnectActivity extends Activity implements OnClickListener,
 			waitDialog.show();
 			communicationManager.connect(this, currentPlayer);
 		} else {
-			showAlertDialog(ConnectActivity.this, "No Internet Connection",
-					"You don't have internet connection.", false);
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "No Internet Connection", 
+					"You don't have internet connection.");
+			errorDialog.showAlertDialog();
 		}
 	}
 
 	private void startAIGame() {
 		communicationManager.connect(this, currentPlayer);
-	}
-
-	/**
-	 * Function to display simple Alert Dialog
-	 * 
-	 * @param context
-	 *            - application context
-	 * @param title
-	 *            - alert dialog title
-	 * @param message
-	 *            - alert message
-	 * @param status
-	 *            - success/failure (used to set icon)
-	 * */
-	@SuppressWarnings("deprecation")
-	public void showAlertDialog(Context context, String title, String message,
-			Boolean status) {
-		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-
-		// Setting Dialog Title
-		alertDialog.setTitle(title);
-
-		// Setting Dialog Message
-		alertDialog.setMessage(message);
-
-		// Setting alert dialog icon
-		// alertDialog.setIcon((status) ? R.drawable.success : R.drawable.fail);
-
-		// Setting OK Button
-		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		});
-
-		// Showing Alert Message
-		alertDialog.show();
 	}
 
 	@Override
@@ -175,24 +137,32 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onConnectTaskCompleted(ConnectResult result) {
-		gameManager.updateAllTerritories(result.getTerritories());
-		gameManager.updateAllPlayers(result.getPlayers());
+		if (result == null) {
+			waitDialog.dismiss();
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is down", 
+					"The server is not responding.");
+			errorDialog.showAlertDialog();
+		}
+		else {
+			gameManager.updateAllTerritories(result.getTerritories());
+			gameManager.updateAllPlayers(result.getPlayers());
 
-		Log.v(LOG_TAG, "RoomId is " + result.getRoomId());
-		gameManager.setRoomId(result.getRoomId());
+			Log.v(LOG_TAG, "RoomId is " + result.getRoomId());
+			gameManager.setRoomId(result.getRoomId());
 
-		houseTokenManager.setStartingHouseTerritories(result.getTerritories());
+			houseTokenManager.setStartingHouseTerritories(result.getTerritories());
 
-		Log.v(LOG_TAG, "Starting GameActivity");
-		Intent intent = new Intent(this, GameActivity.class);
+			Log.v(LOG_TAG, "Starting GameActivity");
+			Intent intent = new Intent(this, GameActivity.class);
 
-		Bundle extras = new Bundle();
-		extras.putString(GAME_MODE, gameMode);
-		intent.putExtras(extras);
+			Bundle extras = new Bundle();
+			extras.putString(GAME_MODE, gameMode);
+			intent.putExtras(extras);
 
-		startActivity(intent);
+			startActivity(intent);
 
-		isOpenningGameActivity = true;
+			isOpenningGameActivity = true;
+		}
 	}
 
 	@Override

@@ -1,5 +1,26 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONFLICT_DICE_VALUES_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONFLICT_HOUSES_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONFLICT_TERRITORY_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_PLAYERS_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_ROOM_ID_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_TERRITORIES_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_STATE_IS_GAME_END_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_STATE_WINNER_LIST_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.HOUSE_NAME_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.MOVE_ACTION_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.MOVE_ORIGIN_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.MOVE_TARGET_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.PLAYER_HOUSE_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.PLAYER_ID_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.PLAYER_NAME_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_RESULT_CONFLICTS_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_RESULT_GAME_STATE_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_RESULT_UPDATED_MAP_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.TERRITORY_NAME_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.TERRITORY_OWNER_TAG;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +28,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
 
 /**
  * 
@@ -30,19 +49,16 @@ public class JSONParser {
 	 * 
 	 * @param conflict
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONObject parseConflictToJson(Conflict conflict) {
+	public static JSONObject parseConflictToJson(Conflict conflict) throws JSONException {
 		JSONObject conflictJson = new JSONObject();
-		try {
-			conflictJson.put(CONFLICT_TERRITORY_TAG,
-					parseTerritoryToJson(conflict.getTerritory()));
-			conflictJson.put(CONFLICT_HOUSES_TAG,
-					parseHousesToJson(conflict.getHouses()));
-			conflictJson.put(CONFLICT_DICE_VALUES_TAG,
-					parseIntegersToJson(conflict.getDiceValues()));
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		conflictJson.put(CONFLICT_TERRITORY_TAG,
+				parseTerritoryToJson(conflict.getTerritory()));
+		conflictJson.put(CONFLICT_HOUSES_TAG,
+				parseHousesToJson(conflict.getHouses()));
+		conflictJson.put(CONFLICT_DICE_VALUES_TAG,
+				parseIntegersToJson(conflict.getDiceValues()));
 		return conflictJson;
 	}
 
@@ -51,8 +67,9 @@ public class JSONParser {
 	 * 
 	 * @param conflicts
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONArray parseConflictsToJson(List<Conflict> conflicts) {
+	public static JSONArray parseConflictsToJson(List<Conflict> conflicts) throws JSONException {
 		JSONArray conflictsJsonArray = new JSONArray();
 		for (Conflict conflict : conflicts) {
 			conflictsJsonArray.put(parseConflictToJson(conflict));
@@ -73,20 +90,17 @@ public class JSONParser {
 	 * 
 	 * @param player
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONObject parsePlayerToJson(Player player) {
+	public static JSONObject parsePlayerToJson(Player player) throws JSONException {
 		JSONObject playerJson = new JSONObject();
-		try {
-			playerJson.put(PLAYER_ID_TAG, player.getId());
-			playerJson.put(PLAYER_NAME_TAG, player.getName());
-			if (player.getHouse() == null) {
-				playerJson.put(PLAYER_HOUSE_TAG, JSONObject.NULL);
-			} else {
-				playerJson.put(PLAYER_HOUSE_TAG,
-						parseHouseToJson(player.getHouse()));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		playerJson.put(PLAYER_ID_TAG, player.getId());
+		playerJson.put(PLAYER_NAME_TAG, player.getName());
+		if (player.getHouse() == null) {
+			playerJson.put(PLAYER_HOUSE_TAG, JSONObject.NULL);
+		} else {
+			playerJson.put(PLAYER_HOUSE_TAG,
+					parseHouseToJson(player.getHouse()));
 		}
 		return playerJson;
 	}
@@ -96,8 +110,9 @@ public class JSONParser {
 	 * 
 	 * @param players
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONArray parsePlayersToJson(List<Player> players) {
+	public static JSONArray parsePlayersToJson(List<Player> players) throws JSONException {
 		JSONArray playersJsonArray = new JSONArray();
 		for (Player player : players) {
 			playersJsonArray.put(parsePlayerToJson(player));
@@ -110,14 +125,11 @@ public class JSONParser {
 	 * 
 	 * @param house
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONObject parseHouseToJson(House house) {
+	public static JSONObject parseHouseToJson(House house) throws JSONException {
 		JSONObject houseJson = new JSONObject();
-		try {
-			houseJson.put(HOUSE_NAME_TAG, house.getName());
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		houseJson.put(HOUSE_NAME_TAG, house.getName());
 		return houseJson;
 	}
 
@@ -126,8 +138,9 @@ public class JSONParser {
 	 * 
 	 * @param moves
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONArray parseHousesToJson(List<House> houses) {
+	public static JSONArray parseHousesToJson(List<House> houses) throws JSONException {
 		JSONArray housesJsonArray = new JSONArray();
 		for (House house : houses) {
 			housesJsonArray.put(parseHouseToJson(house));
@@ -140,20 +153,17 @@ public class JSONParser {
 	 * 
 	 * @param territory
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONObject parseTerritoryToJson(Territory territory) {
+	public static JSONObject parseTerritoryToJson(Territory territory) throws JSONException {
 		JSONObject territoryJson = new JSONObject();
-		try {
-			territoryJson.put(TERRITORY_NAME_TAG, territory.getName());
+		territoryJson.put(TERRITORY_NAME_TAG, territory.getName());
 
-			if (territory.getOwner() == null) {
-				territoryJson.put(TERRITORY_OWNER_TAG, JSONObject.NULL);
-			} else {
-				territoryJson.put(TERRITORY_OWNER_TAG,
-						parseHouseToJson(territory.getOwner()));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		if (territory.getOwner() == null) {
+			territoryJson.put(TERRITORY_OWNER_TAG, JSONObject.NULL);
+		} else {
+			territoryJson.put(TERRITORY_OWNER_TAG,
+					parseHouseToJson(territory.getOwner()));
 		}
 		return territoryJson;
 	}
@@ -163,8 +173,9 @@ public class JSONParser {
 	 * 
 	 * @param territories
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONArray parseTerritoriesToJson(List<Territory> territories) {
+	public static JSONArray parseTerritoriesToJson(List<Territory> territories) throws JSONException {
 		JSONArray territoriesJsonArray = new JSONArray();
 		for (Territory territory : territories) {
 			territoriesJsonArray.put(parseTerritoryToJson(territory));
@@ -177,18 +188,15 @@ public class JSONParser {
 	 * 
 	 * @param move
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONObject parseMoveToJson(Move move) {
+	public static JSONObject parseMoveToJson(Move move) throws JSONException {
 		JSONObject moveJson = new JSONObject();
-		try {
-			moveJson.put(MOVE_ORIGIN_TAG,
-					parseTerritoryToJson(move.getOrigin()));
-			moveJson.put(MOVE_TARGET_TAG,
-					parseTerritoryToJson(move.getTarget()));
-			moveJson.put(MOVE_ACTION_TAG, move.getAction().toString());
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		moveJson.put(MOVE_ORIGIN_TAG,
+				parseTerritoryToJson(move.getOrigin()));
+		moveJson.put(MOVE_TARGET_TAG,
+				parseTerritoryToJson(move.getTarget()));
+		moveJson.put(MOVE_ACTION_TAG, move.getAction().toString());
 		return moveJson;
 	}
 
@@ -197,8 +205,9 @@ public class JSONParser {
 	 * 
 	 * @param moves
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static JSONArray parseMovesToJson(List<Move> moves) {
+	public static JSONArray parseMovesToJson(List<Move> moves) throws JSONException {
 		JSONArray movesJsonArray = new JSONArray();
 		for (Move move : moves) {
 			movesJsonArray.put(parseMoveToJson(move));
@@ -207,40 +216,32 @@ public class JSONParser {
 	}
 
 	public static ConnectResult parseJsonToConnectResult(
-			JSONObject connectResult) {
+			JSONObject connectResult) throws JSONException {
 		ConnectResult result = new ConnectResult();
-		try {
-			List<Territory> territories = parseJsonToTerritories(connectResult
-					.getJSONArray(CONNECT_RESULT_TERRITORIES_TAG));
-			List<Player> players = parseJsonToPlayers(connectResult
-					.getJSONArray(CONNECT_RESULT_PLAYERS_TAG));
-			String roomId = connectResult.getString(CONNECT_RESULT_ROOM_ID_TAG);
+		List<Territory> territories = parseJsonToTerritories(connectResult
+				.getJSONArray(CONNECT_RESULT_TERRITORIES_TAG));
+		List<Player> players = parseJsonToPlayers(connectResult
+				.getJSONArray(CONNECT_RESULT_PLAYERS_TAG));
+		String roomId = connectResult.getString(CONNECT_RESULT_ROOM_ID_TAG);
 
-			result.setTerritories(territories);
-			result.setPlayers(players);
-			result.setRoomId(roomId);
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		result.setTerritories(territories);
+		result.setPlayers(players);
+		result.setRoomId(roomId);
 		return result;
 	}
 
 	public static SendMovesResult parseJsonToSendMovesResult(
-			JSONObject jsonSendMovesResult) {
+			JSONObject jsonSendMovesResult) throws JSONException {
 		SendMovesResult result = new SendMovesResult();
-		try {
-			List<Conflict> conflicts = parseJsonToConflicts(jsonSendMovesResult
-					.getJSONArray(SEND_MOVES_RESULT_CONFLICTS_TAG));
-			List<Territory> updatedMap = parseJsonToTerritories(jsonSendMovesResult
-					.getJSONArray(SEND_MOVES_RESULT_UPDATED_MAP_TAG));
-			GameState gameState = parseJsonToGameState(jsonSendMovesResult
-					.getJSONObject(SEND_MOVES_RESULT_GAME_STATE_TAG));
-			result.setConflicts(conflicts);
-			result.setUpdatedMap(updatedMap);
-			result.setGameState(gameState);
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		List<Conflict> conflicts = parseJsonToConflicts(jsonSendMovesResult
+				.getJSONArray(SEND_MOVES_RESULT_CONFLICTS_TAG));
+		List<Territory> updatedMap = parseJsonToTerritories(jsonSendMovesResult
+				.getJSONArray(SEND_MOVES_RESULT_UPDATED_MAP_TAG));
+		GameState gameState = parseJsonToGameState(jsonSendMovesResult
+				.getJSONObject(SEND_MOVES_RESULT_GAME_STATE_TAG));
+		result.setConflicts(conflicts);
+		result.setUpdatedMap(updatedMap);
+		result.setGameState(gameState);
 
 		return result;
 	}
@@ -250,19 +251,16 @@ public class JSONParser {
 	 * 
 	 * @param territoryJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static Territory parseJsonToTerritory(JSONObject territoryJson) {
+	public static Territory parseJsonToTerritory(JSONObject territoryJson) throws JSONException {
 		Territory territory = new Territory();
-		try {
-			territory.setName(territoryJson.getString(TERRITORY_NAME_TAG));
+		territory.setName(territoryJson.getString(TERRITORY_NAME_TAG));
 
-			if (!territoryJson.isNull(TERRITORY_OWNER_TAG)) {
-				House house = parseJsonToHouse(territoryJson
-						.getJSONObject(TERRITORY_OWNER_TAG));
-				territory.setOwner(house);
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		if (!territoryJson.isNull(TERRITORY_OWNER_TAG)) {
+			House house = parseJsonToHouse(territoryJson
+					.getJSONObject(TERRITORY_OWNER_TAG));
+			territory.setOwner(house);
 		}
 		return territory;
 	}
@@ -272,17 +270,14 @@ public class JSONParser {
 	 * 
 	 * @param territoriesJson
 	 * @return
+	 * @throws JSONException 
 	 */
 	public static List<Territory> parseJsonToTerritories(
-			JSONArray territoriesJson) {
+			JSONArray territoriesJson) throws JSONException {
 		List<Territory> territories = new ArrayList<Territory>();
-		try {
-			for (int i = 0; i < territoriesJson.length(); i++) {
-				territories.add(parseJsonToTerritory(territoriesJson
-						.getJSONObject(i)));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		for (int i = 0; i < territoriesJson.length(); i++) {
+			territories.add(parseJsonToTerritory(territoriesJson
+					.getJSONObject(i)));
 		}
 		return territories;
 	}
@@ -292,19 +287,16 @@ public class JSONParser {
 	 * 
 	 * @param playerJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static Player parseJsonToPlayer(JSONObject playerJson) {
+	public static Player parseJsonToPlayer(JSONObject playerJson) throws JSONException {
 		Player player = new Player();
-		try {
-			player.setId(playerJson.getString(PLAYER_ID_TAG));
-			player.setName(playerJson.getString(PLAYER_NAME_TAG));
+		player.setId(playerJson.getString(PLAYER_ID_TAG));
+		player.setName(playerJson.getString(PLAYER_NAME_TAG));
 
-			House house = parseJsonToHouse(playerJson
-					.getJSONObject(PLAYER_HOUSE_TAG));
-			player.setHouse(house);
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		House house = parseJsonToHouse(playerJson
+				.getJSONObject(PLAYER_HOUSE_TAG));
+		player.setHouse(house);
 		return player;
 	}
 
@@ -313,15 +305,12 @@ public class JSONParser {
 	 * 
 	 * @param playersJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static List<Player> parseJsonToPlayers(JSONArray playersJson) {
+	public static List<Player> parseJsonToPlayers(JSONArray playersJson) throws JSONException {
 		List<Player> players = new ArrayList<Player>();
-		try {
-			for (int i = 0; i < playersJson.length(); i++) {
-				players.add(parseJsonToPlayer(playersJson.getJSONObject(i)));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		for (int i = 0; i < playersJson.length(); i++) {
+			players.add(parseJsonToPlayer(playersJson.getJSONObject(i)));
 		}
 		return players;
 	}
@@ -331,18 +320,14 @@ public class JSONParser {
 	 * 
 	 * @param gameStateJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static GameState parseJsonToGameState(JSONObject gameStateJson) {
+	public static GameState parseJsonToGameState(JSONObject gameStateJson) throws JSONException {
 		GameState gameState = new GameState();
-
-		try {
-			gameState.setGameEnd(gameStateJson
-					.getBoolean(GAME_STATE_IS_GAME_END_TAG));
-			gameState.setWinnerList(parseJsonToPlayers(gameStateJson
-					.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		gameState.setGameEnd(gameStateJson
+				.getBoolean(GAME_STATE_IS_GAME_END_TAG));
+		gameState.setWinnerList(parseJsonToPlayers(gameStateJson
+				.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
 
 		return gameState;
 	}
@@ -352,24 +337,21 @@ public class JSONParser {
 	 * 
 	 * @param conflictJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static Conflict parseJsonToConflict(JSONObject conflictJson) {
+	public static Conflict parseJsonToConflict(JSONObject conflictJson) throws JSONException {
 		Conflict conflict = new Conflict();
-		try {
-			Territory territory = parseJsonToTerritory(conflictJson
-					.getJSONObject(CONFLICT_TERRITORY_TAG));
-			conflict.setTerritory(territory);
+		Territory territory = parseJsonToTerritory(conflictJson
+				.getJSONObject(CONFLICT_TERRITORY_TAG));
+		conflict.setTerritory(territory);
 
-			List<House> houses = parseJsonToHouses(conflictJson
-					.getJSONArray(CONFLICT_HOUSES_TAG));
-			conflict.setHouses(houses);
+		List<House> houses = parseJsonToHouses(conflictJson
+				.getJSONArray(CONFLICT_HOUSES_TAG));
+		conflict.setHouses(houses);
 
-			List<Integer> diceValues = parseJsonToIntegerList(conflictJson
-					.getJSONArray(CONFLICT_DICE_VALUES_TAG));
-			conflict.setDiceValues(diceValues);
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		List<Integer> diceValues = parseJsonToIntegerList(conflictJson
+				.getJSONArray(CONFLICT_DICE_VALUES_TAG));
+		conflict.setDiceValues(diceValues);
 		return conflict;
 	}
 
@@ -378,16 +360,13 @@ public class JSONParser {
 	 * 
 	 * @param conflictsJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static List<Conflict> parseJsonToConflicts(JSONArray conflictsJson) {
+	public static List<Conflict> parseJsonToConflicts(JSONArray conflictsJson) throws JSONException {
 		List<Conflict> conflicts = new ArrayList<Conflict>();
-		try {
-			for (int i = 0; i < conflictsJson.length(); i++) {
-				conflicts.add(parseJsonToConflict(conflictsJson
-						.getJSONObject(i)));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		for (int i = 0; i < conflictsJson.length(); i++) {
+			conflicts.add(parseJsonToConflict(conflictsJson
+					.getJSONObject(i)));
 		}
 		return conflicts;
 	}
@@ -397,14 +376,11 @@ public class JSONParser {
 	 * 
 	 * @param houseJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static House parseJsonToHouse(JSONObject houseJson) {
+	public static House parseJsonToHouse(JSONObject houseJson) throws JSONException {
 		House house = new House();
-		try {
-			house.setName(houseJson.getString(HOUSE_NAME_TAG));
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
-		}
+		house.setName(houseJson.getString(HOUSE_NAME_TAG));
 		return house;
 	}
 
@@ -413,27 +389,20 @@ public class JSONParser {
 	 * 
 	 * @param housesJson
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static List<House> parseJsonToHouses(JSONArray housesJson) {
+	public static List<House> parseJsonToHouses(JSONArray housesJson) throws JSONException {
 		List<House> houses = new ArrayList<House>();
-		try {
-			for (int i = 0; i < housesJson.length(); i++) {
-				houses.add(parseJsonToHouse(housesJson.getJSONObject(i)));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		for (int i = 0; i < housesJson.length(); i++) {
+			houses.add(parseJsonToHouse(housesJson.getJSONObject(i)));
 		}
 		return houses;
 	}
 
-	public static List<Integer> parseJsonToIntegerList(JSONArray jsonArray) {
+	public static List<Integer> parseJsonToIntegerList(JSONArray jsonArray) throws JSONException {
 		List<Integer> integers = new ArrayList<Integer>();
-		try {
-			for (int i = 0; i < jsonArray.length(); i++) {
-				integers.add(jsonArray.getInt(i));
-			}
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		for (int i = 0; i < jsonArray.length(); i++) {
+			integers.add(jsonArray.getInt(i));
 		}
 		return integers;
 	}
