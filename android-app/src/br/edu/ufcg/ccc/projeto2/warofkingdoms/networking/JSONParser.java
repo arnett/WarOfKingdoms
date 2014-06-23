@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
@@ -74,21 +75,22 @@ public class JSONParser {
 	 * @param player
 	 * @return
 	 */
-	public static JSONObject parsePlayerToJson(Player player) {
-		JSONObject playerJson = new JSONObject();
+	public static JSONObject parseConnectToJson(Connect connectEntity) {
+		JSONObject connectJson = new JSONObject();
 		try {
-			playerJson.put(PLAYER_ID_TAG, player.getId());
-			playerJson.put(PLAYER_NAME_TAG, player.getName());
-			if (player.getHouse() == null) {
-				playerJson.put(PLAYER_HOUSE_TAG, JSONObject.NULL);
+			connectJson.put(PLAYER_ID_TAG, connectEntity.getPlayer().getId());
+			connectJson.put(PLAYER_NAME_TAG, connectEntity.getPlayer().getName());
+			if (connectEntity.getPlayer().getHouse() == null) {
+				connectJson.put(PLAYER_HOUSE_TAG, JSONObject.NULL);
 			} else {
-				playerJson.put(PLAYER_HOUSE_TAG,
-						parseHouseToJson(player.getHouse()));
+				connectJson.put(PLAYER_HOUSE_TAG,
+						parseHouseToJson(connectEntity.getPlayer().getHouse()));
 			}
+			connectJson.put(PLAYER_NUM_PLAYERS_TAG, connectEntity.getMaxPlayersInRoom());
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}
-		return playerJson;
+		return connectJson;
 	}
 
 	/**
@@ -97,12 +99,12 @@ public class JSONParser {
 	 * @param players
 	 * @return
 	 */
-	public static JSONArray parsePlayersToJson(List<Player> players) {
-		JSONArray playersJsonArray = new JSONArray();
-		for (Player player : players) {
-			playersJsonArray.put(parsePlayerToJson(player));
+	public static JSONArray parseConnectsToJson(List<Connect> connects) {
+		JSONArray connectsJsonArray = new JSONArray();
+		for (Connect connect : connects) {
+			connectsJsonArray.put(parseConnectToJson(connect));
 		}
-		return playersJsonArray;
+		return connectsJsonArray;
 	}
 
 	/**
@@ -336,8 +338,8 @@ public class JSONParser {
 		GameState gameState = new GameState();
 
 		try {
-			gameState.setGameEnd(gameStateJson
-					.getBoolean(GAME_STATE_IS_GAME_END_TAG));
+			gameState.setGameFinished(gameStateJson
+					.getBoolean(GAME_STATE_IS_GAME_FINISHED_TAG));
 			gameState.setWinnerList(parseJsonToPlayers(gameStateJson
 					.getJSONArray(GAME_STATE_WINNER_LIST_TAG)));
 		} catch (JSONException e) {
@@ -402,6 +404,7 @@ public class JSONParser {
 		House house = new House();
 		try {
 			house.setName(houseJson.getString(HOUSE_NAME_TAG));
+			house.setTerritoryOriginName(houseJson.getString(HOUSE_TERRITORY_ORIGIN_NAME_TAG));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}

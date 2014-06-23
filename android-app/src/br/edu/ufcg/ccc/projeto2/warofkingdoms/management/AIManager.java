@@ -6,6 +6,7 @@ import java.util.Random;
 
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ai.AIPlayer;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
@@ -74,8 +75,8 @@ public class AIManager implements CommunicationManager {
 	 * Fake connect (POST) server method
 	 */
 	@Override
-	public void connect(OnTaskCompleted listener, Player player) {
-		human = player;
+	public void connect(OnTaskCompleted listener, Connect connectEntity) {
+		human = connectEntity.getPlayer();
 
 		updatedMap = generateFirstMap();
 		this.bots = generateBots(Constants.NUM_PLAYERS - 1);

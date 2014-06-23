@@ -528,7 +528,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		gameManager.updateAllTerritories(sendMovesResult.getUpdatedMap());
 		drawTerritoryOwnershipTokens();
 
-		if (sendMovesResult.getGameState().isGameEnd()) {
+		if (sendMovesResult.getGameState().isGameFinished()) {
 			
 			profileManager.saveGameStatistics(sendMovesResult.getGameState(), getApplicationContext());
 			saveGameStatistics(sendMovesResult.getGameState());

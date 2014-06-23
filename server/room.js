@@ -1,6 +1,9 @@
 var gameLogicModule = require('./gameLogic.js');
 var utilsModule = require('./utils.js');
 
+var mapModule    = require('./mapController.js');
+var playerModule = require('./playerController.js');
+
 Array.prototype.contains = function(elem)
 {
    for (var i in this)
@@ -12,15 +15,17 @@ Array.prototype.contains = function(elem)
 
 exports.Room = function(numberOfPlayers, roomId) {
     this.roomId = roomId;
-    this.NUM_MAX_PLAYERS_ROOM = numberOfPlayers;
+    this.numMaxOfPlayers = numberOfPlayers;
     this.reset()
 }
 
 this.Room.prototype.reset = function() {
     // Game Variables
-    this.playerList = new Array();
+    this.players = new playerModule.PlayerController()
+    // this.playerList = new Array();
     this.housesAlreadyChosen = new Array();
-    this.territoriesList = utilsModule.createTerritories();
+    this.map = new mapModule.Map();
+    // this.territoriesList = utilsModule.createTerritories();
     this.availableHouses = utilsModule.createHouses();
 
     // SendMoves Global Variables
@@ -42,7 +47,7 @@ this.Room.prototype.sendMoves = function(req, res) {
 
     var f = function(roomObject) {
 
-        if (roomObject.numPlayersThatSentMoves == roomObject.NUM_MAX_PLAYERS_ROOM) {
+        if (roomObject.numPlayersThatSentMoves == roomObject.numMaxOfPlayers) {
 
             // first thread to process moves data
             if (roomObject.responsesSentSendMovesCount == 0) { 
@@ -51,27 +56,27 @@ this.Room.prototype.sendMoves = function(req, res) {
                 roomObject.conflicts = utilsModule.generateConflicts(roomObject.allMovesRound);
                 var nonConflictingMoves = utilsModule.getNonConflictingMoves(roomObject.allMovesRound, roomObject.conflicts);
 
-                territoriesList = utilsModule.updateTerritories(roomObject.territoriesList, roomObject.conflicts, nonConflictingMoves);
+                roomObject.map.update(roomObject.conflicts, nonConflictingMoves);
+                roomObject.players.updateStatus(roomObject.map);
             }
 
-            var gamestate = utilsModule.generateGameState(roomObject.territoriesList, roomObject.playerList)
-
             // this object is created to be possible to generate a JSONArray using JSON.stringify
-            var returnObject = new utilsModule.SendmovesReturnObj(roomObject.conflicts, roomObject.territoriesList,
-                                       gamestate);
+            var winners = roomObject.players.getWinners(roomObject.map);
+            var gameState = new gameLogicModule.GameState(winners.length > 0, winners, roomObject.players.getById(req.body.id).status)
 
+            var returnObject = new utilsModule.SendmovesReturnObj(roomObject.conflicts, roomObject.map.map, gameState);
+
+            console.log(utilsModule.objToJSON(returnObject))
             res.send(utilsModule.objToJSON(returnObject));
             roomObject.responsesSentSendMovesCount++;
 
-            if (roomObject.responsesSentSendMovesCount == roomObject.NUM_MAX_PLAYERS_ROOM) {
-                console.log("GAME STATE")
-                console.log(gamestate)
+            if (roomObject.responsesSentSendMovesCount == roomObject.numMaxOfPlayers) {
                 roomObject.numPlayersThatSentMoves = 0;
                 roomObject.responsesSentSendMovesCount = 0;
                 roomObject.allMovesRound = new Array();
                 roomObject.conflicts = new Array();
 
-                if (gamestate.isGameEnd) {
+                if (gameState.isGameEnd) {
                     roomObject.reset()
                 }
             }
@@ -86,11 +91,7 @@ this.Room.prototype.sendMoves = function(req, res) {
 }
 
 this.Room.prototype.chooseHouse = function() {
-    var houseIndex = 1;
-    //var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
-    if (this.housesAlreadyChosen.contains(houseIndex))
-        houseIndex = 3;
-
+    var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
     while (this.housesAlreadyChosen.contains(houseIndex)) {
         houseIndex = Math.floor((Math.random() * 5) + 0);
     }
@@ -98,23 +99,24 @@ this.Room.prototype.chooseHouse = function() {
     return this.availableHouses[houseIndex];
 }
 
-this.Room.prototype.connect = function(req, res) {
-	var id        = req.body.id;
-	var name      = req.body.name;
-  	var house 	  = this.chooseHouse();
 
-	var aPlayer = new gameLogicModule.Player(id, name, house);
-	this.playerList.push(aPlayer);
+this.Room.prototype.connect = function(req, res, numTerritoriesToConquerInNorth, numTerritoriesToConquerInCenter, numTerritoriesToConquerInSouth) {
+    var id        = req.body.id;
+    var name      = req.body.name;
+    var house 	  = this.chooseHouse();
 
-    utilsModule.addHouseOwnerInTerritories(aPlayer.house, this.territoriesList);
+    var status = new gameLogicModule.Status(numTerritoriesToConquerInNorth, numTerritoriesToConquerInCenter, numTerritoriesToConquerInSouth)
+    var aPlayer = this.players.createPlayer(id, name, house, status)
 
-    console.log(id + " Player Connected");
+    this.players.add(aPlayer);
+    this.map.addOwnerInTerritory(aPlayer.house, aPlayer.house.territoryOriginName)
+
+    console.log(aPlayer.name + " connected");
 
     var f = function(roomObject){
-		if (roomObject.playerList.length == roomObject.NUM_MAX_PLAYERS_ROOM) {
-
-			// this object is created to be possible to generate a JSONArray using JSON.stringify
-			var returnObject = new utilsModule.ConnectReturnObj(roomObject.territoriesList, roomObject.playerList, roomObject.roomId);
+		if (roomObject.isFull()) {
+            // this object is created to be possible to generate a JSONArray using JSON.stringify
+            var returnObject = new gameLogicModule.ConnectReturnObj(roomObject.map.map, roomObject.players.players, roomObject.roomId);
 
             console.log(utilsModule.objToJSON(returnObject));
 			res.send(utilsModule.objToJSON(returnObject));
@@ -129,5 +131,5 @@ this.Room.prototype.connect = function(req, res) {
 }
 
 this.Room.prototype.isFull = function() {
-    return this.playerList.length >= this.NUM_MAX_PLAYERS_ROOM;
+    return this.players.length() >= this.numMaxOfPlayers;
 }

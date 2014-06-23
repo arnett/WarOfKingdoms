@@ -3,169 +3,162 @@ var gameLogicModule = require('./gameLogic.js');
 ////
 // CRUD FUNCTIONS
 ////
-exports.createTerritories = function () {
-	var territory = null;
-	var territoriesArray = new Array();
+// exports.createTerritories = function () {
+// 	var territory = null;
+// 	var territoriesArray = new Array();
 
-	// NORTH
-	territory = new gameLogicModule.Territory("A");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	// NORTH
+// 	territory = new gameLogicModule.Territory("A");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("B");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("B");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("C");
-	territory.owner = null;
-	territory.house = new gameLogicModule.House("Stark");
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("C");
+// 	territory.owner = null;
+// 	territory.house = new gameLogicModule.House("Stark");
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("D");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("D");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("E");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("E");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("F");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("F");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("G");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("G");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("H");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("H");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	// CENTER
-	territory = new gameLogicModule.Territory("I");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	// CENTER
+// 	territory = new gameLogicModule.Territory("I");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("J");
-	territory.owner = null;
-	territory.house = new gameLogicModule.House("Greyjoy");
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("J");
+// 	territory.owner = null;
+// 	territory.house = new gameLogicModule.House("Greyjoy");
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("K");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("K");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("L");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("L");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("M");
-	territory.owner = null;
-	territory.house = new gameLogicModule.House("Lannister");
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("M");
+// 	territory.owner = null;
+// 	territory.house = new gameLogicModule.House("Lannister");
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("N");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("N");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("O");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("O");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("P");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("P");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("Q");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("Q");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	// SOUTH
-	territory = new gameLogicModule.Territory("R");
-	territory.owner = null;
-	territory.house = new gameLogicModule.House("Baratheon");
-	territoriesArray.push(territory);
+// 	// SOUTH
+// 	territory = new gameLogicModule.Territory("R");
+// 	territory.owner = null;
+// 	territory.house = new gameLogicModule.House("Baratheon");
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("S");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("S");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("T");
-	territory.owner = null;
-	territory.house = new gameLogicModule.House("Tyrell");
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("T");
+// 	territory.owner = null;
+// 	territory.house = new gameLogicModule.House("Tyrell");
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("U");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("U");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("V");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("V");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("X");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("X");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("Z");
-	territory.owner = null;
-	territory.house = null;
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("Z");
+// 	territory.owner = null;
+// 	territory.house = null;
+// 	territoriesArray.push(territory);
 
-	territory = new gameLogicModule.Territory("Y");
-	territory.owner = null;
-	territory.house = new gameLogicModule.House("Martell");
-	territoriesArray.push(territory);
+// 	territory = new gameLogicModule.Territory("Y");
+// 	territory.owner = null;
+// 	territory.house = new gameLogicModule.House("Martell");
+// 	territoriesArray.push(territory);
 
-    return territoriesArray;
-}
-
-exports.addHouseOwnerInTerritories = function(house, territories) {
-	for (var i = 0; i < territories.length; i++) {
-		if (territories[i].house != null && territories[i].house.name == house.name)
-			territories[i].owner = house;
-	}
-}
+//     return territoriesArray;
+// }
 
 exports.createHouses = function () {
 
 	var aHouse;
 	var houses = new Array();
 
-	aHouse = new gameLogicModule.House("Stark");
+	aHouse = new gameLogicModule.House("Stark", "C");
 	houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Baratheon");
+	aHouse = new gameLogicModule.House("Baratheon", "R");
 	houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Lannister");
+	aHouse = new gameLogicModule.House("Lannister", "M");
 	houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Tyrell");
+	aHouse = new gameLogicModule.House("Tyrell", "T");
 	houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Martell");
+	aHouse = new gameLogicModule.House("Martell", "Y");
 	houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Greyjoy");
+	aHouse = new gameLogicModule.House("Greyjoy", "J");
 	houses.push(aHouse);
 
 	return houses;
@@ -186,35 +179,6 @@ exports.createMoveObjects = function(movesJson) {
 	return formattedMoves;
 }
 
-exports.updateTerritories = function(territories, conflicts, nonConflicting) {
-
-	// updating map with nonConflicing moves
-	for (var i = 0; i < nonConflicting.length; i++) {
-
-		var territoryIndex = getTerritoryIndex(territories, nonConflicting[i].target.name);
-		territories[territoryIndex].owner = nonConflicting[i].origin.owner;
-	}		
-
-	// updating map with the result of the conflicts
-	for (var i = 0; i < conflicts.length; i++) {	
-
-		var biggestDiceValue = getBiggestDiceValueIndex(conflicts[i].diceValues);
-
-		if (biggestDiceValue != -1) {
-			
-			var territoryIndex = getTerritoryIndex(territories, conflicts[i].territory.name);
-
-			territories[territoryIndex].owner = conflicts[i].houses[biggestDiceValue];
-		}
-	}
-
-	return territories;
-}
-
-////
-// GENERAL FUNCTIONS
-////
-
 // this convert any "object" in JSON string 
 exports.objToJSON = function(object) {
 	return JSON.stringify(object);
@@ -223,12 +187,6 @@ exports.objToJSON = function(object) {
 ////
 // CONNECT FUNCTIONS
 ////
-
-exports.ConnectReturnObj = function(territories, players, roomId) {
-	this.territories = territories;
-	this.players = players;
-    this.roomId = roomId;
-}
 
 ////
 // SEND MOVES FUNCTIONS
@@ -337,7 +295,7 @@ conclitAlreadyExists = function (move, conflicts) {
 }
 
 // the diceValue index is important cause the diceValue index is equal to its house index
-getBiggestDiceValueIndex = function(values) {
+exports.getBiggestDiceValueIndex = function(values) {
 
 	var biggestValue = -1;
 	var biggestValueIndex = -1;
@@ -360,17 +318,6 @@ getBiggestDiceValueIndex = function(values) {
 	}
 
 	return biggestValueIndex;
-}
-
-getTerritoryIndex = function(territories, territoryName) {
-	
-	for (var i = 0; i < territories.length; i++) {
-	
-		if (territories[i].name == territoryName) {
-			return i;
-		}
-	}
-	return -1;
 }
 
 getRandomDiceValue = function() {

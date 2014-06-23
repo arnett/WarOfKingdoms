@@ -1,8 +1,8 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.RequestManager.requestPOST;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parseConnectToJson;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parseJsonToConnectResult;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parsePlayerToJson;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_URI;
 
 import org.json.JSONException;
@@ -10,10 +10,10 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.OnTaskCompleted;
 
-public class ConnectAsyncTask extends AsyncTask<Player, Void, ConnectResult> {
+public class ConnectAsyncTask extends AsyncTask<Connect, Void, ConnectResult> {
 
 	private final String LOG_TAG = "ConnectAsyncTask";
 
@@ -24,8 +24,8 @@ public class ConnectAsyncTask extends AsyncTask<Player, Void, ConnectResult> {
 	}
 
 	@Override
-	protected ConnectResult doInBackground(Player... params) {
-		String request = parsePlayerToJson(params[0]).toString();
+	protected ConnectResult doInBackground(Connect... params) {
+		String request = parseConnectToJson(params[0]).toString();
 		Log.v(LOG_TAG,
 				String.format("Request to %s = %s", CONNECT_URI, request));
 

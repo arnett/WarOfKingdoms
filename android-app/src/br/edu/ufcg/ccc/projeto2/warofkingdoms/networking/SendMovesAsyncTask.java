@@ -34,6 +34,8 @@ public class SendMovesAsyncTask extends AsyncTask<Move, Void, SendMovesResult> {
 			requestJson.put(SEND_MOVES_REQUEST_MOVES_TAG, movesJson.toString());
 			requestJson.put(SEND_MOVES_REQUEST_ROOM_ID_TAG, GameManager
 					.getInstance().getRoomId());
+			requestJson.put(PLAYER_ID_TAG, GameManager
+					.getInstance().getCurrentPlayer().getId());
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, e.toString());
 		}

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class GameState {
 	
-	private boolean isGameEnd;
+	private boolean isGameFinished;
 	private List<Player> winnerList;
 	
 	public GameState() {
@@ -12,16 +12,16 @@ public class GameState {
 	}
 	
 	public GameState(boolean isGameEnd, List<Player> winnerList) {
-		this.isGameEnd = isGameEnd;
+		this.isGameFinished = isGameEnd;
 		this.winnerList = winnerList;
 	}
 
-	public boolean isGameEnd() {
-		return isGameEnd;
+	public boolean isGameFinished() {
+		return isGameFinished;
 	}
 
-	public void setGameEnd(boolean isGameEnd) {
-		this.isGameEnd = isGameEnd;
+	public void setGameFinished(boolean isGameEnd) {
+		this.isGameFinished = isGameEnd;
 	}
 
 	public List<Player> getWinnerList() {

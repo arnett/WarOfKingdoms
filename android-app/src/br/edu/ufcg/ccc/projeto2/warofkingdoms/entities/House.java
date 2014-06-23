@@ -8,7 +8,14 @@ public class House implements Serializable {
 	private static final long serialVersionUID = 3065642888337391736L;
 
 	private String name;
+	private String territoryOriginName;
 
+	public House(String name, String territoryOriginName) {
+		this.name = name;
+		this.territoryOriginName = territoryOriginName;
+	}
+	
+	@Deprecated
 	public House(String name) {
 		this.name = name;
 	}
@@ -23,6 +30,14 @@ public class House implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getTerritoryOriginName() {
+		return territoryOriginName;
+	}
+
+	public void setTerritoryOriginName(String territoryOriginName) {
+		this.territoryOriginName = territoryOriginName;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 //--------------------------------  IMPORTS -----------------------------------------//
 
 // EXTERNAL-IMPORTS
-var roomModule      = require('./room.js');
+var roomModule  = require('./room.js');
 
 // REQUIRED-IMPORTS
 var express     = require('express');
@@ -17,7 +17,7 @@ function getNextAvailableRoom(num_players, rooms) {
 
     for (;roomId < rooms.length; roomId++) {
         var room = rooms[roomId];
-        if (!room.isFull() && room.NUM_MAX_PLAYERS_ROOM == num_players) {
+        if (!room.isFull() && room.numMaxOfPlayers == num_players) {
             return room;
         }
     }
@@ -25,19 +25,19 @@ function getNextAvailableRoom(num_players, rooms) {
     return new roomModule.Room(num_players, roomId);
 }
 
-function newconnect(req, res) {
+function connect(req, res) {
     var num_players = req.body.num_players;
 
     var room = getNextAvailableRoom(num_players, rooms);
     rooms.push(room);
-    room.connect(req, res);
+    room.connect(req, res, NUM_TERRITORIES_TO_CONQUER_IN_NORTH, NUM_TERRITORIES_TO_CONQUER_IN_CENTER, NUM_TERRITORIES_TO_CONQUER_IN_SOUTH);
 }
 
-function connect(req, res) {
-    var room = getNextAvailableRoom(NUM_MAX_PLAYERS_ROOM, rooms);
-    rooms.push(room);
-    room.connect(req, res);
-}
+//function connect(req, res) {
+    //var room = getNextAvailableRoom(NUM_MAX_PLAYERS_ROOM, rooms);
+    //rooms.push(room);
+    //room.connect(req, res);
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -54,7 +54,10 @@ app.post('/connect'          , connect);
 var port = 3000;
 app.listen(port);
 
-var rooms                = Array();
-var NUM_MAX_PLAYERS_ROOM = 2;
+var rooms                                = Array();
+
+var NUM_TERRITORIES_TO_CONQUER_IN_NORTH  = 3;
+var NUM_TERRITORIES_TO_CONQUER_IN_CENTER = 3;
+var NUM_TERRITORIES_TO_CONQUER_IN_SOUTH  = 3;
 
 console.log("Server running...");

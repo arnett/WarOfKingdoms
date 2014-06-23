@@ -1,32 +1,39 @@
-exports.House = function (name) {
-	this.name = name;
+exports.ConnectReturnObj = function(territories, players, roomId) {
+    this.territories = territories;
+    this.players = players;
+    this.roomId = roomId;
 }
 
 exports.Move = function (origin, target, action) {
-  	this.origin = origin;
-	this.target = target;
-	this.action = action;
+    this.origin = origin;
+    this.target = target;
+    this.action = action;
 }
 
-exports.Territory = function (name, owner, house) {
-	this.name = name;
-	this.owner = owner;
-  this.house = house;
-}
-
-exports.Player = function (id, name, house) {
-	this.id = id;
-	this.name = name;
-  	this.house = house;
+exports.House = function (name, territoryOriginName) {
+    this.name            = name;
+    this.territoryOriginName = territoryOriginName;
 }
 
 exports.Conflict = function (territory, houses, diceValues) {
-  this.territory = territory;
-  this.houses = houses;
-  this.diceValues = diceValues
+    this.territory  = territory;
+    this.houses     = houses;
+    this.diceValues = diceValues
 }
 
-exports.GameState = function (isGameEnd, winnerList) {
-  this.isGameEnd   = isGameEnd;
-  this.winnerList  = winnerList;
+exports.Status = function(numTerritoriesToConquerInNorth, numTerritoriesToConquerInCenter, numTerritoriesToConquerInSouth) {
+    this.numTerritoriesToConquerInNorth  = numTerritoriesToConquerInNorth;
+    this.numTerritoriesToConquerInCenter = numTerritoriesToConquerInCenter;
+    this.numTerritoriesToConquerInSouth  = numTerritoriesToConquerInSouth;
+
+    this.numTerritoriesConqueredInNorth  = 0;
+    this.numTerritoriesConqueredInCenter = 0;
+    this.numTerritoriesConqueredInSouth  = 0;
 }
+
+exports.GameState = function (isGameFinished, winnerList, status) {
+    this.isGameFinished = isGameFinished;
+    this.winnerList     = winnerList;
+    this.status         = status;
+}
+

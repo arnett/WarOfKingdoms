@@ -11,7 +11,8 @@ public class Constants {
 
 	// Networking constants
 
-	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
+//	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
+	public final static String SERVER_URL = "http://192.168.1.105:3000";
 	//public final static String SERVER_URL = "http://10.0.0.4:3000";
 
 	public final static String CONNECT_URI = "/connect";
@@ -28,17 +29,18 @@ public class Constants {
 	public final static String PLAYER_ID_TAG = "id";
 	public final static String PLAYER_NAME_TAG = "name";
 	public final static String PLAYER_HOUSE_TAG = "house";
+	public final static String PLAYER_NUM_PLAYERS_TAG = "num_players";
 
 	public final static String CONFLICT_TERRITORY_TAG = "territory";
 	public final static String CONFLICT_HOUSES_TAG = "houses";
 	public final static String CONFLICT_DICE_VALUES_TAG = "diceValues";
 
-	public final static String GAME_STATE_IS_GAME_END_TAG = "isGameEnd";
+	public final static String GAME_STATE_IS_GAME_FINISHED_TAG = "isGameFinished";
 	public final static String GAME_STATE_WINNER_LIST_TAG = "winnerList";
-	public final static String GAME_STATE_CURRENT_TURN_TAG = "currentTurn";
-	public final static String GAME_STATE_TOTAL_TURNS_TAG = "totalTurns";
+	public final static String GAME_STATE_STATUS_TAG = "status";
 
 	public final static String HOUSE_NAME_TAG = "name";
+	public final static String HOUSE_TERRITORY_ORIGIN_NAME_TAG = "territoryOriginName";
 
 	public final static String CONNECT_RESULT_TERRITORIES_TAG = "territories";
 	public final static String CONNECT_RESULT_PLAYERS_TAG = "players";

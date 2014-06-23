@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.AIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.CommunicationManager;
@@ -39,6 +40,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	private HouseTokenManager houseTokenManager;
 
 	private Player currentPlayer;
+	private Connect connectEntity;
 
 	private ImageView playBtn;
 	private ImageView aboutBtn;
@@ -61,6 +63,8 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		houseTokenManager = HouseTokenManager.getInstance();
 
 		currentPlayer = gameManager.getCurrentPlayer();
+//		TODO HARDCODED Number of players in room set to 2
+		connectEntity = new Connect(2, currentPlayer);
 
 		playBtn = (ImageView) findViewById(R.id.playButton);
 		playBtn.setOnClickListener(this);
@@ -113,7 +117,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 				getApplicationContext());
 		if (connectionDetector.isConnectingToInternet()) {
 			waitDialog.show();
-			communicationManager.connect(this, currentPlayer);
+			communicationManager.connect(this, connectEntity);
 		} else {
 			showAlertDialog(ConnectActivity.this, "No Internet Connection",
 					"You don't have internet connection.", false);
@@ -121,7 +125,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	private void startAIGame() {
-		communicationManager.connect(this, currentPlayer);
+		communicationManager.connect(this, connectEntity);
 	}
 
 	/**
