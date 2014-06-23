@@ -5,6 +5,9 @@ import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parse
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.JSONParser.parseJsonToConnectResult;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_URI;
 
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,20 +28,33 @@ public class ConnectAsyncTask extends AsyncTask<Connect, Void, ConnectResult> {
 
 	@Override
 	protected ConnectResult doInBackground(Connect... params) {
-		String request = parseConnectToJson(params[0]).toString();
+		String request = null;
+		try {
+			request = parseConnectToJson(params[0]).toString();
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
 		Log.v(LOG_TAG,
 				String.format("Request to %s = %s", CONNECT_URI, request));
 
-		String response = requestPOST(CONNECT_URI, request);
+		String response = null;
+		try {
+			response = requestPOST(CONNECT_URI, request);
+		} catch (ClientProtocolException e1) {
+			Log.e(LOG_TAG, e1.toString());
+		} catch (IOException e1) {
+			Log.e(LOG_TAG, e1.toString());
+		}
 		Log.v(LOG_TAG,
 				String.format("Result of %s = %s", CONNECT_URI, response));
 
 		ConnectResult connectResult = null;
-
-		try {
-			connectResult = parseJsonToConnectResult(new JSONObject(response));
-		} catch (JSONException e) {
-			Log.e(LOG_TAG, e.toString());
+		if (response != null) {
+			try {
+				connectResult = parseJsonToConnectResult(new JSONObject(response));
+			} catch (JSONException e) {
+				Log.e(LOG_TAG, e.toString());
+			}
 		}
 
 		return connectResult;

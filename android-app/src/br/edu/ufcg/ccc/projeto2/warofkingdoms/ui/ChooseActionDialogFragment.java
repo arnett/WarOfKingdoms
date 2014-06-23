@@ -32,8 +32,9 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 		try {
 			this.choiceListener = (OnActionSelectedListener) activity;
 		} catch (final ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnCompleteListener");
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(activity, "Process error", 
+					"Error while processing the move. Try Again");
+			errorDialog.showAlertDialog();
 		}
 	}
 	

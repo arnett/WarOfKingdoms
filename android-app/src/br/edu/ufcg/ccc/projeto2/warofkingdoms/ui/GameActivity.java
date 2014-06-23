@@ -52,13 +52,13 @@ import br.ufcg.edu.ccc.projeto2.R;
  * 
  */
 public class GameActivity extends Activity implements OnTouchListener,
-		OnActionSelectedListener, OnClickListener, OnTaskCompleted {
+OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private static final int SOLVE_CONFLICT_RETURN = 1;
 
 	private boolean isOpenningConflictActivity = false; // to just close the
-														// waitDialog when the
-														// activity is started
+	// waitDialog when the
+	// activity is started
 
 	private String LOG_TAG = "GameActivity";
 
@@ -92,13 +92,13 @@ public class GameActivity extends Activity implements OnTouchListener,
 	private CustomProgressDialog waitDialog;
 
 	private ChooseActionDialogFragment chooseActionDialogFragment;
-	
+
 	private long startTime = 30 * 1000;
 	private long interval = 1 * 1000;
 	private long seconds = startTime / 1000;
 	private long minutes = seconds / 60;
-	
-//	TODO MOVE TO ANOTHER CLASS
+
+	//	TODO MOVE TO ANOTHER CLASS
 	private String[] NorthTerritories = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
 	private String[] CenterTerritories = new String[] {"I", "J", "K", "L", "M", "N", "O", "P", "Q"};
 	private String[] SouthTerritories = new String[] {"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -342,7 +342,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 					getBaseContext(),
 					"Invalid move: "
 							+ "This territory was already used during this turn",
-					Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();
 		}
 
 		else if (!rulesChecker
@@ -351,7 +351,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 					getBaseContext(),
 					"Invalid move: "
 							+ "The first territory must be owned by you",
-					Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();
 		}
 
 		else {
@@ -418,10 +418,10 @@ public class GameActivity extends Activity implements OnTouchListener,
 
 			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentMove).getCenterX(
-					getMapWidth());
+							getMapWidth());
 			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentMove).getCenterY(
-					getMapHeight());
+							getMapHeight());
 			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
 
@@ -429,7 +429,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 			break;
 		}
 	}
-	
+
 	private boolean contains(String[] array, String element) {
 		for (String string : array)
 			if (string.equalsIgnoreCase(element))
@@ -443,9 +443,9 @@ public class GameActivity extends Activity implements OnTouchListener,
 		case R.id.nextPhaseButton:
 			countDown.cancel();
 			waitDialog.show();
-			
+
 			communicationManager
-					.sendCurrentMoves(this, gameManager.getCurrentMoves());
+			.sendCurrentMoves(this, gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 			break;
 		case R.id.objectiveButton:
@@ -472,36 +472,40 @@ public class GameActivity extends Activity implements OnTouchListener,
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 		sendMovesResult = result;
-		if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
-			chooseActionDialogFragment.dismiss();
-		}
-		firstSelectedTerritoryForTheCurrentMove = null;
-
-		if (result.getConflicts() != null && result.getConflicts().size() != 0) {
-
-			isOpenningConflictActivity = true;
-
-			Intent intent = new Intent(this, ConflictActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putParcelableArrayList("conflicts",
-					(ArrayList<? extends Parcelable>) result.getConflicts());
-			intent.putExtras(bundle);
-			startActivityForResult(intent, SOLVE_CONFLICT_RETURN);
+		if(sendMovesResult == null) {
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is down", 
+					"The server is not responding.");
+			errorDialog.showAlertDialog();
 			
-		} else {
-			isOpenningConflictActivity = false;
-			doActionsAfterSendMovesReturned();
 		}
+		else {
+			if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
+				chooseActionDialogFragment.dismiss();
+			}
+			firstSelectedTerritoryForTheCurrentMove = null;
 
-		if (!isOpenningConflictActivity) {
-			waitDialog.dismiss();
+			if (result.getConflicts() != null && result.getConflicts().size() != 0) {
+
+				isOpenningConflictActivity = true;
+
+				Intent intent = new Intent(this, ConflictActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putParcelableArrayList("conflicts",
+						(ArrayList<? extends Parcelable>) result.getConflicts());
+				intent.putExtras(bundle);
+				startActivityForResult(intent, SOLVE_CONFLICT_RETURN);
+
+			} else {
+				isOpenningConflictActivity = false;
+				doActionsAfterSendMovesReturned();
+			}
+
+			if (!isOpenningConflictActivity) {
+				waitDialog.dismiss();
+			}
+
+			resetCountDown();
 		}
-
-		countDown = new MyCountDownTimer(startTime, interval);
-		timeCounter.setText(String.format("%02d", minutes) + ":"
-				+ String.format("%02d", seconds));
-
-		countDown.start();
 	}
 
 	@Override
@@ -520,8 +524,18 @@ public class GameActivity extends Activity implements OnTouchListener,
 		if (requestCode == SOLVE_CONFLICT_RETURN) {
 			doActionsAfterSendMovesReturned();
 			isOpenningConflictActivity = false;
+			waitDialog.dismiss();
+			resetCountDown();
 		}
 
+	}
+
+	private void resetCountDown() {
+		countDown = new MyCountDownTimer(startTime, interval);
+		timeCounter.setText(String.format("%02d", minutes) + ":"
+				+ String.format("%02d", seconds));
+
+		countDown.start();
 	}
 
 	private void doActionsAfterSendMovesReturned() {
@@ -529,7 +543,6 @@ public class GameActivity extends Activity implements OnTouchListener,
 		drawTerritoryOwnershipTokens();
 
 		if (sendMovesResult.getGameState().isGameFinished()) {
-			
 			profileManager.saveGameStatistics(sendMovesResult.getGameState(), getApplicationContext());
 			saveGameStatistics(sendMovesResult.getGameState());
 			openGameFinishedDialog();
@@ -582,7 +595,7 @@ public class GameActivity extends Activity implements OnTouchListener,
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
 		gameOverDialog.setWinners(getWinners());
 		gameOverDialog
-				.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
+		.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
 	}
 
 	private String getWinners() {
@@ -641,21 +654,31 @@ public class GameActivity extends Activity implements OnTouchListener,
 		return ih;
 	}
 
-	public class MyCountDownTimer extends CountDownTimer {
+	/**
+	 * @author Rafael
+	 *	A class to manipulate the game's countdown timer.
+	 */
+	private class MyCountDownTimer extends CountDownTimer {
 
 		public MyCountDownTimer(long startTime, long interval) {
 			super(startTime, interval);
 		}
 
+		/* (non-Javadoc)
+		 * @see android.os.CountDownTimer#onFinish()
+		 */
 		@Override
 		public void onFinish() {
 			timeCounter.setText("00:00");
 			waitDialog.show();
 			communicationManager
-					.sendCurrentMoves(GameActivity.this, gameManager.getCurrentMoves());
+			.sendCurrentMoves(GameActivity.this, gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 		}
 
+		/* (non-Javadoc)
+		 * @see android.os.CountDownTimer#onTick(long)
+		 */
 		@Override
 		public void onTick(long millisUntilFinished) {
 			long seconds = millisUntilFinished / 1000;
