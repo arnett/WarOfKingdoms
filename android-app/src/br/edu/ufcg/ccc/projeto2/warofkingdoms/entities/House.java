@@ -59,4 +59,8 @@ public class House implements Serializable {
 	public int hashCode() {
 		return name.hashCode();
 	}
+	
+	public House clone() {
+		return new House(name, territoryOriginName);
+	}
 }

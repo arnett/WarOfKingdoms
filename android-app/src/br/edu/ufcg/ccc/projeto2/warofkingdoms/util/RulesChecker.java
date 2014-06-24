@@ -28,9 +28,9 @@ public class RulesChecker {
 
 	public RulesChecker() {
 		generateMapEntry("A", "B C");
-		generateMapEntry("B", "A C E");
+		generateMapEntry("B", "A C");
 		generateMapEntry("C", "A B D E F");
-		generateMapEntry("D", "G C");
+		generateMapEntry("D", "C G");
 		generateMapEntry("E", "C F");
 		generateMapEntry("F", "C E G I");
 		generateMapEntry("G", "D F I J");
@@ -41,17 +41,17 @@ public class RulesChecker {
 		generateMapEntry("L", "I J K M N O P");
 		generateMapEntry("M", "J L P Q");
 		generateMapEntry("N", "K L O");
-		generateMapEntry("O", "L N P S R");
+		generateMapEntry("O", "L N P R S");
 		generateMapEntry("P", "L M O Q S T");
 		generateMapEntry("Q", "M P T");
-		generateMapEntry("R", "O S U");
+		generateMapEntry("R", "O S U Y");
 		generateMapEntry("S", "O P R T U V");
 		generateMapEntry("T", "P Q S V X");
 		generateMapEntry("U", "R S V Z");
 		generateMapEntry("V", "S T U X Z");
 		generateMapEntry("X", "T V Z");
-		generateMapEntry("Y", "Z");
-		generateMapEntry("Z", "X V U Y");
+		generateMapEntry("Y", "R Z");
+		generateMapEntry("Z", "U V X Y");
 
 		currentPlayer = GameManager.getInstance().getCurrentPlayer();
 		playerHouse = currentPlayer.getHouse();

@@ -210,14 +210,14 @@ public class AIManager implements CommunicationManager {
 
 	private List<Move> getNonConflictingMoves(List<Move> moves,
 			List<Conflict> conflicts) {
+		
 		List<Move> nonConflictingMoves = new ArrayList<Move>();
+		
 		for (Move move : moves) {
 			boolean isConflicting = false;
 			for (Conflict conflict : conflicts) {
-				String moveTarget = move.getTarget().getName();
-				String conflictTerritory = conflict.getTerritory().getName();
 
-				if (moveTarget.equals(conflictTerritory)) {
+				if (move.getTarget().equals(conflict.getTerritory())) {
 					isConflicting = true;
 					break;
 				}
@@ -231,7 +231,10 @@ public class AIManager implements CommunicationManager {
 
 	private List<Territory> updateTerritories(List<Territory> currentMap,
 			List<Conflict> conflicts, List<Move> nonConflictingMoves) {
-		for (Move move : nonConflictingMoves) {
+		
+		List<Move> clonedMoves = cloneMoves(nonConflictingMoves);
+		
+		for (Move move : clonedMoves) {
 			int territoryIndex = currentMap.indexOf(move.getTarget());
 			currentMap.get(territoryIndex)
 					.setOwner(move.getOrigin().getOwner());
@@ -247,6 +250,19 @@ public class AIManager implements CommunicationManager {
 			}
 		}
 		return currentMap;
+	}
+
+	/*
+	 * 
+	 */
+	private List<Move> cloneMoves(List<Move> moves) {
+		
+		List<Move> clonedMoves = new ArrayList<Move>();
+		
+		for (Move move : moves) {
+			clonedMoves.add(move.clone());
+		}
+		return clonedMoves;
 	}
 
 	private int getBiggestDiceValueIndex(List<Integer> diceValues) {
@@ -268,6 +284,7 @@ public class AIManager implements CommunicationManager {
 		return biggestValueIndex;
 	}
 
+	@SuppressWarnings("deprecation")
 	private List<Territory> generateFirstMap() {
 		List<Territory> territories = new ArrayList<Territory>();
 		territories.add(new Territory("A"));

@@ -62,4 +62,13 @@ public class Territory implements Serializable {
 	public int hashCode() {
 		return name.hashCode();
 	}
+	
+	public Territory clone() {
+		Territory clonedTerritory = new Territory(name);
+		
+		if (owner != null) {
+			clonedTerritory.owner = owner.clone();
+		}
+		return clonedTerritory;
+	}
 }
