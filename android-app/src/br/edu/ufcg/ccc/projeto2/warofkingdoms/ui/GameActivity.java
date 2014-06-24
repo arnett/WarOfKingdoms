@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
@@ -482,7 +483,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			}
 			firstSelectedTerritoryForTheCurrentMove = null;
 
-			if (result.getConflicts() != null && result.getConflicts().size() != 0) {
+			if (result.getConflicts() != null && 
+				result.getConflicts().size() != 0 && 
+				currentPlayerIsInvolved(result.getConflicts())) {
 
 				isOpenningConflictActivity = true;
 
@@ -504,6 +507,22 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 			resetCountDown();
 		}
+	}
+
+	/*
+	 * Verify if the current player is involved in the current conflicts
+	 */
+	private boolean currentPlayerIsInvolved(List<Conflict> conflicts) {
+		
+		for (Conflict conflict : conflicts) {
+			for (House house : conflict.getHouses()) {
+				
+				if (house.equals(gameManager.getCurrentPlayer().getHouse())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

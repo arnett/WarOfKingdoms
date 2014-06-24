@@ -79,6 +79,11 @@ public class Conflict implements Parcelable{
 	        return new Conflict[size];
 	    }
 	};
+	
+	@Override
+	public String toString() {
+		return "Conflict ("+territory+"): Houses ["+houses+"], diceValues ["+diceValues+"]";
+	}
 }
 
 

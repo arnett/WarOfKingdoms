@@ -12,9 +12,8 @@ public class Constants {
 	// Networking constants
 
 //	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
-	public final static String SERVER_URL = "http://192.168.1.105:3000";  // ANDRE
-//	public final static String SERVER_URL = "http://10.0.0.4:3000";
-//	public final static String SERVER_URL = "http://192.168.0.12:3000";
+	//public final static String SERVER_URL = "http://192.168.1.105:3000";  // ANDRE
+	public final static String SERVER_URL = "http://10.0.0.4:3000"; // LUAN
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
