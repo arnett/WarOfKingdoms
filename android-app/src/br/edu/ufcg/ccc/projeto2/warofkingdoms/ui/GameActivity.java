@@ -93,7 +93,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private ChooseActionDialogFragment chooseActionDialogFragment;
 
-	private long startTime = 30 * 1000;
+	private long startTime = 65 * 1000;
 	private long interval = 1 * 1000;
 	private long seconds = startTime / 1000;
 	private long minutes = seconds / 60;
@@ -151,11 +151,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				reloadMaskImageBitmap();
 			}
 		});
-
-		long seconds = startTime / 1000;
-		long minutes = seconds / 60;
+		long formatedSeconds = seconds % 60;
 		timeCounter.setText(String.format("%02d", minutes) + ":"
-				+ String.format("%02d", seconds));
+				+ String.format("%02d", formatedSeconds));
 
 		countDown = new MyCountDownTimer(startTime, interval);
 
@@ -532,8 +530,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private void resetCountDown() {
 		countDown = new MyCountDownTimer(startTime, interval);
+		long formatedSeconds = seconds % 60;
 		timeCounter.setText(String.format("%02d", minutes) + ":"
-				+ String.format("%02d", seconds));
+				+ String.format("%02d", formatedSeconds));
 
 		countDown.start();
 	}
@@ -682,6 +681,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		@Override
 		public void onTick(long millisUntilFinished) {
 			long seconds = millisUntilFinished / 1000;
+			long formatedSeconds = seconds % 60;
 			long minutes = seconds / 60;
 			if (minutes == 0 && seconds <= 10) {
 				timeCounter.setTextColor(Color.parseColor("#FF0000"));
@@ -689,7 +689,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				timeCounter.setTextColor(Color.parseColor("#000000"));
 			}
 			timeCounter.setText(String.format("%02d", minutes) + ":"
-					+ String.format("%02d", seconds));
+					+ String.format("%02d", formatedSeconds));
 		}
 	}
 }
