@@ -14,12 +14,11 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 
 public class RulesChecker {
 
-	
-	Map<String, List<String>> territoriesBorders = new HashMap<String, List<String>>();
+	private Map<String, List<String>> territoriesBorders = new HashMap<String, List<String>>();
 	private Player currentPlayer;
 	private House playerHouse;
 	private static RulesChecker instance;
-	
+
 	public static RulesChecker getInstance() {
 		if (instance == null) {
 			instance = new RulesChecker();
@@ -53,130 +52,113 @@ public class RulesChecker {
 		generateMapEntry("X", "T V Z");
 		generateMapEntry("Y", "Z");
 		generateMapEntry("Z", "X V U Y");
-		
+
 		currentPlayer = GameManager.getInstance().getCurrentPlayer();
 		playerHouse = currentPlayer.getHouse();
 	}
-	
+
 	private void generateMapEntry(String key, String values) {
 		String[] valuesArray = values.split(" ");
-		List<String> valuesList = new ArrayList<String>(Arrays.asList(valuesArray));
+		List<String> valuesList = new ArrayList<String>(
+				Arrays.asList(valuesArray));
 		territoriesBorders.put(key, valuesList);
 	}
-	
+
 	/**
-	 * Check if the origin territory of a move is owned by
-	 * the player who is doing the move.
-	 * @param originTerritory
-	 * @return True if the origin territory is owned by the player
-	 */
-	public boolean checkOriginIsOwnedByPlayer(Territory originTerritory) {
-		if (originTerritory.getOwner() == null) {
-			return false;
-		}
-		if (originTerritory.getOwner().equals(playerHouse)) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Check if the target territory is owned by the player
-	 * who is doing the move. 
+	 * Check if the provided territory is owned by the player who is doing the
+	 * move.
+	 * 
 	 * @param targetTerritory
-	 * @return True if the target territory is owned by
-	 * the player. 
+	 * @return true if the provided territory is owned by the player.
 	 */
-	public boolean checkTargetIsOwnedByPlayer(Territory targetTerritory) {
+	public boolean isTerritoryOwnedByTheCurrentPlayer(Territory targetTerritory) {
 		if (targetTerritory.getOwner() == null) {
 			return false;
 		}
-		if (targetTerritory.getOwner().equals(playerHouse)) {
-			return true;
-		}
-		return false;
+		return targetTerritory.getOwner().equals(playerHouse);
 	}
-	
+
 	/**
-	 * Check if the target territory is already a target in another
-	 * move.
-	 * @param List of moves
-	 * @return True if the target territory is already a target
-	 * in another move.
+	 * Check if the target territory is already a target in another move.
+	 * 
+	 * @param List
+	 *            of moves
+	 * @return True if the target territory is already a target in another move.
 	 */
-	public boolean checkTerritorryAlreadyATarget(Territory targetTerritory) {
+	public boolean isTerritoryAlreadyATarget(Territory targetTerritory) {
 		List<Move> moves = GameManager.getInstance().getCurrentMoves();
 		for (Move move : moves) {
-			if(move.getTarget().equals(targetTerritory)) {
+			if (move.getTarget().equals(targetTerritory)) {
 				return true;
 			}
-		}
-		return false;
-	}
-	
-	public boolean checkTerritorryAlreadyAnOrigin(Territory targetTerritory) {
-		List<Move> moves = GameManager.getInstance().getCurrentMoves();
-		for (Move move : moves) {
-			if(move.getOrigin().equals(targetTerritory)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Check if the target territory is adjacent to the origin territory.
-	 * @param originTerritory
-	 * @param targetTerritory
-	 * @return True if the target is adjacent to the origin.
-	 */
-	public boolean checkTargetIsAdjacentToOrigin(Territory originTerritory, Territory targetTerritory) {
-		if (territoriesBorders.get(originTerritory.getName()).contains(targetTerritory.getName())) {
-			return true;
-		}
-		return false;
-	}
-	
-	/** 
-	 * Check if the territory to defend is owned by the player. 
-	 * @return True if the territory is owned by the player.
-	 */
-	public boolean checkDefendHisOwnTerritory(Territory defendedTerritory) {
-		if (defendedTerritory.getOwner().equals(playerHouse)) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Check if the number of moves is equals or smaller than the number
-	 * of territories owned by the player.
-	 * @return
-	 */
-	public boolean checkNumberOfMoves(List<Move> moves) {
-		List<Territory> territories = GameManager.getInstance().getAllTerritories();
-		int numberOfOccupiedTerritories = 0;
-		for (Territory territory : territories) {
-			if(territory.getOwner().equals(playerHouse)) {
-				numberOfOccupiedTerritories++;
-			}
-		}
-		if (moves.size() <= numberOfOccupiedTerritories) {
-			return true;
 		}
 		return false;
 	}
 
-	public boolean checkAllAdjacentIsOwnedByPlayer(Territory territory, List<Territory> territoriesList) {
+	public boolean isTerritoryAlreadyAnOrigin(Territory targetTerritory) {
+		List<Move> moves = GameManager.getInstance().getCurrentMoves();
+		for (Move move : moves) {
+			if (move.getOrigin().equals(targetTerritory)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if the target territory is adjacent to the origin territory.
+	 * 
+	 * @param originTerritory
+	 * @param targetTerritory
+	 * @return True if the target is adjacent to the origin.
+	 */
+	public boolean isTargetAdjacentToOrigin(Territory originTerritory,
+			Territory targetTerritory) {
+		return territoriesBorders.get(originTerritory.getName()).contains(
+				targetTerritory.getName());
+	}
+
+	/**
+	 * Check if the number of moves is equals or smaller than the number of
+	 * territories owned by the player.
+	 * 
+	 * @return
+	 */
+	public boolean checkNumberOfMoves(List<Move> moves) {
+		List<Territory> territories = GameManager.getInstance()
+				.getAllTerritories();
+		int numberOfOccupiedTerritories = 0;
+		for (Territory territory : territories) {
+			if (territory.getOwner().equals(playerHouse)) {
+				numberOfOccupiedTerritories++;
+			}
+		}
+		return moves.size() <= numberOfOccupiedTerritories;
+	}
+
+	public boolean areAllNeighborsOwnedByTheCurrentPlayer(Territory territory,
+			List<Territory> territoriesList) {
 		List<String> adjacentList = territoriesBorders.get(territory.getName());
 		for (String string : adjacentList) {
 			Territory territoryToCheck = new Territory(string);
 			for (Territory t : territoriesList) {
-				if(t.equals(territoryToCheck) && (t.getOwner() == null || !t.getOwner().equals(territory.getOwner()))) {
+				if (t.equals(territoryToCheck)
+						&& (t.getOwner() == null || !t.getOwner().equals(
+								territory.getOwner()))) {
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+
+	// TODO Move all graph stuff to a new entity responsible for handling
+	// neighbors
+	public List<Territory> getNeighbors(Territory territory) {
+		List<Territory> neighbors = new ArrayList<Territory>();
+		for (String territoryName : territoriesBorders.get(territory.getName())) {
+			neighbors.add(GameManager.getInstance().getTerritoryByName(territoryName));
+		}
+		return neighbors;
 	}
 }

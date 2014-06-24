@@ -37,4 +37,8 @@ public class Move {
 		this.action = action;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("origin(%s) target(%s), action(%s)", origin, target, action);
+	}
 }

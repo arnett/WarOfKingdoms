@@ -337,7 +337,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		RulesChecker rulesChecker = RulesChecker.getInstance();
 
 		if (rulesChecker
-				.checkTerritorryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
+				.isTerritoryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
 			Toast.makeText(
 					getBaseContext(),
 					"Invalid move: "
@@ -346,7 +346,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		}
 
 		else if (!rulesChecker
-				.checkOriginIsOwnedByPlayer(firstSelectedTerritoryForTheCurrentMove)) {
+				.isTerritoryOwnedByTheCurrentPlayer(firstSelectedTerritoryForTheCurrentMove)) {
 			Toast.makeText(
 					getBaseContext(),
 					"Invalid move: "
@@ -373,16 +373,16 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		RulesChecker rulesChecker = RulesChecker.getInstance();
 
-		if (rulesChecker.checkTargetIsOwnedByPlayer(touchedTerritory)) {
+		if (rulesChecker.isTerritoryOwnedByTheCurrentPlayer(touchedTerritory)) {
 			Toast.makeText(getBaseContext(),
 					"Invalid move: " + "This territory is owned by you.",
 					Toast.LENGTH_SHORT).show();
-		} else if (!rulesChecker.checkTargetIsAdjacentToOrigin(
+		} else if (!rulesChecker.isTargetAdjacentToOrigin(
 				firstSelectedTerritoryForTheCurrentMove, touchedTerritory)) {
 			Toast.makeText(getBaseContext(),
 					"Invalid move: " + "Target is not adjacent to the origin.",
 					Toast.LENGTH_SHORT).show();
-		} else if (rulesChecker.checkTerritorryAlreadyATarget(touchedTerritory)) {
+		} else if (rulesChecker.isTerritoryAlreadyATarget(touchedTerritory)) {
 			Toast.makeText(getBaseContext(),
 					"Invalid move: " + "You already attacked this territory.",
 					Toast.LENGTH_SHORT).show();

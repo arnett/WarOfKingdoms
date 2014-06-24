@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ai.AIPlayer;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
@@ -20,6 +21,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RandomEntities;
 
 public class AIManager implements CommunicationManager {
 
+	private final String LOG_TAG = "AIManager";
 	private static final String DEFAULT_ROOM_ID = "0";
 
 	private List<AIPlayer> bots;
@@ -41,33 +43,39 @@ public class AIManager implements CommunicationManager {
 		}
 		return instance;
 	}
-	
+
 	/*
 	 * Fake sendCurrentMoves (POST) server method
 	 */
 	@Override
-	public void sendCurrentMoves(OnTaskCompleted listener, List<Move> moves) {
-		
-		moves.addAll(getAIRoundMoves());
-		
-		List<Conflict> conflicts = processMoves(moves);
-		
+	public void sendCurrentMoves(OnTaskCompleted listener, List<Move> humanMoves) {
+		List<Move> allRoundMoves = new ArrayList<Move>();
+		allRoundMoves.addAll(humanMoves);
+		allRoundMoves.addAll(getAIRoundMoves());
+
 		SendMovesResult sendMovesResult = new SendMovesResult();
+
+		List<Conflict> conflicts = processMoves(allRoundMoves);
 		sendMovesResult.setConflicts(conflicts);
-		sendMovesResult.setGameState(new GameState(false,new ArrayList<Player>()));
+		sendMovesResult.setGameState(new GameState(false,
+				new ArrayList<Player>()));
 		sendMovesResult.setUpdatedMap(updatedMap);
+
+		Log.v(LOG_TAG, "Conflicts for the round: " + conflicts);
 		listener.onSendMovesTaskCompleted(sendMovesResult);
 	}
 
 	/*
-	 * Moves being processed as a fake server 
+	 * Moves being processed as a fake server
 	 */
 	private List<Conflict> processMoves(List<Move> moves) {
-		
+
 		List<Conflict> conflicts = generateConflicts(moves);
-		List<Move> nonConflictingMoves = getNonConflictingMoves(moves, conflicts);
-		
-		updatedMap = updateTerritories(updatedMap, conflicts, nonConflictingMoves);
+		List<Move> nonConflictingMoves = getNonConflictingMoves(moves,
+				conflicts);
+
+		updatedMap = updateTerritories(updatedMap, conflicts,
+				nonConflictingMoves);
 		return conflicts;
 	}
 
@@ -89,11 +97,11 @@ public class AIManager implements CommunicationManager {
 
 		listener.onConnectTaskCompleted(connectResult);
 	}
-	
+
 	private List<Move> getAIRoundMoves() {
-		
+
 		List<Move> AIMoves = new ArrayList<Move>();
-		
+
 		for (AIPlayer bot : bots) {
 			AIMoves.addAll(bot.getGeneratedRoundMoves());
 		}
@@ -115,7 +123,10 @@ public class AIManager implements CommunicationManager {
 		Player nextPlayer = generator.nextPlayer(chosenHouses);
 		AIPlayer randomAiPlayer = new AIPlayer(updatedMap);
 		randomAiPlayer.setName(nextPlayer.getName());
+		randomAiPlayer.setHouse(nextPlayer.getHouse());
 		randomAiPlayer.setId(nextPlayer.getId());
+		House a = randomAiPlayer.getHouse();
+		a.getName();
 		return randomAiPlayer;
 	}
 
@@ -137,38 +148,39 @@ public class AIManager implements CommunicationManager {
 	}
 
 	private List<Conflict> generateConflicts(List<Move> moves) {
-		
 		List<Conflict> conflicts = new ArrayList<Conflict>();
-		
 		for (Move aMove : moves) {
-			
 			Conflict aConflict = null;
-			
+
 			// avoiding create multiples conflicts for a territory
 			if (conflictAlreadyExists(aMove, conflicts)) {
 				continue;
 			}
-			
+
 			for (Move anotherMove : moves) {
-				
 				String aMoveTarget = aMove.getTarget().getName();
 				String anotherMoveTarget = anotherMove.getTarget().getName();
-				
+
 				// verifying if has a conflict ("they want the same territory")
 				if (aMoveTarget.equals(anotherMoveTarget)) {
-					
-					String aMoveOriginOwner = aMove.getOrigin().getOwner().getName();
-					String anotherMoveOriginOwner = anotherMove.getOrigin().getOwner().getName();
-					
+					String aMoveOriginOwner = aMove.getOrigin().getOwner()
+							.getName();
+					String anotherMoveOriginOwner = anotherMove.getOrigin()
+							.getOwner().getName();
+
 					// avoiding create a conflict with itself
-					if (! aMoveOriginOwner.equals(anotherMoveOriginOwner)) {
-						
+					if (!aMoveOriginOwner.equals(anotherMoveOriginOwner)) {
+
 						if (aConflict == null) {
-							aConflict = new Conflict(aMove.getTarget(), new ArrayList<House>(), new ArrayList<Integer>());
-							aConflict.getHouses().add(aMove.getOrigin().getOwner());
+							aConflict = new Conflict(aMove.getTarget(),
+									new ArrayList<House>(),
+									new ArrayList<Integer>());
+							aConflict.getHouses().add(
+									aMove.getOrigin().getOwner());
 							aConflict.getDiceValues().add(getRandomDiceValue());
 						}
-						aConflict.getHouses().add(anotherMove.getOrigin().getOwner());
+						aConflict.getHouses().add(
+								anotherMove.getOrigin().getOwner());
 						aConflict.getDiceValues().add(getRandomDiceValue());
 					}
 				}
@@ -177,21 +189,18 @@ public class AIManager implements CommunicationManager {
 				conflicts.add(aConflict);
 			}
 		}
-		
+
 		return conflicts;
 	}
-	
+
 	private Integer getRandomDiceValue() {
 		Random rand = new Random();
-		return rand.nextInt(6)+1; // from 1 to 6
+		return rand.nextInt(6) + 1; // from 1 to 6
 	}
 
 	private boolean conflictAlreadyExists(Move move, List<Conflict> conflicts) {
-		
 		for (Conflict conflict : conflicts) {
-			
 			String conflictTerritoryName = conflict.getTerritory().getName();
-			
 			if (conflictTerritoryName.equals(move.getTarget().getName())) {
 				return true;
 			}
@@ -199,83 +208,63 @@ public class AIManager implements CommunicationManager {
 		return false;
 	}
 
-	private List<Move> getNonConflictingMoves(
-											List<Move> moves,
-											List<Conflict> conflicts) {
-		
+	private List<Move> getNonConflictingMoves(List<Move> moves,
+			List<Conflict> conflicts) {
 		List<Move> nonConflictingMoves = new ArrayList<Move>();
-		
 		for (Move move : moves) {
-			
 			boolean isConflicting = false;
-			
 			for (Conflict conflict : conflicts) {
-				
 				String moveTarget = move.getTarget().getName();
-				String conflictTerritory = conflict.getTerritory().getName(); 
-				
+				String conflictTerritory = conflict.getTerritory().getName();
+
 				if (moveTarget.equals(conflictTerritory)) {
 					isConflicting = true;
 					break;
 				}
 			}
-			
 			if (!isConflicting) {
 				nonConflictingMoves.add(move);
 			}
 		}
 		return nonConflictingMoves;
 	}
-	
-	private List<Territory> updateTerritories(
-			List<Territory> currentMap,
-			List<Conflict> conflicts, 
-			List<Move> nonConflictingMoves) {
-		
+
+	private List<Territory> updateTerritories(List<Territory> currentMap,
+			List<Conflict> conflicts, List<Move> nonConflictingMoves) {
 		for (Move move : nonConflictingMoves) {
-			
 			int territoryIndex = currentMap.indexOf(move.getTarget());
-			currentMap.get(territoryIndex).setOwner(move.getOrigin().getOwner());
+			currentMap.get(territoryIndex)
+					.setOwner(move.getOrigin().getOwner());
 		}
-		
 		for (Conflict conflict : conflicts) {
-			
-			int biggestDiceValueIndex = getBiggestDiceValueIndex(conflict.getDiceValues());
-			
+			int biggestDiceValueIndex = getBiggestDiceValueIndex(conflict
+					.getDiceValues());
 			if (biggestDiceValueIndex != -1) {
-				
-				int territoryIndex = currentMap.indexOf(conflict.getTerritory());
-				currentMap.get(territoryIndex).setOwner(conflict.getHouses().get(biggestDiceValueIndex));
+				int territoryIndex = currentMap
+						.indexOf(conflict.getTerritory());
+				currentMap.get(territoryIndex).setOwner(
+						conflict.getHouses().get(biggestDiceValueIndex));
 			}
 		}
-		
 		return currentMap;
 	}
-	
-	private int getBiggestDiceValueIndex(List<Integer> diceValues) {
 
-		int biggestValue =  -1;
+	private int getBiggestDiceValueIndex(List<Integer> diceValues) {
+		int biggestValue = -1;
 		int biggestValueIndex = -1;
 		boolean hasMoreThanOneBiggestValue = false;
-		
 		for (int i = 0; i < diceValues.size(); i++) {
-			
 			if (diceValues.get(i) > biggestValue) {
-				
 				biggestValue = diceValues.get(i);
 				biggestValueIndex = i;
 				hasMoreThanOneBiggestValue = false;
-			
 			} else if (diceValues.get(i) == biggestValue) {
-				
 				hasMoreThanOneBiggestValue = true;
 			}
 		}
-		
 		if (hasMoreThanOneBiggestValue) {
 			return -1;
 		}
-
 		return biggestValueIndex;
 	}
 

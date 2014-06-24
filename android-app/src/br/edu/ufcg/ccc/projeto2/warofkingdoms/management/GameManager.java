@@ -81,7 +81,7 @@ public class GameManager {
 		if (territory.getOwner() == null) {
 			return null;
 		}
-		if (runChecker.checkAllAdjacentIsOwnedByPlayer(territory, getAllTerritories()))	 {
+		if (runChecker.areAllNeighborsOwnedByTheCurrentPlayer(territory, getAllTerritories()))	 {
 			return new Action[] {Action.DEFEND};
 		}
 		if (territory.getOwner().equals(currentPlayer.getHouse())) {
