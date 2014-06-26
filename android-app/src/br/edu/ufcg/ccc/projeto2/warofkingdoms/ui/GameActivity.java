@@ -167,7 +167,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void showDialog(String title, String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.TempDialogTheme);
 		builder.setTitle(title);
 		builder.setMessage(message);
 		builder.setPositiveButton("OK", null);
@@ -474,7 +474,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void startCancelMovePopup(Action[] actions) {
-		AlertDialog cancelDialog = new AlertDialog.Builder(this).create();
+		AlertDialog cancelDialog = new AlertDialog.Builder(this, R.style.TempDialogTheme).create();
 		cancelDialog.setTitle("Cancel move");
 		cancelDialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {

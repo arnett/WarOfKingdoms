@@ -30,7 +30,7 @@ public class ChooseGameModeDialogFragment extends DialogFragment {
 				Constants.SINGLEPLAYER_GAME_MODE,
 				Constants.MULTIPLAYER_GAME_MODE };
 		
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.TempDialogTheme);
 		builder.setTitle("Game Mode");
 		builder.setItems(GAME_TYPES,
 				new DialogInterface.OnClickListener() {

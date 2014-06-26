@@ -74,7 +74,9 @@
     	<item name="android:windowContentOverlay">@null</item>
 	</style>
 	
-	<style name="TempDialogTheme" parent="@android:style/Theme.Black.NoTitleBar">
-		<item name="android:layout_gravity">center</item>
+	<style name="TempDialogTheme" parent="android:Theme.Holo.Dialog">
+		<item name="android:windowFullscreen">false</item>
+    	<item name="android:windowContentOverlay">@null</item>
 	</style>
+	
 </resources>
