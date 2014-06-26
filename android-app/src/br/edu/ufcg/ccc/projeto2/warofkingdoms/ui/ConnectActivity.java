@@ -61,7 +61,7 @@ OnTaskCompleted, OnGameModeSelectedListener {
 
 		currentPlayer = gameManager.getCurrentPlayer();
 //		TODO HARDCODED Number of players in room set to 2
-		connectEntity = new Connect(1, currentPlayer);
+		connectEntity = new Connect(2, currentPlayer);
 
 		playBtn = (ImageView) findViewById(R.id.playButton);
 		playBtn.setOnClickListener(this);
