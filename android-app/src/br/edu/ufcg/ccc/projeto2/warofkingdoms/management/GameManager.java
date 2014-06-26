@@ -90,6 +90,10 @@ public class GameManager {
 			return null;
 		}
 	}
+	
+	public Action[] getCancelActions(Territory territory) {
+		return new Action[] {Action.CANCEL, Action.OK};
+	}
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
