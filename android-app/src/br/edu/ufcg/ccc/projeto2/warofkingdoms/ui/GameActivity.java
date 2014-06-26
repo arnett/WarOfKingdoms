@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,8 +71,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private View mapImage;
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
-	private Button nextPhaseButton;
-	private Button objectiveButton;
+	private ImageView nextPhaseButton;
+	private ImageView objectiveButton;
 	private TextView timeCounter;
 
 	private SelectionState currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
@@ -131,8 +130,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
 
-		nextPhaseButton = (Button) findViewById(R.id.nextPhaseButton);
-		objectiveButton = (Button) findViewById(R.id.objectiveButton);
+		nextPhaseButton = (ImageView) findViewById(R.id.nextPhaseButton);
+		objectiveButton = (ImageView) findViewById(R.id.objectiveButton);
 		timeCounter = (TextView) findViewById(R.id.time_counter);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);

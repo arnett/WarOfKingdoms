@@ -1,6 +1,7 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
+import br.ufcg.edu.ccc.projeto2.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

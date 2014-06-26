@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -47,8 +47,34 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-
+    
     <style name="noAnimTheme" parent="AppBaseTheme">
-	   <item name="android:windowAnimationStyle">@null</item>
+		<item name="android:windowAnimationStyle">@null</item>
+	    <item name="android:textColor">@color/white</item>
+	    <item name="android:typeface">sans</item>
+	    <item name="android:actionBarStyle">@style/OtherScreens.ActionBar</item>
+	</style>
+	
+    <style name="gameScreenTheme" parent="AppBaseTheme">
+        <item name="android:windowAnimationStyle">@null</item>
+	    <item name="android:textColor">@color/white</item>
+	    <item name="android:typeface">sans</item>
+	    <item name="android:actionBarStyle">@style/GameScreen.ActionBar</item>
+    </style>
+    	
+    <style name="GameScreen.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:displayOptions">showHome|useLogo</item>
+	    <item name="android:background">@color/map_sea_color</item>
+    	<item name="android:windowContentOverlay">@null</item>
+	</style>
+    	
+	<style name="OtherScreens.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+	    <item name="android:displayOptions">showHome|useLogo</item>
+	    <item name="android:background">@color/mainBackgroundColor</item>
+    	<item name="android:windowContentOverlay">@null</item>
+	</style>
+	
+	<style name="TempDialogTheme" parent="@android:style/Theme.Black.NoTitleBar">
+		<item name="android:layout_gravity">center</item>
 	</style>
 </resources>

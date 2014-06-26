@@ -81,7 +81,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/smaller_next_button" />
+                android:src="@drawable/next_button" />
 
             <ImageView
                 android:id="@+id/objectiveButton"
@@ -90,7 +90,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/smaller_goal_icon" />
+                android:src="@drawable/goal_icon" />
 
         </LinearLayout>
 
