@@ -32,7 +32,6 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.AIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.CommunicationManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
@@ -113,17 +112,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		territoryManager = TerritoryUIManager.getInstance();
 		houseTokenManager = HouseTokenManager.getInstance();
 		profileManager = ProfileManager.getInstance();
-
-		Bundle a = getIntent().getExtras();
-		String gameMode = a.getString(Constants.GAME_MODE);
-
-		if (gameMode.equals(Constants.SINGLEPLAYER_GAME_MODE)) {
-			communicationManager = AIManager.getInstance();
-		} else if (gameMode.equals(Constants.MULTIPLAYER_GAME_MODE)) {
-			communicationManager = NetworkManager.getInstance();
-		} else {
-			Log.e(LOG_TAG, "Game type error");
-		}
+		communicationManager = NetworkManager.getInstance();
 
 		setContentView(R.layout.map_screen);
 

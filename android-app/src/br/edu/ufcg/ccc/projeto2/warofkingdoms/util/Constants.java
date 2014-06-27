@@ -65,9 +65,4 @@ public class Constants {
 	public final static String NUM_VICTORIES_KEY = "numVictories";
 	public static final String VICTORY_TRACK_SHARED_PREFERENCE = "victoryTrackPreference";
 	public static final String TEN_LAST_GAMES = "tenLastGames";
-
-	// Activity parameters
-	public static final String GAME_MODE = "gameMode";
-	public static final String SINGLEPLAYER_GAME_MODE = "Singleplayer";
-	public static final String MULTIPLAYER_GAME_MODE = "Multiplayer";
 }

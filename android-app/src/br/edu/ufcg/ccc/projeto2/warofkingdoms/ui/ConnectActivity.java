@@ -1,10 +1,6 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_MODE;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.MULTIPLAYER_GAME_MODE;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SINGLEPLAYER_GAME_MODE;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,19 +10,17 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.AIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.CommunicationManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseGameModeDialogFragment.OnGameModeSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ConnectActivity extends Activity implements OnClickListener,
-OnTaskCompleted, OnGameModeSelectedListener {
+OnTaskCompleted {
 
 	private final String LOG_TAG = "ConnectActivity";
 
@@ -47,11 +41,7 @@ OnTaskCompleted, OnGameModeSelectedListener {
 
 	private CustomProgressDialog waitDialog;
 
-	private String CHOOSE_GAME_DIALOG_FRAGMENT_TAG = "CHOOSE_GAME_DIALOG_FRAGMENT_TAG";
-	
 	private int NUM_PLAYER_PER_ROOM = 2;
-
-	private String gameMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +86,8 @@ OnTaskCompleted, OnGameModeSelectedListener {
 		
 		if (v == playBtn) {
 
-			startChooseGameModeDialog();
+			communicationManager = NetworkManager.getInstance();
+			startNetworkGame();
 		} else if (v == aboutBtn) {
 
 			startActivity(new Intent(this, AboutActivity.class));
@@ -106,12 +97,6 @@ OnTaskCompleted, OnGameModeSelectedListener {
 			Intent intent = new Intent(this, ProfileActivity.class); 
 			startActivity(intent);
 		}
-	}
-
-	private void startChooseGameModeDialog() {
-		DialogFragment chooseGameDialogFragment = new ChooseGameModeDialogFragment();
-		chooseGameDialogFragment.show(getFragmentManager(),
-				CHOOSE_GAME_DIALOG_FRAGMENT_TAG);
 	}
 
 	private void startNetworkGame() {
@@ -125,10 +110,6 @@ OnTaskCompleted, OnGameModeSelectedListener {
 					"You don't have internet connection.");
 			errorDialog.showAlertDialog();
 		}
-	}
-
-	private void startAIGame() {
-		communicationManager.connect(this, connectEntity);
 	}
 
 	@Override
@@ -163,11 +144,6 @@ OnTaskCompleted, OnGameModeSelectedListener {
 
 			Log.v(LOG_TAG, "Starting GameActivity");
 			Intent intent = new Intent(this, GameActivity.class);
-
-			Bundle extras = new Bundle();
-			extras.putString(GAME_MODE, gameMode);
-			intent.putExtras(extras);
-
 			startActivity(intent);
 
 			isOpenningGameActivity = true;
@@ -180,18 +156,5 @@ OnTaskCompleted, OnGameModeSelectedListener {
 			waitDialog.dismiss();
 		}
 		super.onDestroy();
-	}
-
-	@Override
-	public void onGameModeSelected(String selectedMode) {
-		gameMode = selectedMode;
-
-		if (selectedMode.equals(MULTIPLAYER_GAME_MODE)) {
-			communicationManager = NetworkManager.getInstance();
-			startNetworkGame();
-		} else if (selectedMode.equals(SINGLEPLAYER_GAME_MODE)) {
-			communicationManager = AIManager.getInstance();
-			startAIGame();
-		}
 	}
 }
