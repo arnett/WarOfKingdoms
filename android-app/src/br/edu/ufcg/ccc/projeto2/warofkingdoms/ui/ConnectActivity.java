@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Connect;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
@@ -42,17 +43,20 @@ OnTaskCompleted, OnGameModeSelectedListener {
 	private ImageView playBtn;
 	private ImageView aboutBtn;
 	private ImageView profileBtn;
+	private AlphaAnimation alphaAnimation = new AlphaAnimation(1F, 0.2F);
 
 	private CustomProgressDialog waitDialog;
 
 	private String CHOOSE_GAME_DIALOG_FRAGMENT_TAG = "CHOOSE_GAME_DIALOG_FRAGMENT_TAG";
+	
+	private int NUM_PLAYER_PER_ROOM = 2;
 
 	private String gameMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_screen);
+		setContentView(R.layout.home_screen);
 
 		resetPreviousGameState();
 
@@ -60,16 +64,15 @@ OnTaskCompleted, OnGameModeSelectedListener {
 		houseTokenManager = HouseTokenManager.getInstance();
 
 		currentPlayer = gameManager.getCurrentPlayer();
-//		TODO HARDCODED Number of players in room set to 2
-		connectEntity = new Connect(1, currentPlayer);
+		connectEntity = new Connect(NUM_PLAYER_PER_ROOM, currentPlayer);
 
-		playBtn = (ImageView) findViewById(R.id.playButton);
+		playBtn = (ImageView) findViewById(R.id.playBtn);
 		playBtn.setOnClickListener(this);
 
-		aboutBtn = (ImageView) findViewById(R.id.aboutButton);
+		aboutBtn = (ImageView) findViewById(R.id.aboutBtn);
 		aboutBtn.setOnClickListener(this);
 
-		profileBtn = (ImageView) findViewById(R.id.profileButton);
+		profileBtn = (ImageView) findViewById(R.id.profileBtn);
 		profileBtn.setOnClickListener(this);
 
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
@@ -89,6 +92,8 @@ OnTaskCompleted, OnGameModeSelectedListener {
 
 	@Override
 	public void onClick(View v) {
+		v.startAnimation(alphaAnimation);
+		
 		if (v == playBtn) {
 
 			startChooseGameModeDialog();

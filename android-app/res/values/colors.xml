@@ -1,5 +1,10 @@
 <resources>
 
+    <!-- Home Screen Colors -->
+    <color name="gray_home_screen">#E0E0E0</color>
+    <color name="purple_home_screen">#5F35B1</color>
+    
+    <!-- Old Colors -->
     <color name="black_overlay">#66000000</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>

@@ -123,7 +123,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			Log.e(LOG_TAG, "Game type error");
 		}
 
-		setContentView(R.layout.activity_game);
+		setContentView(R.layout.map_screen);
 
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
