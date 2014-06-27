@@ -2,47 +2,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackgroundColor"
-    android:orientation="vertical"
-    android:weightSum="100">
+    android:background="@color/gray_home_screen"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_weight="20"
-        android:orientation="horizontal" >
+        android:background="@color/green_home_screen"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
-        </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/about_label"
-                android:textSize="50sp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        </LinearLayout>
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="50sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="45"
+        android:orientation="vertical" 
+        android:layout_weight="1">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TextView
@@ -51,9 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/developers_label"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/dark_gray"
-            android:textSize="50sp"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/textView2"
@@ -62,18 +71,20 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:text="@string/andre_label"
-            android:textSize="40sp"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green_home_screen" 
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/arnett_label"
             android:layout_marginTop="15dp"
-            android:textSize="40sp"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/arnett_label"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green_home_screen" 
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/textView4"
@@ -81,9 +92,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:textSize="40sp"
             android:text="@string/luan_label"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green_home_screen"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/textView5"
@@ -91,15 +103,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:textSize="40sp"
             android:text="@string/rafael_label"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green_home_screen"
+            android:textSize="30sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="45"
+        android:orientation="vertical" 
+        android:layout_weight="1">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TextView
@@ -108,9 +127,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/support_feedback_label"
-            android:textColor="@color/dark_gray"
-            android:textSize="50sp"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_gray" 
+            android:textSize="40sp"/>
 
         <TextView
             android:id="@+id/textView8"
@@ -119,9 +138,16 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:text="@string/game_email_label"
-            android:textSize="40sp"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green_home_screen"
+            android:textSize="30sp" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:layout_weight="1">
     </LinearLayout>
     
 </LinearLayout>

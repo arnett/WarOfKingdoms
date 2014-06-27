@@ -43,7 +43,7 @@ OnTaskCompleted, OnGameModeSelectedListener {
 	private ImageView playBtn;
 	private ImageView aboutBtn;
 	private ImageView profileBtn;
-	private AlphaAnimation alphaAnimation = new AlphaAnimation(1F, 0.2F);
+	private AlphaAnimation alphaAnimation = new AlphaAnimation(1F, 0.5F);
 
 	private CustomProgressDialog waitDialog;
 

@@ -165,7 +165,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		mRenderer.setShowLegend(false);
 		
 		mRenderer.setApplyBackgroundColor(true);
-		mRenderer.setBackgroundColor(Color.rgb(107, 160, 176));
+		mRenderer.setBackgroundColor(Color.rgb(224, 224, 224));
 		mRenderer.setChartTitleTextSize(50);
 		mRenderer.setMargins(new int[] { 20, 30, 15, 0 });
 		mRenderer.setZoomButtonsVisible(false);

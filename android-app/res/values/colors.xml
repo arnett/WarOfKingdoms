@@ -3,6 +3,8 @@
     <!-- Home Screen Colors -->
     <color name="gray_home_screen">#E0E0E0</color>
     <color name="purple_home_screen">#5F35B1</color>
+    <color name="green_home_screen">#259B25</color>
+    <color name="orange_home_screen">#FF9800</color>
     
     <!-- Old Colors -->
     <color name="black_overlay">#66000000</color>

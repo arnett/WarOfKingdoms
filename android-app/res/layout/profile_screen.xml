@@ -3,25 +3,44 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@color/mainBackgroundColor"
+    android:background="@color/gray_home_screen"
     android:weightSum="100">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" 
-        android:layout_weight="10"
-        android:background="@color/mainBackgroundColor">
+        android:background="@color/orange_home_screen"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/victory_track_label"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal" >
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/profile_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="30sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -36,8 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="20"
-        android:background="@color/mainBackgroundColor"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:background="@color/gray_home_screen">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -50,6 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="60%"
+            android:textColor="@color/green"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <LinearLayout
@@ -63,6 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="40%"
+            android:textColor="@color/red"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <LinearLayout
@@ -85,6 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/last_ten_games_label"
+            android:textColor="@color/dark_gray"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <LinearLayout
