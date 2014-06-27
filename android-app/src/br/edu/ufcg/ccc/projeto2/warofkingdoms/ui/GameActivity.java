@@ -94,7 +94,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private ChooseActionDialogFragment chooseActionDialogFragment;
 
-	private long startTime = 65 * 1000;
+	private long startTime = 6005 * 1000;//65 * 1000;
 	private long interval = 1 * 1000;
 	private long seconds = startTime / 1000;
 	private long minutes = seconds / 60;
@@ -323,6 +323,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private void processTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
+		
+		Log.d(LOG_TAG, "touched position X "
+				+ motionEventX +" Y "+motionEventY);
+		
 		switch (currentActionSelectionState) {
 		case SELECTING_ORIGIN:
 			processFirstTouch(motionEventX, motionEventY, touchedPixelColor);
@@ -694,30 +698,12 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private int getMapWidth() {
 		ImageView mapImageView = (ImageView) mapImage;
-		int ih = mapImageView.getMeasuredHeight();
-		int iw = mapImageView.getMeasuredWidth();
-		int iH = mapImageView.getDrawable().getIntrinsicHeight();
-		int iW = mapImageView.getDrawable().getIntrinsicWidth();
-
-		if (ih / iH <= iw / iW) {
-			iw = iW * ih / iH;
-		}
-
-		return iw;
+		return mapImageView.getMeasuredWidth();
 	}
 
 	private int getMapHeight() {
 		ImageView mapImageView = (ImageView) mapImage;
-		int ih = mapImageView.getMeasuredHeight();
-		int iw = mapImageView.getMeasuredWidth();
-		int iH = mapImageView.getDrawable().getIntrinsicHeight();
-		int iW = mapImageView.getDrawable().getIntrinsicWidth();
-
-		if (ih / iH > iw / iW) {
-			iw = iW * ih / iH;
-		}
-
-		return ih;
+		return mapImageView.getMeasuredHeight();
 	}
 
 	/**
