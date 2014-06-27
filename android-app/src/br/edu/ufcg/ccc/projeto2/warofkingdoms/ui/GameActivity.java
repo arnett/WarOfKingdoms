@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.AIManager;
@@ -165,7 +167,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void showDialog(String title, String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.TempDialogTheme);
 		builder.setTitle(title);
 		builder.setMessage(message);
 		builder.setPositiveButton("OK", null);
@@ -268,6 +270,27 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		}
 	}
 
+	private void drawActionTokens() {
+		for (Move move : gameManager.getCurrentMoves()) {
+			if (move.getAction().equals(Action.ATTACK)) {
+				int xTerritoryCenter = territoryManager.getTerritoryUICenter(
+						move.getTarget()).getCenterX(getMapWidth());
+				int yTerritoryCenter = territoryManager.getTerritoryUICenter(
+						move.getTarget()).getCenterY(getMapHeight());
+				addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
+						yTerritoryCenter, tokenLayout);
+			}
+			else if (move.getAction().equals(Action.DEFEND)) {
+				int xTerritoryCenter = territoryManager.getTerritoryUICenter(
+						move.getTarget()).getCenterX(getMapWidth());
+				int yTerritoryCenter = territoryManager.getTerritoryUICenter(
+						move.getTarget()).getCenterY(getMapHeight());
+				addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
+						yTerritoryCenter, tokenLayout);
+			}
+		}
+	}
+
 	private int getTokenImage(Territory territory) {
 		return houseTokenManager.getTokenImage(territory);
 	}
@@ -334,7 +357,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		RulesChecker rulesChecker = RulesChecker.getInstance();
 
-		if (rulesChecker
+		if(rulesChecker.isTerritoryAlreadyATarget(firstSelectedTerritoryForTheCurrentMove)) {
+			Action[] applicableActionsToThisTerritory = gameManager
+					.getCancelActions(firstSelectedTerritoryForTheCurrentMove);
+
+			startCancelMovePopup(applicableActionsToThisTerritory);
+		}
+		else if (rulesChecker
 				.isTerritoryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
 			Toast.makeText(
 					getBaseContext(),
@@ -425,7 +454,38 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
+		case OK:
+			Move moveToRemove = null;
+			List<Move> currentMoves = gameManager.getCurrentMoves();
+			for (Move move : currentMoves) {
+				if(move.getTarget().equals(firstSelectedTerritoryForTheCurrentMove)) {
+					moveToRemove = move;
+				}
+			}
+			gameManager.getCurrentMoves().remove(moveToRemove);
+			drawTerritoryOwnershipTokens();
+			drawActionTokens();	
+			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
+			break;
+		case CANCEL:
+			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
+			break;
 		}
+	}
+
+	private void startCancelMovePopup(Action[] actions) {
+		AlertDialog cancelDialog = new AlertDialog.Builder(this, R.style.TempDialogTheme).create();
+		cancelDialog.setTitle("Cancel move");
+		cancelDialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				onActionSelected(Action.OK);
+			}
+		});
+		cancelDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+		cancelDialog.show();
 	}
 
 	private boolean contains(String[] array, String element) {
@@ -474,7 +534,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is down", 
 					"The server is not responding.");
 			errorDialog.showAlertDialog();
-			
+
 		}
 		else {
 			if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
@@ -483,8 +543,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			firstSelectedTerritoryForTheCurrentMove = null;
 
 			if (result.getConflicts() != null && 
-				result.getConflicts().size() != 0 && 
-				currentPlayerIsInvolved(result.getConflicts())) {
+					result.getConflicts().size() != 0 && 
+					currentPlayerIsInvolved(result.getConflicts())) {
 
 				isOpenningConflictActivity = true;
 
@@ -512,10 +572,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	 * Verify if the current player is involved in the current conflicts
 	 */
 	private boolean currentPlayerIsInvolved(List<Conflict> conflicts) {
-		
+
 		for (Conflict conflict : conflicts) {
 			for (House house : conflict.getHouses()) {
-				
+
 				if (house.equals(gameManager.getCurrentPlayer().getHouse())) {
 					return true;
 				}
