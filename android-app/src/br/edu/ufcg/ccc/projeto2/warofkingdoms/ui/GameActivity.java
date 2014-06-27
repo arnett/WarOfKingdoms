@@ -94,7 +94,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private ChooseActionDialogFragment chooseActionDialogFragment;
 
-	private long startTime = 6005 * 1000;//65 * 1000;
+	private long startTime = 65 * 1000;
 	private long interval = 1 * 1000;
 	private long seconds = startTime / 1000;
 	private long minutes = seconds / 60;

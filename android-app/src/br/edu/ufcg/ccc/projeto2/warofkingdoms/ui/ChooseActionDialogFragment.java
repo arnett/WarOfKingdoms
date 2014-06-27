@@ -2,12 +2,15 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
@@ -44,8 +47,14 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 			ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View view = inflater.inflate(R.layout.custom_dialog, container);
+		View view = inflater.inflate(R.layout.action_dialog, container);
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
+		
+		final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.gravity = Gravity.CENTER;
 		
 		actionDefenseLayout = (LinearLayout) view.findViewById(R.id.action_defense_layout);
 		actionAttackLayout = (LinearLayout) view.findViewById(R.id.action_attack_layout);
@@ -56,9 +65,6 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 		
 		defenseActionBtn = (ImageView) view.findViewById(R.id.defense_action_button);
 		defenseActionBtn.setOnClickListener(this);
-		
-		setStyle(STYLE_NO_FRAME, android.R.style.Theme_Translucent_NoTitleBar);
-		
 		
 		if (actions.length == 1) {	// only attack - hiding the defense action
 			

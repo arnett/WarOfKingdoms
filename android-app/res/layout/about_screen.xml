@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green_home_screen"
+        android:background="@color/green_about"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -71,7 +71,7 @@
             android:layout_marginTop="15dp"
             android:text="@string/andre_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/green_home_screen" />
+            android:textColor="@color/green_about" />
 
         <TextView
             android:id="@+id/textView3"
@@ -81,7 +81,7 @@
             android:layout_marginTop="15dp"
             android:text="@string/arnett_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/green_home_screen" />
+            android:textColor="@color/green_about" />
 
         <TextView
             android:id="@+id/textView4"
@@ -91,7 +91,7 @@
             android:layout_marginTop="15dp"
             android:text="@string/luan_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/green_home_screen" />
+            android:textColor="@color/green_about" />
 
         <TextView
             android:id="@+id/textView5"
@@ -101,7 +101,7 @@
             android:layout_marginTop="15dp"
             android:text="@string/rafael_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/green_home_screen" />
+            android:textColor="@color/green_about" />
     </LinearLayout>
 
     <LinearLayout
@@ -133,7 +133,7 @@
             android:layout_marginTop="15dp"
             android:text="@string/game_email_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/green_home_screen" />
+            android:textColor="@color/green_about" />
     </LinearLayout>
 
     <LinearLayout

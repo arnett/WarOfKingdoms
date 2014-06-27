@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
@@ -30,7 +30,8 @@ public class ConflictActivity extends Activity implements OnClickListener{
 	
 	private TextView territoryInConflictTextView;
 	private ImageView unknownDiceImg; 
-	private RelativeLayout mainLayout;
+	
+	private LinearLayout headerLayout;
 	private Button nextConflictBtn;
 	
 	private TextView tapDiceLabel;
@@ -60,7 +61,7 @@ public class ConflictActivity extends Activity implements OnClickListener{
 		
 		tapDiceLabel = (TextView) findViewById(R.id.tapDiceLabel);
 		
-		mainLayout = (RelativeLayout) findViewById(R.id.conflict_mainLayout);
+		headerLayout = (LinearLayout) findViewById(R.id.conflict_header_layout);
 		
 		nextConflictBtn = (Button) findViewById(R.id.nextConflictBtn);
 		nextConflictBtn.setOnClickListener(this);
@@ -112,14 +113,14 @@ public class ConflictActivity extends Activity implements OnClickListener{
 			
 			backgroundColor = getResources().getColor(R.color.gray);
 			resultStr = "It's a draw! No one won";
-			
-			mainLayout.setBackgroundColor(getResources().getColor(R.color.gray));
+			headerLayout.setBackgroundColor(getResources().getColor(R.color.gray));
 			break;
 		}
 		
-		mainLayout.setBackgroundColor(backgroundColor);
+		headerLayout.setBackgroundColor(backgroundColor);
 		unknownDiceImg.setImageResource(getDiceImg(diceValue));
 		tapDiceLabel.setText(resultStr);
+		tapDiceLabel.setTextColor(backgroundColor);
 	}
 
 	private int getDiceImg(int diceValue) {
@@ -147,7 +148,8 @@ public class ConflictActivity extends Activity implements OnClickListener{
 		currentConflictIndex++;
 		currentConflict = conflicts.get(currentConflictIndex);
 		tapDiceLabel.setText(getResources().getString(R.string.tap_to_throw_dice));
-		mainLayout.setBackgroundColor(getResources().getColor(R.color.mainBackgroundColor));
+		tapDiceLabel.setTextColor(getResources().getColor(R.color.blue_play));
+		headerLayout.setBackgroundColor(getResources().getColor(R.color.blue_play));
 		nextConflictBtn.setVisibility(View.INVISIBLE);
 		territoryInConflictTextView.setText("Territory "+currentConflict.getTerritory().getName());
 		unknownDiceImg.setImageResource(R.drawable.unknown_dice);

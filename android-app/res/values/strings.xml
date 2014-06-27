@@ -16,6 +16,9 @@
     <string name="victory_track_label">Victory Track</string>
     <string name="last_ten_games_label">Last 10 matches</string>
     
+    <string name="conflict_lost_label">Conflict Lost</string>
+    <string name="conflict_won_label">Conflict Won</string>
+    <string name="conflict_tie_label">Conflict Drew</string>
     
     <string name="game_over_label">The Game is Over</string>
     <string name="ok_label">Ok</string>
