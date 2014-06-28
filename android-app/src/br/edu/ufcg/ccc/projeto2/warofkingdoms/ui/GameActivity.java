@@ -43,6 +43,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums.SelectionState;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
@@ -487,17 +488,29 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				return true;
 		return false;
 	}
+	
+	private void startNextPhase() {
+		ConnectionDetector connectionDetector = new ConnectionDetector(
+				getApplicationContext());
+		if (connectionDetector.isConnectingToInternet()) {
+			countDown.cancel();
+			waitDialog.show();
+			communicationManager
+			.sendCurrentMoves(this, gameManager.getCurrentMoves());
+			gameManager.startNextPhase();
+		} else {
+			waitDialog.dismiss();
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "No Internet Connection", 
+					"You don't have internet connection.");
+			errorDialog.showAlertDialog();
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.nextPhaseButton:
-			countDown.cancel();
-			waitDialog.show();
-
-			communicationManager
-			.sendCurrentMoves(this, gameManager.getCurrentMoves());
-			gameManager.startNextPhase();
+			startNextPhase();
 			break;
 		case R.id.objectiveButton:
 			int north = 0, center = 0, south = 0;
@@ -524,10 +537,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 		sendMovesResult = result;
 		if(sendMovesResult == null) {
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is down", 
-					"The server is not responding.");
+			waitDialog.dismiss();
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is not responding", 
+					"Not stabilished communication with server.");
 			errorDialog.showAlertDialog();
-
 		}
 		else {
 			if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
@@ -593,7 +606,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		if (requestCode == SOLVE_CONFLICT_RETURN) {
 			doActionsAfterSendMovesReturned();
 			isOpenningConflictActivity = false;
-			waitDialog.dismiss();
+//			waitDialog.dismiss();
 			resetCountDown();
 		}
 
