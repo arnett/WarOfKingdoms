@@ -6,6 +6,7 @@ import java.util.Random;
 
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Game;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
@@ -29,6 +30,7 @@ public class GameManager {
 	private String roomId;
 
 	private Player currentPlayer;
+	private Territory currentPlayerHomebase;
 
 	private GameManager() {
 		currentPlayer = new Player(ID, NAME);
@@ -102,6 +104,24 @@ public class GameManager {
 	public List<Territory> getAllTerritories() {
 		return game.getTerritories();
 	}
+	
+	/*
+	 * Gets all territories owned by the house
+	 */
+	public List<Territory> getTerritories(House house) {
+		
+		List<Territory> territories = new ArrayList<Territory>();
+		for (Territory t : game.getTerritories()) {
+			if (t.getOwner() == null) {
+				continue;
+			}
+			
+			if (t.getOwner().equals(house)){
+				territories.add(t);
+			}
+		}
+		return territories;
+	}
 
 	public void updateAllPlayers(List<Player> players) {
 		for (Player player: players) {
@@ -133,6 +153,14 @@ public class GameManager {
 			}
 		}
 		return false;
+	}
+
+	public Territory getCurrentPlayerHomebase() {
+		return getTerritoryByName(currentPlayerHomebase.getName());
+	}
+
+	public void setCurrentPlayerHomebase(Territory currentPlayerHomebase) {
+		this.currentPlayerHomebase = currentPlayerHomebase;
 	}
 	
 }

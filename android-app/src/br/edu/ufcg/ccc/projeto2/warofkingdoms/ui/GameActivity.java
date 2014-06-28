@@ -40,7 +40,11 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.ProfileManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ChooseActionDialogFragment.OnActionSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment.OnActionSelectedListener;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.GameOverDialogFragment;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ObjectiveDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums.SelectionState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
@@ -94,6 +98,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private CustomProgressDialog waitDialog;
 
 	private ChooseActionDialogFragment chooseActionDialogFragment;
+	
+	private ObjectiveDialogFragment objectiveDialogFragment;
 
 	private long startTime = 65 * 1000;
 	private long interval = 1 * 1000;
@@ -134,6 +140,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		currentPlayerToken = (ImageView) findViewById(R.id.currentPlayerToken);
 		drawCurrentPlayerToken();
+		setCurrentPlayerHomebase();
 
 		mapImageMask.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 			@Override
@@ -151,17 +158,36 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		countDown.start();
 
-		showDialog(
-				"Objective",
-				"You have to conquer at least 3 territories in each region (North, Center and South), and keep you initial territory");
+		showObjectiveDialog(false, 0, 0, 0, false);
 	}
 
-	private void showDialog(String title, String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.TempDialogTheme);
-		builder.setTitle(title);
-		builder.setMessage(message);
-		builder.setPositiveButton("OK", null);
-		builder.create().show();
+	private void setCurrentPlayerHomebase() {
+		House currentPlayerHouse = gameManager.getCurrentPlayer().getHouse();
+		// this method is only called on the onCreate method, meaning that the list will only have one element
+		Territory currentPlayerHomebase = gameManager.getTerritories(currentPlayerHouse).get(0);
+		
+		gameManager.setCurrentPlayerHomebase(currentPlayerHomebase);
+	}
+
+	/*
+	 * Opens dialog fragment with objective info
+	 * 
+	 * @params fromOnCreate - if is the first time is openning (from oncreate)
+	 */
+	private void showObjectiveDialog(boolean withData, int numNorth, int numCenter, int numSouth, boolean hasHomebase) {
+		
+		objectiveDialogFragment = new ObjectiveDialogFragment();
+		
+		if (withData) {
+			Bundle data = new Bundle();
+			data.putInt(Constants.NUM_CONQUERED_NORTH, numNorth);
+			data.putInt(Constants.NUM_CONQUERED_CENTER, numCenter);
+			data.putInt(Constants.NUM_CONQUERED_SOUTH, numSouth);
+			data.putBoolean(Constants.HAS_HOMEBASE, hasHomebase);
+			objectiveDialogFragment.setArguments(data);
+		}
+
+		objectiveDialogFragment.show(getFragmentManager(), "objectiveDialog");
 	}
 
 	private void drawCurrentPlayerToken() {
@@ -513,24 +539,32 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			startNextPhase();
 			break;
 		case R.id.objectiveButton:
-			int north = 0, center = 0, south = 0;
-			for (Territory territory : gameManager.getAllTerritories()) {
-				if (!territory.isFree() && territory.getOwner().getName().equals(gameManager.getCurrentPlayer().getHouse().getName())) {
-					if (contains(NorthTerritories, territory.getName()))
-						north++;
-					else if (contains(CenterTerritories, territory.getName()))
-						center++;
-					else if (contains(SouthTerritories, territory.getName()))
-						south++;
-				}
-			}
-			showDialog(
-					"Objective",
-					"North:" + north + "/3\nCenter:" + center + "/3\nSouth:" + south + "/3");
+			openGameObjective();
 			break;
 		default:
 			return;
 		}
+	}
+
+	private void openGameObjective() {
+		int north = 0, center = 0, south = 0;
+		for (Territory territory : gameManager.getAllTerritories()) {
+			if (!territory.isFree() && territory.getOwner().getName().equals(gameManager.getCurrentPlayer().getHouse().getName())) {
+				if (contains(NorthTerritories, territory.getName()))
+					north++;
+				else if (contains(CenterTerritories, territory.getName()))
+					center++;
+				else if (contains(SouthTerritories, territory.getName()))
+					south++;
+			}
+		}
+		
+		House currentPlayerHouse = gameManager.getCurrentPlayer().getHouse();
+		
+		// if the current player still has his homebase
+		boolean hasHomebase = gameManager.getCurrentPlayerHomebase().getOwner().equals(currentPlayerHouse);
+		
+		showObjectiveDialog(true, north, center, south, hasHomebase);
 	}
 
 	@Override

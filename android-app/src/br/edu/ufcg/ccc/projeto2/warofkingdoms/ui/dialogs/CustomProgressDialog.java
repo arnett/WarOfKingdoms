@@ -1,4 +1,4 @@
-package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
+package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;

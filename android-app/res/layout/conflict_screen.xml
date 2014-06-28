@@ -116,7 +116,7 @@
                     android:text="@string/tap_to_throw_dice"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/blue_play"
-                    android:textSize="15sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout

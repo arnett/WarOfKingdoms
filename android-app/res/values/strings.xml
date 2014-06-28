@@ -27,6 +27,13 @@
 	<string name="attack_action_label">Attack</string>
 	<string name="defense_action_label">Defense</string>
 	
+	<string name="objective_label">Objective</string>
+	<string name="what_objective_label">You must conquer at least 3 territories in each region</string>
+	<string name="north_objective">North</string>
+	<string name="center_objective">Center</string>
+	<string name="south_objective">South</string>
+	<string name="homebase_objective">Keeping your homebase</string>
+	
 	
 	<string name="andre_label">André</string>
 	<string name="arnett_label">Arnett</string>

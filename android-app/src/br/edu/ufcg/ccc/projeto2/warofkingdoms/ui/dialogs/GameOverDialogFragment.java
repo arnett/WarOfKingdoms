@@ -1,4 +1,4 @@
-package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
+package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class GameOverDialogFragment extends DialogFragment implements OnClickListener {

@@ -1,4 +1,4 @@
-package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
+package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ErrorAlertDialog;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ChooseActionDialogFragment extends DialogFragment implements OnClickListener {
