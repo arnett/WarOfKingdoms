@@ -54,7 +54,7 @@ import br.ufcg.edu.ccc.projeto2.R;
  * 
  */
 public class GameActivity extends Activity implements OnTouchListener,
-OnActionSelectedListener, OnClickListener, OnTaskCompleted {
+		OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private static final int SOLVE_CONFLICT_RETURN = 1;
 
@@ -100,10 +100,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private long seconds = startTime / 1000;
 	private long minutes = seconds / 60;
 
-	//	TODO MOVE TO ANOTHER CLASS
-	private String[] NorthTerritories = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
-	private String[] CenterTerritories = new String[] {"I", "J", "K", "L", "M", "N", "O", "P", "Q"};
-	private String[] SouthTerritories = new String[] {"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+	// TODO MOVE TO ANOTHER CLASS
+	private String[] NorthTerritories = new String[] { "A", "B", "C", "D", "E",
+			"F", "G", "H" };
+	private String[] CenterTerritories = new String[] { "I", "J", "K", "L",
+			"M", "N", "O", "P", "Q" };
+	private String[] SouthTerritories = new String[] { "R", "S", "T", "U", "V",
+			"W", "X", "Y", "Z" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +160,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void showDialog(String title, String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.TempDialogTheme);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this,
+				R.style.TempDialogTheme);
 		builder.setTitle(title);
 		builder.setMessage(message);
 		builder.setPositiveButton("OK", null);
@@ -269,8 +273,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 						move.getTarget()).getCenterY(getMapHeight());
 				addTokenToLayout(R.drawable.token_attack, xTerritoryCenter,
 						yTerritoryCenter, tokenLayout);
-			}
-			else if (move.getAction().equals(Action.DEFEND)) {
+			} else if (move.getAction().equals(Action.DEFEND)) {
 				int xTerritoryCenter = territoryManager.getTerritoryUICenter(
 						move.getTarget()).getCenterX(getMapWidth());
 				int yTerritoryCenter = territoryManager.getTerritoryUICenter(
@@ -324,10 +327,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private void processTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		
-		Log.d(LOG_TAG, "touched position X "
-				+ motionEventX +" Y "+motionEventY);
-		
+
+		Log.d(LOG_TAG, "touched position X " + motionEventX + " Y "
+				+ motionEventY);
+
 		switch (currentActionSelectionState) {
 		case SELECTING_ORIGIN:
 			processFirstTouch(motionEventX, motionEventY, touchedPixelColor);
@@ -351,19 +354,19 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		RulesChecker rulesChecker = RulesChecker.getInstance();
 
-		if(rulesChecker.isTerritoryAlreadyATarget(firstSelectedTerritoryForTheCurrentMove)) {
+		if (rulesChecker
+				.isTerritoryAlreadyATarget(firstSelectedTerritoryForTheCurrentMove)) {
 			Action[] applicableActionsToThisTerritory = gameManager
 					.getCancelActions(firstSelectedTerritoryForTheCurrentMove);
 
 			startCancelMovePopup(applicableActionsToThisTerritory);
-		}
-		else if (rulesChecker
+		} else if (rulesChecker
 				.isTerritoryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
 			Toast.makeText(
 					getBaseContext(),
 					"Invalid move: "
 							+ "This territory was already used during this turn",
-							Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_SHORT).show();
 		}
 
 		else if (!rulesChecker
@@ -372,7 +375,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 					getBaseContext(),
 					"Invalid move: "
 							+ "The first territory must be owned by you",
-							Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_SHORT).show();
 		}
 
 		else {
@@ -439,10 +442,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 			int xTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentMove).getCenterX(
-							getMapWidth());
+					getMapWidth());
 			int yTerritoryCenter = territoryManager.getTerritoryUICenter(
 					firstSelectedTerritoryForTheCurrentMove).getCenterY(
-							getMapHeight());
+					getMapHeight());
 			addTokenToLayout(R.drawable.token_defense, xTerritoryCenter,
 					yTerritoryCenter, tokenLayout);
 
@@ -452,13 +455,14 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			Move moveToRemove = null;
 			List<Move> currentMoves = gameManager.getCurrentMoves();
 			for (Move move : currentMoves) {
-				if(move.getTarget().equals(firstSelectedTerritoryForTheCurrentMove)) {
+				if (move.getTarget().equals(
+						firstSelectedTerritoryForTheCurrentMove)) {
 					moveToRemove = move;
 				}
 			}
 			gameManager.getCurrentMoves().remove(moveToRemove);
 			drawTerritoryOwnershipTokens();
-			drawActionTokens();	
+			drawActionTokens();
 			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
 		case CANCEL:
@@ -468,17 +472,20 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void startCancelMovePopup(Action[] actions) {
-		AlertDialog cancelDialog = new AlertDialog.Builder(this, R.style.TempDialogTheme).create();
+		AlertDialog cancelDialog = new AlertDialog.Builder(this,
+				R.style.TempDialogTheme).create();
 		cancelDialog.setTitle("Cancel move");
-		cancelDialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				onActionSelected(Action.OK);
-			}
-		});
-		cancelDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		});
+		cancelDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						onActionSelected(Action.OK);
+					}
+				});
+		cancelDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				});
 		cancelDialog.show();
 	}
 
@@ -488,19 +495,20 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				return true;
 		return false;
 	}
-	
+
 	private void startNextPhase() {
 		ConnectionDetector connectionDetector = new ConnectionDetector(
 				getApplicationContext());
 		if (connectionDetector.isConnectingToInternet()) {
 			countDown.cancel();
 			waitDialog.show();
-			communicationManager
-			.sendCurrentMoves(this, gameManager.getCurrentMoves());
+			communicationManager.sendCurrentMoves(this,
+					gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 		} else {
 			waitDialog.dismiss();
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "No Internet Connection", 
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this,
+					"No Internet Connection",
 					"You don't have internet connection.");
 			errorDialog.showAlertDialog();
 		}
@@ -513,9 +521,16 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			startNextPhase();
 			break;
 		case R.id.objectiveButton:
-			int north = 0, center = 0, south = 0;
+			int north = 0,
+			center = 0,
+			south = 0;
 			for (Territory territory : gameManager.getAllTerritories()) {
-				if (!territory.isFree() && territory.getOwner().getName().equals(gameManager.getCurrentPlayer().getHouse().getName())) {
+				if (!territory.isFree()
+						&& territory
+								.getOwner()
+								.getName()
+								.equals(gameManager.getCurrentPlayer()
+										.getHouse().getName())) {
 					if (contains(NorthTerritories, territory.getName()))
 						north++;
 					else if (contains(CenterTerritories, territory.getName()))
@@ -524,9 +539,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 						south++;
 				}
 			}
-			showDialog(
-					"Objective",
-					"North:" + north + "/3\nCenter:" + center + "/3\nSouth:" + south + "/3");
+			showDialog("Objective", "North: " + north + "/3\nCenter: " + center
+					+ "/3\nSouth: " + south + "/3");
 			break;
 		default:
 			return;
@@ -536,21 +550,22 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 		sendMovesResult = result;
-		if(sendMovesResult == null) {
+		if (sendMovesResult == null) {
 			waitDialog.dismiss();
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is not responding", 
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this,
+					"Server is not responding",
 					"Not stabilished communication with server.");
 			errorDialog.showAlertDialog();
-		}
-		else {
-			if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {
+		} else {
+			if (chooseActionDialogFragment != null
+					&& chooseActionDialogFragment.isVisible()) {
 				chooseActionDialogFragment.dismiss();
 			}
 			firstSelectedTerritoryForTheCurrentMove = null;
 
-			if (result.getConflicts() != null && 
-					result.getConflicts().size() != 0 && 
-					currentPlayerIsInvolved(result.getConflicts())) {
+			if (result.getConflicts() != null
+					&& result.getConflicts().size() != 0
+					&& currentPlayerIsInvolved(result.getConflicts())) {
 
 				isOpenningConflictActivity = true;
 
@@ -606,7 +621,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		if (requestCode == SOLVE_CONFLICT_RETURN) {
 			doActionsAfterSendMovesReturned();
 			isOpenningConflictActivity = false;
-//			waitDialog.dismiss();
+			// waitDialog.dismiss();
 			resetCountDown();
 		}
 
@@ -626,7 +641,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		drawTerritoryOwnershipTokens();
 
 		if (sendMovesResult.getGameState().isGameFinished()) {
-			profileManager.saveGameStatistics(sendMovesResult.getGameState(), getApplicationContext());
+			profileManager.saveGameStatistics(sendMovesResult.getGameState(),
+					getApplicationContext());
 			saveGameStatistics(sendMovesResult.getGameState());
 			openGameFinishedDialog();
 		}
@@ -678,7 +694,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
 		gameOverDialog.setWinners(getWinners());
 		gameOverDialog
-		.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
+				.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
 	}
 
 	private String getWinners() {
@@ -720,8 +736,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	/**
-	 * @author Rafael
-	 *	A class to manipulate the game's countdown timer.
+	 * @author Rafael A class to manipulate the game's countdown timer.
 	 */
 	private class MyCountDownTimer extends CountDownTimer {
 
@@ -729,19 +744,23 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			super(startTime, interval);
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.CountDownTimer#onFinish()
 		 */
 		@Override
 		public void onFinish() {
 			timeCounter.setText("00:00");
 			waitDialog.show();
-			communicationManager
-			.sendCurrentMoves(GameActivity.this, gameManager.getCurrentMoves());
+			communicationManager.sendCurrentMoves(GameActivity.this,
+					gameManager.getCurrentMoves());
 			gameManager.startNextPhase();
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.CountDownTimer#onTick(long)
 		 */
 		@Override

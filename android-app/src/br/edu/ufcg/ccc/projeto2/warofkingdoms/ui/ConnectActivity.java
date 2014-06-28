@@ -17,10 +17,11 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ConnectActivity extends Activity implements OnClickListener,
-OnTaskCompleted {
+		OnTaskCompleted {
 
 	private final String LOG_TAG = "ConnectActivity";
 
@@ -41,20 +42,16 @@ OnTaskCompleted {
 
 	private CustomProgressDialog waitDialog;
 
-	private int NUM_PLAYER_PER_ROOM = 2;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_screen);
 
-		resetPreviousGameState();
-
 		gameManager = GameManager.getInstance();
 		houseTokenManager = HouseTokenManager.getInstance();
 
 		currentPlayer = gameManager.getCurrentPlayer();
-		connectEntity = new Connect(NUM_PLAYER_PER_ROOM, currentPlayer);
+		connectEntity = new Connect(Constants.NUM_PLAYERS, currentPlayer);
 
 		playBtn = (ImageView) findViewById(R.id.playBtn);
 		playBtn.setOnClickListener(this);
@@ -70,20 +67,10 @@ OnTaskCompleted {
 		isOpenningGameActivity = false;
 	}
 
-	private void resetPreviousGameState() {
-
-		if (gameManager != null) {
-			gameManager.reset();
-		}
-		if (houseTokenManager != null) {
-			houseTokenManager.reset();
-		}
-	}
-
 	@Override
 	public void onClick(View v) {
 		v.startAnimation(alphaAnimation);
-		
+
 		if (v == playBtn) {
 
 			communicationManager = NetworkManager.getInstance();
@@ -91,10 +78,9 @@ OnTaskCompleted {
 		} else if (v == aboutBtn) {
 
 			startActivity(new Intent(this, AboutActivity.class));
-		}
-		else if (v == profileBtn) {
+		} else if (v == profileBtn) {
 
-			Intent intent = new Intent(this, ProfileActivity.class); 
+			Intent intent = new Intent(this, ProfileActivity.class);
 			startActivity(intent);
 		}
 	}
@@ -106,7 +92,8 @@ OnTaskCompleted {
 			waitDialog.show();
 			communicationManager.connect(this, connectEntity);
 		} else {
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "No Internet Connection", 
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this,
+					"No Internet Connection",
 					"You don't have internet connection.");
 			errorDialog.showAlertDialog();
 		}
@@ -129,18 +116,18 @@ OnTaskCompleted {
 	public void onConnectTaskCompleted(ConnectResult result) {
 		if (result == null) {
 			waitDialog.dismiss();
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is down", 
-					"The server is not responding.");
+			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this,
+					"Server is down", "The server is not responding.");
 			errorDialog.showAlertDialog();
-		}
-		else {
+		} else {
 			gameManager.updateAllTerritories(result.getTerritories());
 			gameManager.updateAllPlayers(result.getPlayers());
 
 			Log.v(LOG_TAG, "RoomId is " + result.getRoomId());
 			gameManager.setRoomId(result.getRoomId());
 
-			houseTokenManager.setStartingHouseTerritories(result.getTerritories());
+			houseTokenManager.setStartingHouseTerritories(result
+					.getTerritories());
 
 			Log.v(LOG_TAG, "Starting GameActivity");
 			Intent intent = new Intent(this, GameActivity.class);

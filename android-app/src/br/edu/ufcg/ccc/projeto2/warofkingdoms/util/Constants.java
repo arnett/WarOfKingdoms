@@ -3,7 +3,7 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.util;
 public class Constants {
 
 	// Game Constants
-	public final static int NUM_PLAYERS = 2;
+	public final static int NUM_PLAYERS = 1;
 
 	public final static String ACTIONS_KEY = "actions";
 
@@ -12,8 +12,10 @@ public class Constants {
 	// Networking constants
 
 	public final static String SERVER_URL = "http://ec2-54-207-125-231.sa-east-1.compute.amazonaws.com";
-	//public final static String SERVER_URL = "http://192.168.1.105:3000";  // ANDRE
-	//public final static String SERVER_URL = "http://10.0.0.4:3000"; // LUAN
+	// public final static String SERVER_URL = "http://192.168.1.105:3000"; //
+	// ANDRE
+	// public final static String SERVER_URL = "http://10.0.0.4:3000"; // LUAN
+//	public final static String SERVER_URL = "http://192.168.56.1:3000"; // ARNETT
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
