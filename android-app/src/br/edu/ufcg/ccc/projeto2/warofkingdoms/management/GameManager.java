@@ -94,7 +94,7 @@ public class GameManager {
 	}
 	
 	public Action[] getCancelActions(Territory territory) {
-		return new Action[] {Action.CANCEL, Action.OK};
+		return new Action[] {Action.CANCEL};
 	}
 
 	public Player getCurrentPlayer() {

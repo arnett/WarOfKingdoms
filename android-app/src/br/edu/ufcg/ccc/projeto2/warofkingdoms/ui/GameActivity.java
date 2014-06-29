@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -43,8 +41,8 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.service.TimerService;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CancelActionDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.GameOverDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.MessageDialogFragment;
@@ -66,6 +64,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private static final int SOLVE_CONFLICT_RETURN = 1;
 
+
 	private boolean isOpenningConflictActivity = false; // to just close the
 	// waitDialog when the
 	// activity is started
@@ -74,6 +73,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "ChooseActionDialogFragmentTag";
 	private String GAME_OVER_DIALOG_FRAGMENT_TAG = "GameOverDialogFragmentTag";
+	private static final String CANCEL_ACTION_DIALOG_FRAGMENT_TAG = "CancelActionDialogFragmentTag";
 
 	private RelativeLayout tokenLayout;
 	private Bitmap imageToken;
@@ -379,10 +379,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		RulesChecker rulesChecker = RulesChecker.getInstance();
 
 		if(rulesChecker.isTerritoryAlreadyATarget(firstSelectedTerritoryForTheCurrentMove)) {
-			Action[] applicableActionsToThisTerritory = gameManager
-					.getCancelActions(firstSelectedTerritoryForTheCurrentMove);
-
-			startCancelMovePopup(applicableActionsToThisTerritory);
+			startCancelMovePopup();
 		}
 		else if (rulesChecker
 				.isTerritoryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
@@ -478,7 +475,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
-		case OK:
+		case CANCEL:
 			Move moveToRemove = null;
 			List<Move> currentMoves = gameManager.getCurrentMoves();
 			for (Move move : currentMoves) {
@@ -491,25 +488,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			drawActionTokens();	
 			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
-		case CANCEL:
-			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
-			break;
 		}
 	}
 
-	private void startCancelMovePopup(Action[] actions) {
-		AlertDialog cancelDialog = new AlertDialog.Builder(this, R.style.TempDialogTheme).create();
-		cancelDialog.setTitle("Cancel move");
-		cancelDialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				onActionSelected(Action.OK);
-			}
-		});
-		cancelDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		});
-		cancelDialog.show();
+	private void startCancelMovePopup() {
+		CancelActionDialogFragment cancelActionDialogFragment = new CancelActionDialogFragment();
+		cancelActionDialogFragment.show(getFragmentManager(),
+				CANCEL_ACTION_DIALOG_FRAGMENT_TAG);
 	}
 
 	private boolean contains(String[] array, String element) {
@@ -716,7 +701,11 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void openGameFinishedDialog() {
-		unregisterReceiver(broadcastReceiver);
+		try {
+			unregisterReceiver(broadcastReceiver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		stopService(new Intent(this, TimerService.class));
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
 		gameOverDialog.setWinners(getWinners());
@@ -734,7 +723,11 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	@Override
 	protected void onDestroy() {
-		unregisterReceiver(broadcastReceiver);
+		try {
+			unregisterReceiver(broadcastReceiver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		stopService(new Intent(this, TimerService.class));
 		if (waitDialog.isShowing()) {
 			waitDialog.dismiss();
