@@ -5,14 +5,16 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -40,6 +42,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.ProfileManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.TerritoryUIManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.service.TimerService;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
@@ -94,23 +97,23 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private ImageView currentPlayerToken;
 
-	private MyCountDownTimer countDown;
-
 	private CustomProgressDialog waitDialog;
 
 	private ChooseActionDialogFragment chooseActionDialogFragment;
-	
-	private ObjectiveDialogFragment objectiveDialogFragment;
 
-	private long startTime = 65 * 1000;
-	private long interval = 1 * 1000;
-	private long seconds = startTime / 1000;
-	private long minutes = seconds / 60;
+	private ObjectiveDialogFragment objectiveDialogFragment;
 
 	//	TODO MOVE TO ANOTHER CLASS
 	private String[] NorthTerritories = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
 	private String[] CenterTerritories = new String[] {"I", "J", "K", "L", "M", "N", "O", "P", "Q"};
 	private String[] SouthTerritories = new String[] {"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {            
+			updateGUI(intent); // or whatever method used to update your GUI fields
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,14 +154,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				reloadMaskImageBitmap();
 			}
 		});
-		long formatedSeconds = seconds % 60;
-		timeCounter.setText(String.format("%02d", minutes) + ":"
-				+ String.format("%02d", formatedSeconds));
 
-		countDown = new MyCountDownTimer(startTime, interval);
-
-		countDown.start();
-
+		startService(new Intent(this, TimerService.class));
+		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
 		showObjectiveDialog(false, 0, 0, 0, false);
 	}
 
@@ -166,7 +164,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		House currentPlayerHouse = gameManager.getCurrentPlayer().getHouse();
 		// this method is only called on the onCreate method, meaning that the list will only have one element
 		Territory currentPlayerHomebase = gameManager.getTerritories(currentPlayerHouse).get(0);
-		
+
 		gameManager.setCurrentPlayerHomebase(currentPlayerHomebase);
 	}
 
@@ -176,9 +174,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	 * @params fromOnCreate - if is the first time is openning (from oncreate)
 	 */
 	private void showObjectiveDialog(boolean withData, int numNorth, int numCenter, int numSouth, boolean hasHomebase) {
-		
+
 		objectiveDialogFragment = new ObjectiveDialogFragment();
-		
+
 		if (withData) {
 			Bundle data = new Bundle();
 			data.putInt(Constants.NUM_CONQUERED_NORTH, numNorth);
@@ -202,6 +200,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private boolean areFirstTokensDrawn = true;
 
 	private SendMovesResult sendMovesResult;
+
+	private boolean updateUI = true;
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
@@ -351,10 +351,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private void processTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
-		
+
 		Log.d(LOG_TAG, "touched position X "
 				+ motionEventX +" Y "+motionEventY);
-		
+
 		switch (currentActionSelectionState) {
 		case SELECTING_ORIGIN:
 			processFirstTouch(motionEventX, motionEventY, touchedPixelColor);
@@ -515,12 +515,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				return true;
 		return false;
 	}
-	
+
 	private void startNextPhase() {
 		ConnectionDetector connectionDetector = new ConnectionDetector(
 				getApplicationContext());
 		if (connectionDetector.isConnectingToInternet()) {
-			countDown.cancel();
+			unregisterReceiver(broadcastReceiver);
+			stopService(new Intent(this, TimerService.class));
 			waitDialog.show();
 			communicationManager
 			.sendCurrentMoves(this, gameManager.getCurrentMoves());
@@ -546,14 +547,14 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void openMessageDialog(String message) {
-		
+
 		MessageDialogFragment msgDialog = new MessageDialogFragment();
 		Bundle args = new Bundle();
 		args.putString(Constants.DIALOG_MESSAGE, message);
 		msgDialog.setArguments(args);
 		msgDialog.show(getFragmentManager(), "msgDialog");
 	}
-	
+
 	private void openGameObjective() {
 		int north = 0, center = 0, south = 0;
 		for (Territory territory : gameManager.getAllTerritories()) {
@@ -566,12 +567,12 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 					south++;
 			}
 		}
-		
+
 		House currentPlayerHouse = gameManager.getCurrentPlayer().getHouse();
-		
+
 		// if the current player still has his homebase
 		boolean hasHomebase = gameManager.getCurrentPlayerHomebase().getOwner().equals(currentPlayerHouse);
-		
+
 		showObjectiveDialog(true, north, center, south, hasHomebase);
 	}
 
@@ -633,11 +634,27 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		countDown.cancel();
+//		unregisterReceiver(broadcastReceiver);
+//		stopService(new Intent(this, TimerService.class));
 		if (isOpenningConflictActivity) {
 			waitDialog.dismiss();
 		}
 	}
+
+//	@Override
+//	protected void onPause() {
+//		super.onPause();
+//		updateUI  = false;
+//		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
+//	}
+//
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//		updateUI = true;
+//		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
+//	}
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -646,19 +663,16 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		if (requestCode == SOLVE_CONFLICT_RETURN) {
 			doActionsAfterSendMovesReturned();
 			isOpenningConflictActivity = false;
-//			waitDialog.dismiss();
+			//			waitDialog.dismiss();
 			resetCountDown();
 		}
 
 	}
 
 	private void resetCountDown() {
-		countDown = new MyCountDownTimer(startTime, interval);
-		long formatedSeconds = seconds % 60;
-		timeCounter.setText(String.format("%02d", minutes) + ":"
-				+ String.format("%02d", formatedSeconds));
-
-		countDown.start();
+		stopService(new Intent(this, TimerService.class));
+		startService(new Intent(this, TimerService.class));
+		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
 	}
 
 	private void doActionsAfterSendMovesReturned() {
@@ -714,7 +728,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void openGameFinishedDialog() {
-		countDown.cancel();
+		unregisterReceiver(broadcastReceiver);
+		stopService(new Intent(this, TimerService.class));
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
 		gameOverDialog.setWinners(getWinners());
 		gameOverDialog
@@ -731,7 +746,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	@Override
 	protected void onDestroy() {
-		countDown.cancel();
+		unregisterReceiver(broadcastReceiver);
+		stopService(new Intent(this, TimerService.class));
 		if (waitDialog.isShowing()) {
 			waitDialog.dismiss();
 		}
@@ -759,43 +775,34 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		return mapImageView.getMeasuredHeight();
 	}
 
-	/**
-	 * @author Rafael
-	 *	A class to manipulate the game's countdown timer.
-	 */
-	private class MyCountDownTimer extends CountDownTimer {
-
-		public MyCountDownTimer(long startTime, long interval) {
-			super(startTime, interval);
-		}
-
-		/* (non-Javadoc)
-		 * @see android.os.CountDownTimer#onFinish()
-		 */
-		@Override
-		public void onFinish() {
-			timeCounter.setText("00:00");
-			waitDialog.show();
-			communicationManager
-			.sendCurrentMoves(GameActivity.this, gameManager.getCurrentMoves());
-			gameManager.startNextPhase();
-		}
-
-		/* (non-Javadoc)
-		 * @see android.os.CountDownTimer#onTick(long)
-		 */
-		@Override
-		public void onTick(long millisUntilFinished) {
-			long seconds = millisUntilFinished / 1000;
-			long formatedSeconds = seconds % 60;
-			long minutes = seconds / 60;
-			if (minutes == 0 && seconds <= 10) {
-				timeCounter.setTextColor(Color.parseColor("#FF0000"));
-			} else {
-				timeCounter.setTextColor(Color.parseColor("#000000"));
+	private void updateGUI(Intent intent) {
+		if (intent.getExtras() != null) {
+			long millisUntilFinished = intent.getLongExtra("countdown", 0);
+			if (updateUI) {
+				updateTimerText(millisUntilFinished);
 			}
-			timeCounter.setText(String.format("%02d", minutes) + ":"
-					+ String.format("%02d", formatedSeconds));
+			if (millisUntilFinished == 0) {
+				unregisterReceiver(broadcastReceiver);
+				stopService(new Intent(this, TimerService.class));
+				waitDialog.show();
+				communicationManager.sendCurrentMoves(
+						GameActivity.this, gameManager.getCurrentMoves());
+				gameManager.startNextPhase();
+			}
+
 		}
+	}
+
+	private void updateTimerText(long millisUntilFinished) {
+		long seconds = millisUntilFinished / 1000;
+		long formatedSeconds = seconds % 60;
+		long minutes = seconds / 60;
+		if (seconds <= 10) {
+			timeCounter.setTextColor(Color.parseColor("#FF0000"));
+		} else {
+			timeCounter.setTextColor(Color.parseColor("#000000"));
+		}
+		timeCounter.setText(String.format("%02d", minutes) + ":"
+				+ String.format("%02d", formatedSeconds));
 	}
 }

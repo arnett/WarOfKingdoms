@@ -34,6 +34,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+		<service android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.service.TimerService"></service>
+        
         <activity
             android:theme="@style/noAnimTheme"
             android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConflictActivity">
