@@ -64,7 +64,6 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private static final int SOLVE_CONFLICT_RETURN = 1;
 
-
 	private boolean isOpenningConflictActivity = false; // to just close the
 	// waitDialog when the
 	// activity is started
@@ -567,7 +566,6 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 		sendMovesResult = result;
-		
 		if(sendMovesResult == null) {
 			waitDialog.dismiss();
 			openMessageDialog(getResources().getString(R.string.internet_missbehaving_msg));
