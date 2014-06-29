@@ -16,6 +16,12 @@
     <string name="victory_track_label">Victory Track</string>
     <string name="last_ten_games_label">Last 10 matches</string>
     
+    <string name="sorry_label">We\'re very sorry!</string>
+    <string name="no_internet_msg">You need internet  =\\</string>
+    <string name="server_down_msg">Our system is down =\\</string>
+    <string name="internet_missbehaving_msg">Our system is missbehaving =\\</string>
+
+    
     <string name="conflict_lost_label">Conflict Lost</string>
     <string name="conflict_won_label">Conflict Won</string>
     <string name="conflict_tie_label">Conflict Drew</string>

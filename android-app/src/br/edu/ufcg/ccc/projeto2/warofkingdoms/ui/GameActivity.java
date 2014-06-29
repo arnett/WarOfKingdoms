@@ -44,6 +44,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragm
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment.OnActionSelectedListener;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.GameOverDialogFragment;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.MessageDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ObjectiveDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.enums.SelectionState;
@@ -526,9 +527,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			gameManager.startNextPhase();
 		} else {
 			waitDialog.dismiss();
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "No Internet Connection", 
-					"You don't have internet connection.");
-			errorDialog.showAlertDialog();
+			openMessageDialog(getResources().getString(R.string.no_internet_msg));
 		}
 	}
 
@@ -546,6 +545,15 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		}
 	}
 
+	private void openMessageDialog(String message) {
+		
+		MessageDialogFragment msgDialog = new MessageDialogFragment();
+		Bundle args = new Bundle();
+		args.putString(Constants.DIALOG_MESSAGE, message);
+		msgDialog.setArguments(args);
+		msgDialog.show(getFragmentManager(), "msgDialog");
+	}
+	
 	private void openGameObjective() {
 		int north = 0, center = 0, south = 0;
 		for (Territory territory : gameManager.getAllTerritories()) {
@@ -572,9 +580,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		sendMovesResult = result;
 		if(sendMovesResult == null) {
 			waitDialog.dismiss();
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this, "Server is not responding", 
-					"Not stabilished communication with server.");
-			errorDialog.showAlertDialog();
+			openMessageDialog(getResources().getString(R.string.internet_missbehaving_msg));
 		}
 		else {
 			if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {

@@ -17,6 +17,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.MessageDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.ConnectionDetector;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
 import br.ufcg.edu.ccc.projeto2.R;
@@ -93,11 +94,17 @@ public class ConnectActivity extends Activity implements OnClickListener,
 			waitDialog.show();
 			communicationManager.connect(this, connectEntity);
 		} else {
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this,
-					"No Internet Connection",
-					"You don't have internet connection.");
-			errorDialog.showAlertDialog();
+			openMessageDialog(getResources().getString(R.string.no_internet_msg));
 		}
+	}
+
+	private void openMessageDialog(String message) {
+		
+		MessageDialogFragment msgDialog = new MessageDialogFragment();
+		Bundle args = new Bundle();
+		args.putString(Constants.DIALOG_MESSAGE, message);
+		msgDialog.setArguments(args);
+		msgDialog.show(getFragmentManager(), "msgDialog");
 	}
 
 	@Override
@@ -117,9 +124,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	public void onConnectTaskCompleted(ConnectResult result) {
 		if (result == null) {
 			waitDialog.dismiss();
-			ErrorAlertDialog errorDialog = new ErrorAlertDialog(this,
-					"Server is down", "The server is not responding.");
-			errorDialog.showAlertDialog();
+			openMessageDialog(getResources().getString(R.string.server_down_msg));
 		} else {
 			gameManager.updateAllTerritories(result.getTerritories());
 			gameManager.updateAllPlayers(result.getPlayers());
