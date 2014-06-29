@@ -10,45 +10,46 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
 
-public class GameOverDialogFragment extends DialogFragment implements OnClickListener {
+public class GameOverDialogFragment extends DialogFragment implements
+		OnClickListener {
 
 	private Button gameOverOkBtn;
 	private TextView winnersTextView;
 	private String winners;
-	
+
 	@Override
-	public View onCreateView(
-							LayoutInflater inflater, 
-							ViewGroup container,
-							Bundle savedInstanceState) {
-		
-		View view = inflater.inflate(R.layout.game_over_custom_dialog, container);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.game_over_custom_dialog,
+				container);
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setStyle(STYLE_NO_FRAME, android.R.style.Theme_Translucent_NoTitleBar);
-		
+
 		gameOverOkBtn = (Button) view.findViewById(R.id.gameOverOk);
 		gameOverOkBtn.setOnClickListener(this);
-		
+
 		winnersTextView = (TextView) view.findViewById(R.id.winners_text_view);
 		winnersTextView.setText(winners);
-		
+
 		setCancelable(false);
-		
+
 		return view;
 	}
 
 	public void onClick(View v) {
-		
 		if (v == gameOverOkBtn) {
-			
+			resetPreviousGameState();
 			startActivity(new Intent(getActivity(), ConnectActivity.class));
 			getActivity().finish();
 		}
-		
+
 	}
 
 	public String getWinners() {
@@ -57,5 +58,11 @@ public class GameOverDialogFragment extends DialogFragment implements OnClickLis
 
 	public void setWinners(String winners) {
 		this.winners = winners;
+	}
+
+	private void resetPreviousGameState() {
+		GameManager.getInstance().reset();
+		HouseTokenManager.getInstance().reset();
+		RulesChecker.getInstance().reset();
 	}
 }

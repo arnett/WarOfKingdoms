@@ -161,4 +161,8 @@ public class RulesChecker {
 		}
 		return neighbors;
 	}
+
+	public void reset() {
+		instance = null;
+	}
 }
