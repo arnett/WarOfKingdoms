@@ -141,9 +141,9 @@ Room.prototype.sendMoves = function(req, res) {
 }
 
 Room.prototype.chooseHouse = function() {
-    var houseIndex = Math.floor((Math.random() * 5) + 0);   // random from 0 to 5 (has 6 houses total)
+    var houseIndex = Math.floor((Math.random() * 3) + 0);   // random from 0 to 5 (has 6 houses total)
     while (this.housesAlreadyChosen.contains(houseIndex)) {
-        houseIndex = Math.floor((Math.random() * 5) + 0);
+        houseIndex = Math.floor((Math.random() * 3) + 0);
     }
     this.housesAlreadyChosen.push(houseIndex);
     return this.availableHouses[houseIndex];
