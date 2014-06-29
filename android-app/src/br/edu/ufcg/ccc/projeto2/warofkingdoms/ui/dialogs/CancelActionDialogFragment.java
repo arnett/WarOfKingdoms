@@ -12,24 +12,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.OnActionSelectedListener;
 import br.ufcg.edu.ccc.projeto2.R;
 
-public class ChooseActionDialogFragment extends DialogFragment implements OnClickListener {
+public class CancelActionDialogFragment extends DialogFragment implements OnClickListener {
 
-	private Action[] actions;
 	private OnActionSelectedListener choiceListener;
 	
-	private ImageView attackActionBtn;
-	private ImageView defenseActionBtn;
+	private ImageView cancelBtn;
 	
-	@SuppressWarnings("unused")
-	private LinearLayout actionDefenseLayout;
-	private LinearLayout actionAttackLayout;
-	private LinearLayout actionDialogDesignLayout;
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -46,7 +38,7 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
 			ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View view = inflater.inflate(R.layout.action_dialog, container);
+		View view = inflater.inflate(R.layout.cancel_action_dialog, container);
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
 		
@@ -54,40 +46,20 @@ public class ChooseActionDialogFragment extends DialogFragment implements OnClic
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.gravity = Gravity.CENTER;
-		
-		actionDefenseLayout = (LinearLayout) view.findViewById(R.id.action_defense_layout);
-		actionAttackLayout = (LinearLayout) view.findViewById(R.id.action_attack_layout);
-		actionDialogDesignLayout = (LinearLayout) view.findViewById(R.id.action_dialog_layout);
-		
-		attackActionBtn = (ImageView) view.findViewById(R.id.attack_action_button);
-		attackActionBtn.setOnClickListener(this);
-		
-		defenseActionBtn = (ImageView) view.findViewById(R.id.defense_action_button);
-		defenseActionBtn.setOnClickListener(this);
-		
-		if (actions.length == 1) {	// only attack - hiding the defense action
-			
-			actionAttackLayout.setVisibility(View.GONE);
-			actionDialogDesignLayout.setVisibility(View.GONE);
-		}
-		
+        
+        cancelBtn = (ImageView) view.findViewById(R.id.cancel_action_button);
+        cancelBtn.setOnClickListener(this);
+        
 		return view;
-	}
-
-	public void setActions(Action[] actions) {
-		this.actions = actions;
 	}
 
 	@Override
 	public void onClick(View v) {
 		
-		if (v == attackActionBtn) {
-			choiceListener.onActionSelected(Action.ATTACK);
-			dismiss();
-
-		} else if (v == defenseActionBtn) {
-			choiceListener.onActionSelected(Action.DEFEND);
+		if (v == cancelBtn) {
+			choiceListener.onActionSelected(Action.CANCEL);
 			dismiss();
 		}
 	}
 }
+

@@ -30,8 +30,10 @@
     <string name="ok_label">Ok</string>
     
     <string name="action_label">Action</string>
+    <string name="remove_action_label">Remove Action</string>
 	<string name="attack_action_label">Attack</string>
 	<string name="defense_action_label">Defense</string>
+	<string name="cancel_action_label">Remove</string>
 	
 	<string name="objective_label">Objective</string>
 	<string name="what_objective_label">You must conquer at least 3 territories in each region</string>
