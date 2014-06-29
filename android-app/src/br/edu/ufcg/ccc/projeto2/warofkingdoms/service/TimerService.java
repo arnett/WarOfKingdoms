@@ -9,7 +9,7 @@ import android.util.Log;
 public class TimerService extends Service{
 
 	private final static String TAG = "TimerService";
-	private final long START_TIME = 30 *1000;
+	public static final long START_TIME = 60 *1000;
 	private final long INTERVAL = 1 * 1000;
 
 	public static final String COUNTDOWN = "br.edu.ufcg.ccc.projeto2.warofkingdoms.service.countdown";
