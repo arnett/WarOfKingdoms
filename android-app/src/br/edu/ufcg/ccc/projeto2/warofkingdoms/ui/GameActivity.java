@@ -402,7 +402,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 							Toast.LENGTH_SHORT).show();
 		}
 
-		else {
+		else if (rulesChecker.isTerritoryOwnedByTheCurrentPlayer(firstSelectedTerritoryForTheCurrentMove) && 
+				!rulesChecker.isTerritoryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)){
 
 			Action[] applicableActionsToThisTerritory = gameManager
 					.getApplicableActions(firstSelectedTerritoryForTheCurrentMove);
@@ -434,7 +435,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			Toast.makeText(getBaseContext(),
 					"Invalid move: " + "You already attacked this territory.",
 					Toast.LENGTH_SHORT).show();
-		} else {
+		} else if (rulesChecker.isTargetAdjacentToOrigin(firstSelectedTerritoryForTheCurrentMove, touchedTerritory) && 
+				!rulesChecker.isTerritoryOwnedByTheCurrentPlayer(touchedTerritory) && !rulesChecker.isTerritoryAlreadyATarget(touchedTerritory)){
+			
 			gameManager.makeAttackMove(firstSelectedTerritoryForTheCurrentMove,
 					touchedTerritory);
 
@@ -579,6 +582,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
 		sendMovesResult = result;
+		
 		if(sendMovesResult == null) {
 			waitDialog.dismiss();
 			openMessageDialog(getResources().getString(R.string.internet_missbehaving_msg));
@@ -613,6 +617,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 			resetCountDown();
 		}
+		firstSelectedTerritoryForTheCurrentMove = null;
+		currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 	}
 
 	/*
@@ -634,27 +640,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	@Override
 	protected void onStop() {
 		super.onStop();
-//		unregisterReceiver(broadcastReceiver);
-//		stopService(new Intent(this, TimerService.class));
 		if (isOpenningConflictActivity) {
 			waitDialog.dismiss();
 		}
 	}
-
-//	@Override
-//	protected void onPause() {
-//		super.onPause();
-//		updateUI  = false;
-//		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
-//	}
-//
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		updateUI = true;
-//		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
-//	}
-
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -663,10 +652,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		if (requestCode == SOLVE_CONFLICT_RETURN) {
 			doActionsAfterSendMovesReturned();
 			isOpenningConflictActivity = false;
-			//			waitDialog.dismiss();
+			waitDialog.dismiss();
 			resetCountDown();
 		}
-
 	}
 
 	private void resetCountDown() {
@@ -777,7 +765,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private void updateGUI(Intent intent) {
 		if (intent.getExtras() != null) {
-			long millisUntilFinished = intent.getLongExtra("countdown", 0);
+			long millisUntilFinished = intent.getLongExtra("countdown", TimerService.START_TIME);
 			if (updateUI) {
 				updateTimerText(millisUntilFinished);
 			}
