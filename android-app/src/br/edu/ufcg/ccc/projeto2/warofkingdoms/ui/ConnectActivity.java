@@ -2,7 +2,10 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,8 +70,31 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
 		isOpenningGameActivity = false;
+		loadSavedPreferences();
 	}
 
+	private void loadSavedPreferences() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean firstOpen = sharedPreferences.getBoolean("firstOpen", true);
+		if (firstOpen) {
+			savePreferences("firstOpen", false);
+			startTutorial();
+		}
+	}
+	
+	private void startTutorial() {
+		startActivity(new Intent(this, TutorialActivity.class));
+	}
+	
+	private void savePreferences(String key, boolean value) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(key, value);
+		editor.commit();
+	}
+	
 	@Override
 	public void onClick(View v) {
 		v.startAnimation(alphaAnimation);
