@@ -15,6 +15,8 @@ function sendMoves(req, res) {
     console.log(roomsController.get(roomId).playersThatSentMoves.contains(req.body.id))
     if (roomsController.get(roomId).playersThatSentMoves.contains(req.body.id))
         return;
+    if (!roomsController.isPlayerConnected(req.body.id))
+        return;
 
     roomsController.rooms[roomId].sendMoves(req, res);
 }
