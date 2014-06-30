@@ -22,6 +22,14 @@ exports.roomController = function() {
     this.rooms = new Array();
 }
 
+this.roomController.prototype.isPlayerConnected = function(id) {
+    for (var roomId = 0;roomId < this.rooms.length; roomId++)
+        if (this.get(roomId).hasPlayer(id))
+            return true;
+
+    return false;
+}
+
 this.roomController.prototype.add = function(room) {
     this.rooms.push(room)
 }
@@ -50,6 +58,7 @@ Room.prototype.reset = function() {
     this.availableHouses     = utilsModule.createHouses();
 
     // SendMoves Global Variables
+    this.playersThatSentMoves        = new Array();
     this.numPlayersThatSentMoves     = 0;
     this.responsesSentSendMovesCount = 0;
     this.conflicts                   = new Array();
@@ -86,10 +95,19 @@ Room.prototype.connect = function(req, res, numTerritoriesToConquerInNorth, numT
     var busyWait = setInterval(f, 1000, this);
 }
 
+Room.prototype.hasPlayer = function(id) {
+    return this.players.getById(id) != null;
+}
+
 Room.prototype.sendMoves = function(req, res) {
     console.log(req.body.moves);
     var playerMoves = utilsModule.createMoveObjects(JSON.parse(req.body.moves));
     this.numPlayersThatSentMoves++;
+    console.log(req.body.id)
+    if (!this.playersThatSentMoves.contains(req.body.id))
+        this.playersThatSentMoves.push(req.body.id)
+    else
+        return;
 
     this.allMovesRound = this.allMovesRound.concat(playerMoves);   // saving all moves in one list per round
 
@@ -122,10 +140,11 @@ Room.prototype.sendMoves = function(req, res) {
             roomObject.responsesSentSendMovesCount++;
 
             if (roomObject.responsesSentSendMovesCount == roomObject.numMaxOfPlayers) {
-                roomObject.numPlayersThatSentMoves = 0;
+                roomObject.playersThatSentMoves        = new Array();
+                roomObject.numPlayersThatSentMoves     = 0;
                 roomObject.responsesSentSendMovesCount = 0;
-                roomObject.allMovesRound = new Array();
-                roomObject.conflicts = new Array();
+                roomObject.allMovesRound               = new Array();
+                roomObject.conflicts                   = new Array();
 
                 if (gameState.isGameFinished)
                     roomObject.reset()

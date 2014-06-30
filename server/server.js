@@ -6,14 +6,26 @@ var roomModule  = require('./room.js');
 // REQUIRED-IMPORTS
 var express     = require('express');
 var bodyParser  = require('body-parser');
+var sqlite3     = require('sqlite3')
 
 function sendMoves(req, res) {
     var roomId = parseInt(req.body.roomId);
+    console.log(roomsController.get(roomId))
+    console.log(roomsController.get(roomId).playersThatSentMoves)
+    console.log(roomsController.get(roomId).playersThatSentMoves.contains(req.body.id))
+    if (roomsController.get(roomId).playersThatSentMoves.contains(req.body.id))
+        return;
+
     roomsController.rooms[roomId].sendMoves(req, res);
 }
 
 function connect(req, res) {
     var num_players = req.body.num_players;
+
+    console.log(req.body.id)
+    console.log(roomsController.isPlayerConnected(req.body.id))
+    if (roomsController.isPlayerConnected(req.body.id))
+        return;
 
     var room = roomsController.getNextAvailableRoom(num_players);
     roomsController.add(room);
