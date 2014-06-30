@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">War of Kingdoms</string>
+    <string name="app_shot_name">W of K</string>
     <string name="title_activity_game">War of Kingdoms</string>
     <string name="choose_an_action">Choose an action</string>
     
