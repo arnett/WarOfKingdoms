@@ -33,7 +33,7 @@ public class TimerService extends Service{
 
 			@Override
 			public void onFinish() {
-				bi.putExtra("countdown", 0);
+				bi.putExtra("countdown", 0L);
 				sendBroadcast(bi);
 				Log.i(TAG, "Timer finished");
 			}
