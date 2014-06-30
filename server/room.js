@@ -114,7 +114,21 @@ Room.prototype.sendMoves = function(req, res) {
     console.log("Moves Sent");
     console.log(playerMoves);
 
+    count = 0;
     var f = function(roomObject) {
+        count++
+        console.log(count)
+
+        if (count >= 2) {
+            var left = roomObject.numMaxOfPlayers - roomObject.numPlayersThatSentMoves;
+            if (left > 0) {
+                for (var i = 0; i < left; i++) {
+                    var playerMoves = utilsModule.createMoveObjects([]);
+                    roomObject.numPlayersThatSentMoves++;
+                    roomObject.allMovesRound = roomObject.allMovesRound.concat(playerMoves);   // saving all moves in one list per round
+                }
+            }
+        }
 
         if (roomObject.numPlayersThatSentMoves == roomObject.numMaxOfPlayers) {
 
@@ -139,7 +153,7 @@ Room.prototype.sendMoves = function(req, res) {
             res.send(utilsModule.objToJSON(returnObject));
             roomObject.responsesSentSendMovesCount++;
 
-            if (roomObject.responsesSentSendMovesCount == roomObject.numMaxOfPlayers) {
+            if (roomObject.responsesSentSendMovesCount == roomObject.playersThatSentMoves.length) {
                 roomObject.playersThatSentMoves        = new Array();
                 roomObject.numPlayersThatSentMoves     = 0;
                 roomObject.responsesSentSendMovesCount = 0;

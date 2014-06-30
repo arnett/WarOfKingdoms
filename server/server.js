@@ -10,8 +10,8 @@ var sqlite3     = require('sqlite3')
 
 function sendMoves(req, res) {
     var roomId = parseInt(req.body.roomId);
-    console.log(roomsController.get(roomId))
-    console.log(roomsController.get(roomId).playersThatSentMoves)
+
+    console.log("Sending move: ".concat(req.body.id))
     console.log(roomsController.get(roomId).playersThatSentMoves.contains(req.body.id))
     if (roomsController.get(roomId).playersThatSentMoves.contains(req.body.id))
         return;
