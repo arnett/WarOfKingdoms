@@ -119,7 +119,7 @@ Room.prototype.sendMoves = function(req, res) {
         count++
         console.log(count)
 
-        if (count >= 1) {
+        if (count >= 200) {
             var left = roomObject.numMaxOfPlayers - roomObject.numPlayersThatSentMoves;
             if (left > 0) {
                 for (var i = 0; i < left; i++) {
