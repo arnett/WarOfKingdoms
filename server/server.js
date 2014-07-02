@@ -2,6 +2,7 @@
 
 // EXTERNAL-IMPORTS
 var roomModule  = require('./room.js');
+var utilsModule = require('./utils.js');
 
 // REQUIRED-IMPORTS
 var express     = require('express');
@@ -28,9 +29,10 @@ function connect(req, res) {
     if (roomsController.isPlayerConnected(req.body.id))
         return;
 
-    var room = roomsController.getNextAvailableRoom(num_players);
-    roomsController.add(room);
-    room.connect(req, res, NUM_TERRITORIES_TO_CONQUER_IN_NORTH, NUM_TERRITORIES_TO_CONQUER_IN_CENTER, NUM_TERRITORIES_TO_CONQUER_IN_SOUTH);
+    var numAiPlayers = 1;
+    var room = roomsController.getNextAvailableRoom(num_players, numAiPlayers);
+    room.connect(req, res, utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_NORTH, 
+                 utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_CENTER, utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_SOUTH);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,9 +51,5 @@ var port = 3000;
 app.listen(port);
 
 var roomsController = new roomModule.roomController();
-
-var NUM_TERRITORIES_TO_CONQUER_IN_NORTH  = 3;
-var NUM_TERRITORIES_TO_CONQUER_IN_CENTER = 3;
-var NUM_TERRITORIES_TO_CONQUER_IN_SOUTH  = 3;
 
 console.log("Server running...");

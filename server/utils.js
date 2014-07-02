@@ -178,6 +178,10 @@ getRandomDiceValue = function() {
 	return Math.floor((Math.random() * 6) + 1);
 }
 
+module.exports.NUM_TERRITORIES_TO_CONQUER_IN_NORTH = 3;
+module.exports.NUM_TERRITORIES_TO_CONQUER_IN_CENTER = 3;
+module.exports.NUM_TERRITORIES_TO_CONQUER_IN_SOUTH = 3;
+
 ////
 // THE END
 ////
