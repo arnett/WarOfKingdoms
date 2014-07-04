@@ -32,14 +32,12 @@ public class TutorialActivity extends Activity {
 
 			@Override
 			public void onPageSelected(int arg0) {
-				// TODO Auto-generated method stub
 				selectedIndex = arg0;
 
 			}
 			
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
 				if( mPageEnd && arg0 == selectedIndex && !callHappened)
 				{
 					Log.d(getClass().getName(), "Okay");
@@ -55,7 +53,6 @@ public class TutorialActivity extends Activity {
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
 				int count = adapter.getCount();
 				if(selectedIndex == count - 1)
 				{
@@ -68,7 +65,6 @@ public class TutorialActivity extends Activity {
 
 	private class ImagePagerAdapter extends PagerAdapter {
 	
-		private Context context;
 		private int[] mImages = new int[] {
 				R.drawable.tutorial1,
 				R.drawable.tutorial2,
@@ -110,13 +106,6 @@ public class TutorialActivity extends Activity {
 			((ViewPager) container).removeView((ImageView) object);
 		}
 
-		public Context getContext() {
-			return context;
-		}
-
-		public void setContext(Context context) {
-			this.context = context;
-		}
 	}
 
 

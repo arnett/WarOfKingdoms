@@ -48,8 +48,8 @@
             android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ProfileActivity" >
         </activity>
         <activity
-            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.TutorialActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar">
+            android:theme="@style/noAnimTheme"
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.TutorialActivity">
         </activity>
     </application>
 
