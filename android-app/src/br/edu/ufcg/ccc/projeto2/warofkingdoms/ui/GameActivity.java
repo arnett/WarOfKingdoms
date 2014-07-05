@@ -155,7 +155,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		});
 
 		startService(new Intent(this, TimerService.class));
+		Log.v(LOG_TAG, "registering receiver - on create");
 		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
+		countdownIsRunning = true;
 		showObjectiveDialog(false, 0, 0, 0, false);
 	}
 
@@ -201,6 +203,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private SendMovesResult sendMovesResult;
 
 	private boolean updateUI = true;
+
+	private boolean gameFinished;
+
+	private boolean countdownIsRunning;
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
@@ -495,8 +501,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		ConnectionDetector connectionDetector = new ConnectionDetector(
 				getApplicationContext());
 		if (connectionDetector.isConnectingToInternet()) {
+			Log.v(LOG_TAG, "Unregistering receiver - start next phase");
 			unregisterReceiver(broadcastReceiver);
 			stopService(new Intent(this, TimerService.class));
+			countdownIsRunning = false;
 			waitDialog.show();
 			communicationManager
 			.sendCurrentMoves(this, gameManager.getCurrentMoves());
@@ -582,11 +590,11 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				doActionsAfterSendMovesReturned();
 			}
 
-			if (!isOpenningConflictActivity) {
+			if (!isOpenningConflictActivity && !gameFinished) {
 				waitDialog.dismiss();
+				resetCountDown();
 			}
 
-			resetCountDown();
 		}
 		firstSelectedTerritoryForTheCurrentMove = null;
 		currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
@@ -631,7 +639,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private void resetCountDown() {
 		stopService(new Intent(this, TimerService.class));
 		startService(new Intent(this, TimerService.class));
+		Log.v(LOG_TAG, "registering receiver - reset countdown");
 		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
+		countdownIsRunning = true;
 	}
 
 	private void doActionsAfterSendMovesReturned() {
@@ -645,12 +655,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	}
 
 	private void openGameFinishedDialog() {
-		try {
-			unregisterReceiver(broadcastReceiver);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		stopService(new Intent(this, TimerService.class));
+		gameFinished = true;
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
 		gameOverDialog.setWinners(getWinners());
 		gameOverDialog
@@ -667,12 +672,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	@Override
 	protected void onDestroy() {
-		try {
+
+		if (countdownIsRunning) {
 			unregisterReceiver(broadcastReceiver);
-		} catch (Exception e) {
-			e.printStackTrace();
+			stopService(new Intent(this, TimerService.class));
+			countdownIsRunning = false;
 		}
-		stopService(new Intent(this, TimerService.class));
+		
 		if (waitDialog.isShowing()) {
 			waitDialog.dismiss();
 		}
@@ -707,12 +713,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 				updateTimerText(millisUntilFinished);
 			}
 			if (millisUntilFinished == 0) {
-				unregisterReceiver(broadcastReceiver);
-				stopService(new Intent(this, TimerService.class));
-				waitDialog.show();
-				communicationManager.sendCurrentMoves(
-						GameActivity.this, gameManager.getCurrentMoves());
-				gameManager.startNextPhase();
+				startNextPhase();
 			}
 
 		}
