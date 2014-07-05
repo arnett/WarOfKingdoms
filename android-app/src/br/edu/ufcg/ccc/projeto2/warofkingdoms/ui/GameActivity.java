@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -77,6 +78,11 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private RelativeLayout tokenLayout;
 	private Bitmap imageToken;
 
+	private ImageView hint;
+	private AnimationDrawable hintAnimation;
+	private boolean alreadyDrawnHint = false;
+	private int round = 0;
+	
 	private View mapImage;
 	private View mapImageMask;
 	private Bitmap maskImageBitmap;
@@ -101,6 +107,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private ChooseActionDialogFragment chooseActionDialogFragment;
 
 	private ObjectiveDialogFragment objectiveDialogFragment;
+	
+	private boolean areFirstTokensDrawn = true;
+	private SendMovesResult sendMovesResult;
+	private boolean updateUI = true;
+	private boolean gameFinished;
+	private boolean countdownIsRunning;
+	
 
 	//	TODO MOVE TO ANOTHER CLASS
 	private String[] NorthTerritories = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
@@ -136,6 +149,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		timeCounter = (TextView) findViewById(R.id.time_counter);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);
+		
+		hint = (ImageView) findViewById(R.id.hint);
 
 		mapImage.setOnTouchListener(this);
 		nextPhaseButton.setOnClickListener(this);
@@ -159,6 +174,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN));
 		countdownIsRunning = true;
 		showObjectiveDialog(false, 0, 0, 0, false);
+		
+		round++;
 	}
 
 	private void setCurrentPlayerHomebase() {
@@ -198,16 +215,6 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		currentPlayerToken.setImageResource(playerHouseToken.getCastleToken());
 	}
 
-	private boolean areFirstTokensDrawn = true;
-
-	private SendMovesResult sendMovesResult;
-
-	private boolean updateUI = true;
-
-	private boolean gameFinished;
-
-	private boolean countdownIsRunning;
-
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
@@ -221,6 +228,39 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		if (areFirstTokensDrawn) {
 			drawTerritoryOwnershipTokens();
 			areFirstTokensDrawn = false;
+		} 
+		
+		if (round == 1 && !alreadyDrawnHint) {
+			startHintAnimation();
+			alreadyDrawnHint = true;
+		}
+	}
+
+	private void stopHintAnimation() {
+		if (hintAnimation != null) {
+			hintAnimation.stop();
+			hint.setImageResource(R.drawable.clean_map);
+		}
+	}
+
+	private void startHintAnimation() {
+		
+		// TODO - why in some cases hint is null?????
+		if (hint != null) {
+			House currentPlayerHouse = gameManager.getCurrentPlayer().getHouse();
+			
+			if (currentPlayerHouse.getName().equals("Stark")) {
+				hint.setImageResource(R.drawable.stark_hint_animation);
+			}
+			else if (currentPlayerHouse.getName().equals("Lannister")) {
+				hint.setImageResource(R.drawable.lannister_hint_animation);
+			}
+			else if (currentPlayerHouse.getName().equals("Martell")) {
+				hint.setImageResource(R.drawable.martell_hint_animation);
+			}
+			
+			hintAnimation = (AnimationDrawable) hint.getDrawable();
+			hintAnimation.start();
 		}
 	}
 
@@ -372,6 +412,9 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private void processFirstTouch(int motionEventX, int motionEventY,
 			int touchedPixelColor) {
+		
+		stopHintAnimation();
+		
 		String touchedTerritoryName = territoryManager
 				.getTerritoryByClosestColor(touchedPixelColor);
 
@@ -439,6 +482,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 					yTerritoryCenter, tokenLayout);
 		}
 		currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
+		stopHintAnimation();
 	}
 
 	private void startActionPopup(Action[] actions) {
@@ -453,6 +497,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		switch (chosenAction) {
 		case ATTACK:
 			currentActionSelectionState = SelectionState.SELECTING_TARGET;
+			
+			if (round == 1) {
+				startNeighbourHintAnimation();
+			}
 			break;
 		case DEFEND:
 			gameManager.makeDefendMove(firstSelectedTerritoryForTheCurrentMove);
@@ -481,6 +529,27 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			drawActionTokens();	
 			currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
 			break;
+		}
+	}
+
+	private void startNeighbourHintAnimation() {
+		
+		// TODO - why in some cases hint is null?????
+		if (hint != null) {
+			House currentPlayerHouse = gameManager.getCurrentPlayer().getHouse();
+			
+			if (currentPlayerHouse.getName().equals("Stark")) {
+				hint.setImageResource(R.drawable.stark_neighbour_hint_animation);
+			}
+			else if (currentPlayerHouse.getName().equals("Lannister")) {
+				hint.setImageResource(R.drawable.lannister_neighbour_hint_animation);
+			}
+			else if (currentPlayerHouse.getName().equals("Martell")) {
+				hint.setImageResource(R.drawable.martell_neighbour_hint_animation);
+			}
+			
+			hintAnimation = (AnimationDrawable) hint.getDrawable();
+			hintAnimation.start();
 		}
 	}
 
@@ -561,6 +630,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	@Override
 	public void onSendMovesTaskCompleted(SendMovesResult result) {
+		round++;
 		sendMovesResult = result;
 		if(sendMovesResult == null) {
 			waitDialog.dismiss();
