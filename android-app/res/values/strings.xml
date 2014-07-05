@@ -51,4 +51,11 @@
 	
 	<string name="game_email_label">wofk@gmail.com</string>
 	
+	<!-- info messages -->
+	<string name="territory_already_owned_by_you_info">Territory already owned by you</string>
+	<string name="attack_a_neighbour_territory_info">Attack a neighbour territory</string>
+	<string name="you_already_attacked_this_territory_info">You already attacked this territory</string>
+	<string name="territory_already_used_during_this_turn_info">Territory already used</string>
+	<string name="choose_a_territory_owned_by_you_info">Choose a territory owned by you</string>
+	
 </resources>

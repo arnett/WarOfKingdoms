@@ -8,26 +8,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.GameState;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
@@ -382,20 +382,14 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		}
 		else if (rulesChecker
 				.isTerritoryAlreadyAnOrigin(firstSelectedTerritoryForTheCurrentMove)) {
-			Toast.makeText(
-					getBaseContext(),
-					"Invalid move: "
-							+ "This territory was already used during this turn",
-							Toast.LENGTH_SHORT).show();
+			
+			showInfoToast(getString(R.string.territory_already_used_during_this_turn_info));
 		}
 
 		else if (!rulesChecker
 				.isTerritoryOwnedByTheCurrentPlayer(firstSelectedTerritoryForTheCurrentMove)) {
-			Toast.makeText(
-					getBaseContext(),
-					"Invalid move: "
-							+ "The first territory must be owned by you",
-							Toast.LENGTH_SHORT).show();
+			
+			showInfoToast(getString(R.string.choose_a_territory_owned_by_you_info));
 		}
 
 		else if (rulesChecker.isTerritoryOwnedByTheCurrentPlayer(firstSelectedTerritoryForTheCurrentMove) && 
@@ -419,18 +413,12 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		RulesChecker rulesChecker = RulesChecker.getInstance();
 
 		if (rulesChecker.isTerritoryOwnedByTheCurrentPlayer(touchedTerritory)) {
-			Toast.makeText(getBaseContext(),
-					"Invalid move: " + "This territory is owned by you.",
-					Toast.LENGTH_SHORT).show();
+			showInfoToast(getString(R.string.territory_already_owned_by_you_info));
 		} else if (!rulesChecker.isTargetAdjacentToOrigin(
 				firstSelectedTerritoryForTheCurrentMove, touchedTerritory)) {
-			Toast.makeText(getBaseContext(),
-					"Invalid move: " + "Target is not adjacent to the origin.",
-					Toast.LENGTH_SHORT).show();
+			showInfoToast(getString(R.string.attack_a_neighbour_territory_info));
 		} else if (rulesChecker.isTerritoryAlreadyATarget(touchedTerritory)) {
-			Toast.makeText(getBaseContext(),
-					"Invalid move: " + "You already attacked this territory.",
-					Toast.LENGTH_SHORT).show();
+			showInfoToast(getString(R.string.you_already_attacked_this_territory_info));
 		} else if (rulesChecker.isTargetAdjacentToOrigin(firstSelectedTerritoryForTheCurrentMove, touchedTerritory) && 
 				!rulesChecker.isTerritoryOwnedByTheCurrentPlayer(touchedTerritory) && !rulesChecker.isTerritoryAlreadyATarget(touchedTerritory)){
 			
@@ -652,50 +640,8 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		if (sendMovesResult.getGameState().isGameFinished()) {
 			profileManager.saveGameStatistics(sendMovesResult.getGameState(), getApplicationContext());
-			saveGameStatistics(sendMovesResult.getGameState());
 			openGameFinishedDialog();
 		}
-	}
-
-	private void saveGameStatistics(GameState gameState) {
-
-		int numTimesPlayed = loadInt(Constants.NUM_TIMES_PLAYED_KEY);
-		int numVictories = loadInt(Constants.NUM_VICTORIES_KEY);
-
-		if (currentPlayerWon(gameState.getWinnerList())) {
-
-			numVictories++;
-			saveInt(Constants.NUM_VICTORIES_KEY, numVictories);
-		}
-
-		numTimesPlayed++;
-		saveInt(Constants.NUM_TIMES_PLAYED_KEY, numTimesPlayed);
-	}
-
-	public void saveInt(String key, int value) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putInt(key, value);
-		editor.commit();
-	}
-
-	public int loadInt(String key) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		return sharedPreferences.getInt(key, 0);
-	}
-
-	private boolean currentPlayerWon(List<Player> winners) {
-
-		for (Player player : winners) {
-
-			if (gameManager.getCurrentPlayer().getId().equals(player.getId())) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	private void openGameFinishedDialog() {
@@ -783,5 +729,21 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		}
 		timeCounter.setText(String.format("%02d", minutes) + ":"
 				+ String.format("%02d", formatedSeconds));
+	}
+	
+	private void showInfoToast(String message) {
+		LayoutInflater inflater = getLayoutInflater();
+
+		View layout = inflater.inflate(R.layout.custom_toast,
+                                       (ViewGroup) findViewById(R.id.toast_layout_root));
+
+        TextView text = (TextView) layout.findViewById(R.id.message);
+        text.setText(message);
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
 	}
 }
