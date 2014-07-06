@@ -26,7 +26,7 @@ public class ConflictActivity extends Activity implements OnClickListener{
 	private final int DRAW = 0;
 	private final int LOST = -1;
 	
-	private ArrayList<Conflict> conflicts;
+	private List<Conflict> conflicts;
 	private int currentConflictIndex = 0;
 	private Conflict currentConflict;
 	
@@ -51,9 +51,26 @@ public class ConflictActivity extends Activity implements OnClickListener{
 		gameManager = GameManager.getInstance();
 		
 		conflicts = (ArrayList<Conflict>) getIntent().getExtras().getSerializable("conflicts");
+		
+		conflicts = currentPlayerConflicts(conflicts);
+		
 		currentConflict = conflicts.get(currentConflictIndex);
 		
 		initializeComponents();
+	}
+
+	private List<Conflict> currentPlayerConflicts(List<Conflict> conflicts) {
+		
+		List<Conflict> myConflicts = new ArrayList<Conflict>();
+		
+		for (Conflict conflict : conflicts) {
+			
+			if (conflict.getHouses().contains(gameManager.getCurrentPlayer().getHouse())) {
+				myConflicts.add(conflict);
+			}
+		}
+		
+		return myConflicts;
 	}
 
 	private void initializeComponents() {
@@ -208,10 +225,9 @@ public class ConflictActivity extends Activity implements OnClickListener{
 	public int getDiceValueIndexCurrentPlayer(Conflict currentConflict) {
 		
 		List<House> conflictHouses = currentConflict.getHouses();
+		House currentPlayersHouse = gameManager.getCurrentPlayer().getHouse();
 		
 		for (int i = 0; i < conflictHouses.size(); i++) {
-			
-			House currentPlayersHouse = gameManager.getCurrentPlayer().getHouse();
 			
 			if (conflictHouses.get(i).equals(currentPlayersHouse)) {
 				return i;

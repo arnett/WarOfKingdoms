@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray_home_screen"
     android:orientation="vertical"
-    android:weightSum="100">
+    android:weightSum="100" >
 
     <LinearLayout
         android:id="@+id/conflict_header_layout"
@@ -131,6 +131,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical" >
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" 
+            android:clickable="false"
+            android:dividerHeight="0dp">
+        </ListView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
         </LinearLayout>
 
     </LinearLayout>
