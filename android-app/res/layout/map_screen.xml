@@ -64,9 +64,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/info_layout"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical" >
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_gray_shape" >
 
             <TextView
                 android:id="@+id/time_counter"
@@ -74,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="00:00"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/black" />
 
             <ImageView
@@ -92,6 +93,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:src="@drawable/smaller_goal_icon" />
         </LinearLayout>
 
