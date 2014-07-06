@@ -10,10 +10,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.adapter.CustomListViewAdapter;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RowItem;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class ConflictActivity extends Activity implements OnClickListener{
@@ -29,6 +33,7 @@ public class ConflictActivity extends Activity implements OnClickListener{
 	private GameManager gameManager; 
 	
 	private TextView territoryInConflictTextView;
+	private ListView resultList;
 	private ImageView unknownDiceImg; 
 	
 	private LinearLayout headerLayout;
@@ -59,12 +64,40 @@ public class ConflictActivity extends Activity implements OnClickListener{
 		unknownDiceImg = (ImageView) findViewById(R.id.unknownDiceImg);
 		unknownDiceImg.setOnClickListener(this);
 		
+		resultList = (ListView) findViewById(R.id.list);
+
 		tapDiceLabel = (TextView) findViewById(R.id.tapDiceLabel);
 		
 		headerLayout = (LinearLayout) findViewById(R.id.conflict_header_layout);
 		
 		nextConflictBtn = (Button) findViewById(R.id.nextConflictBtn);
 		nextConflictBtn.setOnClickListener(this);
+	}
+
+	private List<Integer> getDiceValues(List<House> houses, List<Integer> diceValues) {
+		List<Integer> diceValue = new ArrayList<Integer>(); 
+		Player currentPlayer = gameManager.getCurrentPlayer();
+		for (int i = 0; i < houses.size(); i++) { 
+			if(!currentPlayer.getHouse().equals(houses.get(i))) {
+				diceValue.add(diceValues.get(i));
+			}
+		}
+		return diceValue;
+	}
+
+	private List<String> getPlayersNames(List<House> houses) {
+		List<Player> players = gameManager.getCurrentPlayers();
+		List<String> playerName = new ArrayList<String>();
+		Player currentPlayer = gameManager.getCurrentPlayer();
+		for (House house : houses) {
+			for (Player player : players) {
+				if (player.getHouse().equals(house) && !player.equals(currentPlayer)) {
+					playerName.add(player.getName());
+					break;
+				}
+			}
+		}
+		return playerName;
 	}
 
 	@Override
@@ -116,7 +149,18 @@ public class ConflictActivity extends Activity implements OnClickListener{
 			headerLayout.setBackgroundColor(getResources().getColor(R.color.gray));
 			break;
 		}
-		
+		List<RowItem> rowItems = new ArrayList<RowItem>();
+        List<Integer> diceValues = currentConflict.getDiceValues();
+        List<House> houses = currentConflict.getHouses();
+        List<String> playerName = getPlayersNames(houses);
+        List<Integer> listDiceValues = getDiceValues(houses,diceValues);
+		for (int i = 0; i < listDiceValues.size(); i++) {
+			RowItem item = new RowItem(getDiceImg(listDiceValues.get(i)), playerName.get(i));
+            rowItems.add(item);
+        }
+		CustomListViewAdapter adapter = new CustomListViewAdapter(this,
+                R.layout.list_item, rowItems);
+        resultList.setAdapter(adapter);
 		headerLayout.setBackgroundColor(backgroundColor);
 		unknownDiceImg.setImageResource(getDiceImg(diceValue));
 		tapDiceLabel.setText(resultStr);
@@ -153,6 +197,7 @@ public class ConflictActivity extends Activity implements OnClickListener{
 		nextConflictBtn.setVisibility(View.INVISIBLE);
 		territoryInConflictTextView.setText("Territory "+currentConflict.getTerritory().getName());
 		unknownDiceImg.setImageResource(R.drawable.unknown_dice);
+		resultList.setAdapter(null);
 	}
 
 	private boolean conflictsAreOver() {

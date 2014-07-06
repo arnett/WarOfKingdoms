@@ -5,6 +5,7 @@
     <string name="app_shot_name">W of K</string>
     <string name="title_activity_game">War of Kingdoms</string>
     <string name="choose_an_action">Choose an action</string>
+    <string name="image">Image description</string>
     
     <string name="play_label">Play</string>
     <string name="profile_label">Profile</string>
@@ -28,7 +29,7 @@
     <string name="conflict_tie_label">Conflict Drew</string>
     
     <string name="game_over_label">The Game is Over</string>
-    <string name="ok_label">Ok</string>
+    <string name="ok_label">OK</string>
     
     <string name="action_label">Action</string>
     <string name="remove_action_label">Remove Action</string>

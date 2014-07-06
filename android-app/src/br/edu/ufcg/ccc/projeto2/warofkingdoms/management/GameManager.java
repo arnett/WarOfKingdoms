@@ -36,8 +36,8 @@ public class GameManager {
 		currentPlayer = new Player(ID, NAME);
 		game = new Game();
 
-		currentPlayers = new ArrayList<Player>();
-		currentPlayers.add(currentPlayer);
+		setCurrentPlayers(new ArrayList<Player>());
+		getCurrentPlayers().add(currentPlayer);
 	}
 
 	public synchronized static GameManager getInstance() {
@@ -129,7 +129,7 @@ public class GameManager {
 				currentPlayer = player;
 			}
 		}
-		currentPlayers = players;
+		setCurrentPlayers(players);
 	}
 
 	public Territory getTerritoryByName(String territoryName) {
@@ -161,6 +161,14 @@ public class GameManager {
 
 	public void setCurrentPlayerHomebase(Territory currentPlayerHomebase) {
 		this.currentPlayerHomebase = currentPlayerHomebase;
+	}
+
+	public List<Player> getCurrentPlayers() {
+		return currentPlayers;
+	}
+
+	public void setCurrentPlayers(List<Player> currentPlayers) {
+		this.currentPlayers = currentPlayers;
 	}
 	
 }
