@@ -46,6 +46,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CancelActionDialogFragm
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ChooseActionDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.GameOverDialogFragment;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ListPlayersDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.MessageDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.ObjectiveDialogFragment;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.entities.HouseToken;
@@ -73,6 +74,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 	private String CHOOSE_ACTION_DIALOG_FRAGMENT_TAG = "ChooseActionDialogFragmentTag";
 	private String GAME_OVER_DIALOG_FRAGMENT_TAG = "GameOverDialogFragmentTag";
+	private String LIST_PLAYERS_DIALOG_FRAGMENT_TAG = "ListPlayersDialogFragmentTag";
 	private static final String CANCEL_ACTION_DIALOG_FRAGMENT_TAG = "CancelActionDialogFragmentTag";
 
 	private RelativeLayout tokenLayout;
@@ -88,6 +90,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private Bitmap maskImageBitmap;
 	private ImageView nextPhaseButton;
 	private ImageView objectiveButton;
+	private ImageView listPlayersButton;
 	private TextView timeCounter;
 
 	private SelectionState currentActionSelectionState = SelectionState.SELECTING_ORIGIN;
@@ -107,6 +110,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private ChooseActionDialogFragment chooseActionDialogFragment;
 
 	private ObjectiveDialogFragment objectiveDialogFragment;
+	private ListPlayersDialogFragment listPlayersDialogFragment;
 	
 	private boolean areFirstTokensDrawn = true;
 	private SendMovesResult sendMovesResult;
@@ -146,6 +150,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		nextPhaseButton = (ImageView) findViewById(R.id.nextPhaseButton);
 		objectiveButton = (ImageView) findViewById(R.id.objectiveButton);
+		listPlayersButton = (ImageView) findViewById(R.id.listPlayersButton);
 		timeCounter = (TextView) findViewById(R.id.time_counter);
 		tokenLayout = (RelativeLayout) findViewById(R.id.token);
 		tokenLayout.setBackgroundColor(100);
@@ -155,6 +160,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		mapImage.setOnTouchListener(this);
 		nextPhaseButton.setOnClickListener(this);
 		objectiveButton.setOnClickListener(this);
+		listPlayersButton.setOnClickListener(this);
 
 		currentPlayerToken = (ImageView) findViewById(R.id.currentPlayerToken);
 		drawCurrentPlayerToken();
@@ -593,9 +599,17 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		case R.id.objectiveButton:
 			openGameObjective();
 			break;
+		case R.id.listPlayersButton:
+			openListPlayers();
+			break;
 		default:
 			return;
 		}
+	}
+
+	private void openListPlayers() {
+		listPlayersDialogFragment = new ListPlayersDialogFragment();
+		listPlayersDialogFragment.show(getFragmentManager(), LIST_PLAYERS_DIALOG_FRAGMENT_TAG);
 	}
 
 	private void openMessageDialog(String message) {
