@@ -62,6 +62,13 @@ public class TutorialActivity extends Activity {
 		};
 		viewPager.setOnPageChangeListener(mListener);
 	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		startActivity(new Intent(context, ConnectActivity.class));
+		context.finish();	
+	}
 
 	private class ImagePagerAdapter extends PagerAdapter {
 	

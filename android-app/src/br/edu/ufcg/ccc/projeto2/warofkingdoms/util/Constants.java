@@ -11,8 +11,8 @@ public class Constants {
 
 	// Networking constants
 
-	public final static String SERVER_URL = "http://ec2-54-94-134-213.sa-east-1.compute.amazonaws.com";
-	//public final static String SERVER_URL = "http://192.168.25.4:3000"; //ANDRE
+//	public final static String SERVER_URL = "http://ec2-54-94-134-213.sa-east-1.compute.amazonaws.com";
+	public final static String SERVER_URL = "http://192.168.0.18:3000"; //ANDRE
 	//public final static String SERVER_URL = "http://10.0.0.2:3000"; // LUAN
 	//public final static String SERVER_URL = "http://192.168.1.24:3000"; // ARNETT
 
