@@ -176,7 +176,7 @@ public class ConflictActivity extends Activity implements OnClickListener{
             rowItems.add(item);
         }
 		CustomListViewAdapter adapter = new CustomListViewAdapter(this,
-                R.layout.list_item, rowItems);
+                R.layout.list_players_item, rowItems);
         resultList.setAdapter(adapter);
 		headerLayout.setBackgroundColor(backgroundColor);
 		unknownDiceImg.setImageResource(getDiceImg(diceValue));

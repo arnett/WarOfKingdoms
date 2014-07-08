@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.DialogFragment;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -30,11 +33,19 @@ public class ListPlayersDialogFragment extends DialogFragment implements OnClick
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.list_players_dialog, null, false);
-		resultList = (ListView) view.findViewById(R.id.list);
+		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
+		
+		final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.gravity = Gravity.CENTER;
+        
+        
+        resultList = (ListView) view.findViewById(R.id.list);
         okBtn = (Button) view.findViewById(R.id.okBtn);
         okBtn.setOnClickListener(this);
         
-		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		return view;
 	}
 
@@ -60,7 +71,7 @@ public class ListPlayersDialogFragment extends DialogFragment implements OnClick
 			rowItems.add(rowItem);
 		}
 		CustomListViewAdapter adapter = new CustomListViewAdapter(getActivity(),
-				R.layout.list_item, rowItems);
+				R.layout.list_players_item, rowItems);
 
 		resultList.setAdapter(adapter);
 	}

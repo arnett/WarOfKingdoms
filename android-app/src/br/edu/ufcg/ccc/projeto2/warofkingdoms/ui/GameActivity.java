@@ -160,7 +160,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		mapImage.setOnTouchListener(this);
 		nextPhaseButton.setOnClickListener(this);
 		objectiveButton.setOnClickListener(this);
-//		listPlayersButton.setOnClickListener(this);
+		listPlayersButton.setOnClickListener(this);
 
 		currentPlayerToken = (ImageView) findViewById(R.id.currentPlayerToken);
 		drawCurrentPlayerToken();

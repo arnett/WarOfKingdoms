@@ -3,8 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/shape"
-    android:minWidth="400dp"
-	android:minHeight="300dp"
+    android:minWidth="300dp"
+	android:minHeight="430dp"
     android:orientation="vertical" >
     
     <LinearLayout
@@ -21,7 +21,7 @@
             android:gravity="center_horizontal"
             android:text="@string/player_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
+            android:textSize="50sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +59,8 @@
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:background="@color/dark_gray"
-            android:text="Ok"
+            android:text="@string/ok_label"
+            android:textSize="20sp"
             android:textColor="@color/white" />
 
         <LinearLayout
