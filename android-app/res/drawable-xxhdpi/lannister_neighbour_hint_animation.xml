@@ -8,6 +8,6 @@
     <item android:drawable="@drawable/lannister_n2" android:duration="1000" />
     <item android:drawable="@drawable/lannister_n3" android:duration="1000" />
     <item android:drawable="@drawable/lannister_n4" android:duration="1000" />
-    <item android:drawable="@drawable/clean_map" android:duration="3000" />
+    <item android:drawable="@drawable/clean_map" android:duration="1500" />
 
 </animation-list>

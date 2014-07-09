@@ -43,6 +43,9 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	private ImageView playBtn;
 	private ImageView aboutBtn;
 	private ImageView profileBtn;
+	private ImageView facebookBtn;
+	private ImageView tutorialBtn;
+	
 	private AlphaAnimation alphaAnimation = new AlphaAnimation(1F, 0.5F);
 
 	private CustomProgressDialog waitDialog;
@@ -66,6 +69,12 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 		profileBtn = (ImageView) findViewById(R.id.profileBtn);
 		profileBtn.setOnClickListener(this);
+		
+		facebookBtn = (ImageView) findViewById(R.id.facebook_button);
+		facebookBtn.setOnClickListener(this);
+		
+		tutorialBtn = (ImageView) findViewById(R.id.tutorial_button);
+		tutorialBtn.setOnClickListener(this);
 
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
 
@@ -103,13 +112,21 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 			communicationManager = NetworkManager.getInstance();
 			startNetworkGame();
-		} else if (v == aboutBtn) {
+		} 
+		else if (v == aboutBtn) {
 
 			startActivity(new Intent(this, AboutActivity.class));
-		} else if (v == profileBtn) {
+		}
+		else if (v == profileBtn) {
 
 			Intent intent = new Intent(this, ProfileActivity.class);
 			startActivity(intent);
+		}
+		else if (v == facebookBtn) {
+			// TODO - facebook connection
+		}
+		else if (v == tutorialBtn) {
+			startTutorial();
 		}
 	}
 

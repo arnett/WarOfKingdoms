@@ -4,7 +4,7 @@
     android:id="@+id/selected"
     android:oneshot="false">
     
-    <item android:drawable="@drawable/lannister_homebase_highlight" android:duration="2000" />
-    <item android:drawable="@drawable/clean_map" android:duration="2000" />
+    <item android:drawable="@drawable/lannister_homebase_highlight" android:duration="1000" />
+    <item android:drawable="@drawable/clean_map" android:duration="1000" />
 
 </animation-list>

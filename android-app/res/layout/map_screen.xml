@@ -66,6 +66,7 @@
             android:layout_below="@+id/info_layout"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
+            android:layout_alignParentRight="true"
             android:background="@drawable/rounded_gray_shape" >
 
             <TextView
