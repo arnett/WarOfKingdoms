@@ -1,5 +1,39 @@
-<android.support.v4.view.ViewPager
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/view_pager"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent" />
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" 
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:layout_weight="20">
+    </android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="80" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tutorial_text"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/purple_main_theme"
+                android:text="Large Text"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
