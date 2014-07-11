@@ -64,8 +64,13 @@ public class ListPlayersDialogFragment extends DialogFragment implements OnClick
 			HouseToken playerHouseToken = houseTokenManager
 					.getHouseToken(player.getHouse());
 			String playerName = player.getName();
+			
+			if (playerName.equals("Anonymous Player")) {
+				playerName = getString(R.string.anonymous_player);
+			}
+			
 			if (player.equals(gameManager.getCurrentPlayer())) {
-				playerName = playerName + " (You)";
+				playerName += " ("+ getString(R.string.you_label) +")";
 			}
 			RowItem rowItem = new RowItem(playerHouseToken.getCastleToken(), playerName);
 			rowItems.add(rowItem);

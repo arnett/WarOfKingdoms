@@ -19,7 +19,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 public class GameManager {
 
 	private static final int RANDOM_ID = new Random().nextInt(Integer.MAX_VALUE);
-	private String NAME = "Player " + RANDOM_ID;
+	private String NAME = "Anonymous Player";
 	private String ID = "MAC " + RANDOM_ID;
 
 	private static GameManager instance;
@@ -33,6 +33,7 @@ public class GameManager {
 	private Territory currentPlayerHomebase;
 
 	private GameManager() {
+		
 		currentPlayer = new Player(ID, NAME);
 		game = new Game();
 

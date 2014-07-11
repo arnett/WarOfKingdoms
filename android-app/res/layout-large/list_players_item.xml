@@ -14,7 +14,6 @@
             android:id="@+id/icon"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:contentDescription="@string/image"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
 
@@ -24,7 +23,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="25dp" />
 
     </LinearLayout>

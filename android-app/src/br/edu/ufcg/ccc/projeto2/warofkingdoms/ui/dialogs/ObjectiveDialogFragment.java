@@ -85,9 +85,9 @@ public class ObjectiveDialogFragment extends DialogFragment implements OnClickLi
 		
 		homeBaseTxt = (TextView) view.findViewById(R.id.my_house_txt);
 		if (hasHomebase) {
-			homeBaseTxt.setText("Keep Homebase");
+			homeBaseTxt.setText(getActivity().getString(R.string.keep_homebase_label));
 		} else {
-			homeBaseTxt.setText("Retrieve Homebase!");
+			homeBaseTxt.setText(getActivity().getString(R.string.retrieve_homebase_label));
 		}
 	}
 

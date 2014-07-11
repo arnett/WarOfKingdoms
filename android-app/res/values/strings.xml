@@ -5,7 +5,6 @@
     <string name="app_shot_name">W of K</string>
     <string name="title_activity_game">War of Kingdoms</string>
     <string name="choose_an_action">Choose an action</string>
-    <string name="image">Image description</string>
     
     <string name="play_label">Play</string>
     <string name="profile_label">Profile</string>
@@ -79,5 +78,12 @@
 	<string name="waiting_players_join">Waiting other players join&#8230;</string>
 	<string name="waiting_players_moves">Waiting other players moves&#8230;</string>	
 	
+	<!-- Other -->
+	<string name="anonymous_player">Anonymous</string>
+	<string name="you_label">You</string>
+	<string name="won_label">Won!</string>
+	
+	<string name="keep_homebase_label">Keep Homebase</string>
+	<string name="retrieve_homebase_label">Retrieve Homebase!</string>
 	
 </resources>

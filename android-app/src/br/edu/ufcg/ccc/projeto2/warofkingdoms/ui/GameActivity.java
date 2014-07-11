@@ -760,8 +760,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		gameOverDialog.setWinners(getWinners());
 		
 		try {
-			gameOverDialog
-			.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
+			gameOverDialog.show(
+					getFragmentManager(), 
+					GAME_OVER_DIALOG_FRAGMENT_TAG);
+			waitDialog.dismiss();
 		} catch (Exception e) {
 			// do nothing
 		}
@@ -770,7 +772,22 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private String getWinners() {
 		String winners = "";
 		for (Player p : sendMovesResult.getGameState().getWinnerList()) {
-			winners += p.getName() + " (" + p.getHouse().getName() + ") won!\n";
+			
+			String playerName = p.getName();
+			
+			if (p.getName().equals("Anonymous Player")) {
+				playerName = getString(R.string.anonymous_player);
+			}
+			
+			if (p.getId().equals(gameManager.getCurrentPlayer().getId()) &&
+				p.getHouse().equals(gameManager.getCurrentPlayer().getHouse())) {
+			
+				winners += playerName + " (" + getString(R.string.you_label) + ") "+getString(R.string.won_label)+"\n";
+			} 
+			else {
+				winners += playerName + " (" + p.getHouse().getName() + ") "+getString(R.string.won_label)+"\n";
+			}
+			
 		}
 		return winners;
 	}

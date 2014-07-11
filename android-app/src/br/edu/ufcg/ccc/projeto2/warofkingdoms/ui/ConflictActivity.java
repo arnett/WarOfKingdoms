@@ -104,17 +104,23 @@ public class ConflictActivity extends Activity implements OnClickListener{
 
 	private List<String> getPlayersNames(List<House> houses) {
 		List<Player> players = gameManager.getCurrentPlayers();
-		List<String> playerName = new ArrayList<String>();
+		List<String> playersName = new ArrayList<String>();
 		Player currentPlayer = gameManager.getCurrentPlayer();
 		for (House house : houses) {
 			for (Player player : players) {
 				if (player.getHouse().equals(house) && !player.equals(currentPlayer)) {
-					playerName.add(player.getName());
+					
+					String playerName = player.getName(); 
+					if (player.getName().equals("Anonymous Player")) {
+						playerName = getString(R.string.anonymous_player);
+					}
+					
+					playersName.add(playerName);
 					break;
 				}
 			}
 		}
-		return playerName;
+		return playersName;
 	}
 
 	@Override
@@ -152,17 +158,17 @@ public class ConflictActivity extends Activity implements OnClickListener{
 		case WON:
 			
 			backgroundColor = getResources().getColor(R.color.green);
-			resultStr = "You won the conflict";
+			resultStr = getString(R.string.conflict_won_label);
 			break;
 		case LOST:
 			
 			backgroundColor = getResources().getColor(R.color.red);
-			resultStr = "You lost the conflict";
+			resultStr = getString(R.string.conflict_lost_label);
 			break;
 		case DRAW:
 			
 			backgroundColor = getResources().getColor(R.color.gray);
-			resultStr = "It's a draw! No one won";
+			resultStr = getString(R.string.conflict_tie_label);
 			headerLayout.setBackgroundColor(getResources().getColor(R.color.gray));
 			break;
 		}
