@@ -12,17 +12,18 @@ exports.createHouses = function () {
 	aHouse = new gameLogicModule.House("Stark", "C");
 	houses.push(aHouse);
 
-	//aHouse = new gameLogicModule.House("Baratheon", "R");
+	aHouse = new gameLogicModule.House("Martell", "Y");
+	houses.push(aHouse);
+
+	//aHouse = new gameLogicModule.House("Lannister", "M");
 	//houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Lannister", "M");
-	houses.push(aHouse);
+	//aHouse = new gameLogicModule.House("Baratheon", "R");
+	//houses.push(aHouse);
 
 	//aHouse = new gameLogicModule.House("Tyrell", "T");
 	//houses.push(aHouse);
 
-	aHouse = new gameLogicModule.House("Martell", "Y");
-	houses.push(aHouse);
 
 	//aHouse = new gameLogicModule.House("Greyjoy", "J");
 	//houses.push(aHouse);

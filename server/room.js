@@ -13,10 +13,10 @@ Array.prototype.contains = function(elem) {
    return false;
 }
 
-Room = function(numberOfPlayers, roomId, numberOfAiPlayers) {
+Room = function(numberOfPlayers, roomId) {
     this.roomId = roomId;
     this.numMaxOfPlayers = numberOfPlayers;
-    this.reset(numberOfAiPlayers)
+    this.reset()
 }
 
 exports.roomController = function() {
@@ -39,22 +39,26 @@ this.roomController.prototype.get = function(i) {
     return this.rooms[i];
 }
 
-this.roomController.prototype.getNextAvailableRoom = function(numPlayers, numAiPlayers) {
+this.roomController.prototype.getNextAvailableRoom = function(numPlayers) {
     var roomId = 0;
 
     for (;roomId < this.rooms.length; roomId++) {
         var room = this.get(roomId);
-        if (!room.isFull() && room.numMaxOfPlayers == numPlayers && room.aiPlayersIds.length == numAiPlayers) {
+        if (!room.isFull() && room.numMaxOfPlayers == numPlayers) {
             return room;
         }
     }
 
-    var newRoom = new Room(numPlayers, roomId, numAiPlayers);
+    var newRoom = new Room(numPlayers, roomId);
     this.rooms.push(newRoom);
     return newRoom;
 }
 
-Room.prototype.reset = function(numOfAiPlayers) {
+Room.prototype.reset = function() {
+    // AI
+    this.aiPlayersIds = new Array();
+    this.addAIPlayersIfNeeded();
+
     // Game Variables
     this.players             = new playerModule.PlayerController()
     this.housesAlreadyChosen = new Array();
@@ -63,16 +67,16 @@ Room.prototype.reset = function(numOfAiPlayers) {
 
     // SendMoves Global Variables
     this.playersThatSentMoves        = new Array();
-    this.numPlayersThatSentMoves     = 0;
+    this.numPlayersThatSentMoves     = this.aiPlayersIds.length;
     this.responsesSentSendMovesCount = 0;
     this.conflicts                   = new Array();
     this.allMovesRound               = new Array();
+}
 
-    // AI
-    this.aiPlayersIds = new Array();
+Room.prototype.createAIPlayers = function(numOfAiPlayers) {
     for (var i = 0; i < numOfAiPlayers; i++) {
         var id = "ID " + Math.floor((Math.random() * Number.MAX_VALUE));
-        var name = "Player " + Math.floor((Math.random() * Number.MAX_VALUE));
+        var name = "Anonymous Player";
         var status = new gameLogicModule.Status(utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_NORTH,
                                                 utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_CENTER, utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_SOUTH)
 
@@ -82,6 +86,23 @@ Room.prototype.reset = function(numOfAiPlayers) {
         this.players.add(aiPlayer);
         this.map.addOwnerInTerritory(aiPlayer.house, aiPlayer.house.territoryOriginName);
     }
+}
+
+Room.prototype.addAIPlayersIfNeeded = function() {
+    // time that a room should wait for a real player
+    var timeToWait = 5000;
+    var f = function(roomObject){
+        if (roomObject.isFull()) {
+            clearInterval(busyWait);
+        } else if (timeToWait <= 0) {
+            roomObject.createAIPlayers(1);
+            roomObject.numPlayersThatSentMoves = roomObject.aiPlayersIds.length;
+            clearInterval(busyWait);
+        }
+        timeToWait -= 1000;
+    }
+
+    var busyWait = setInterval(f, 1000, this);
 }
 
 Room.prototype.connect = function(req, res) {
@@ -123,9 +144,9 @@ Room.prototype.sendMoves = function(req, res) {
     console.log(req.body.moves);
     var playerMoves = utilsModule.createMoveObjects(JSON.parse(req.body.moves));
     this.numPlayersThatSentMoves++;
-    console.log(req.body.id)
+    console.log(req.body.id);
     if (!this.playersThatSentMoves.contains(req.body.id))
-        this.playersThatSentMoves.push(req.body.id)
+        this.playersThatSentMoves.push(req.body.id);
     else
         return;
 
@@ -136,8 +157,7 @@ Room.prototype.sendMoves = function(req, res) {
 
     count = 0;
     var f = function(roomObject) {
-        count++
-        console.log(count)
+        count++;
 
         if (count >= 200) {
             var left = roomObject.numMaxOfPlayers - roomObject.numPlayersThatSentMoves;
@@ -178,7 +198,7 @@ Room.prototype.sendMoves = function(req, res) {
 
             if (roomObject.responsesSentSendMovesCount == roomObject.playersThatSentMoves.length) {
                 roomObject.playersThatSentMoves        = new Array();
-                roomObject.numPlayersThatSentMoves     = 0;
+                roomObject.numPlayersThatSentMoves     = roomObject.aiPlayersIds.length;
                 roomObject.responsesSentSendMovesCount = 0;
                 roomObject.allMovesRound               = new Array();
                 roomObject.conflicts                   = new Array();
@@ -197,16 +217,16 @@ Room.prototype.sendMoves = function(req, res) {
 }
 
 Room.prototype.chooseHouse = function() {
-    var houseIndex = Math.floor((Math.random() * 3) + 0);   // random from 0 to 5 (has 6 houses total)
+    var houseIndex = Math.floor((Math.random() * 2) + 0);
     while (this.housesAlreadyChosen.contains(houseIndex)) {
-        houseIndex = Math.floor((Math.random() * 3) + 0);
+        houseIndex = Math.floor((Math.random() * 2) + 0);
     }
     this.housesAlreadyChosen.push(houseIndex);
     return this.availableHouses[houseIndex];
 }
 
 Room.prototype.isFull = function() {
-    return this.players.length() - this.aiPlayersIds.length >= this.numMaxOfPlayers;
+    return this.players.length() >= this.numMaxOfPlayers;
 }
 
 Room.prototype.getRoundAIMoves = function() {

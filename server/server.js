@@ -30,7 +30,7 @@ function connect(req, res) {
         return;
 
     var numAiPlayers = 1;
-    var room = roomsController.getNextAvailableRoom(num_players, numAiPlayers);
+    var room = roomsController.getNextAvailableRoom(num_players);
     room.connect(req, res, utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_NORTH, 
                  utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_CENTER, utilsModule.NUM_TERRITORIES_TO_CONQUER_IN_SOUTH);
 }

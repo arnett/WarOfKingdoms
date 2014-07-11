@@ -126,7 +126,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/currentPlayerToken"
-            android:text="You"
+            android:text="@string/you_label"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="20sp" />
     </RelativeLayout>

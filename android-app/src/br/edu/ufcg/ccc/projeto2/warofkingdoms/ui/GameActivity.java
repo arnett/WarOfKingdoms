@@ -31,7 +31,6 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.CommunicationManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
@@ -757,7 +756,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	private void openGameFinishedDialog() {
 		gameFinished = true;
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
-		gameOverDialog.setWinners(getWinners());
+		gameOverDialog.setWinners(sendMovesResult.getGameState().getWinnerList());
 		
 		try {
 			gameOverDialog.show(
@@ -767,29 +766,6 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		} catch (Exception e) {
 			// do nothing
 		}
-	}
-
-	private String getWinners() {
-		String winners = "";
-		for (Player p : sendMovesResult.getGameState().getWinnerList()) {
-			
-			String playerName = p.getName();
-			
-			if (p.getName().equals("Anonymous Player")) {
-				playerName = getString(R.string.anonymous_player);
-			}
-			
-			if (p.getId().equals(gameManager.getCurrentPlayer().getId()) &&
-				p.getHouse().equals(gameManager.getCurrentPlayer().getHouse())) {
-			
-				winners += playerName + " (" + getString(R.string.you_label) + ") "+getString(R.string.won_label)+"\n";
-			} 
-			else {
-				winners += playerName + " (" + p.getHouse().getName() + ") "+getString(R.string.won_label)+"\n";
-			}
-			
-		}
-		return winners;
 	}
 
 	@Override
