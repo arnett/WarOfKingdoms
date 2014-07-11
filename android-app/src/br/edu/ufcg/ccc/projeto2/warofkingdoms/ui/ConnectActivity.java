@@ -30,9 +30,10 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 	private final String LOG_TAG = "ConnectActivity";
 
-	private boolean isOpenningGameActivity; // to just close the waitDialog when
+	// to just close the waitDialog when
 	// the activity is started
-
+	private boolean isOpenningGameActivity;
+	
 	private CommunicationManager communicationManager;
 	private GameManager gameManager;
 	private HouseTokenManager houseTokenManager;
@@ -77,8 +78,6 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		tutorialBtn.setOnClickListener(this);
 
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
-
-		isOpenningGameActivity = false;
 		loadSavedPreferences();
 	}
 
@@ -147,7 +146,12 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		Bundle args = new Bundle();
 		args.putString(Constants.DIALOG_MESSAGE, message);
 		msgDialog.setArguments(args);
-		msgDialog.show(getFragmentManager(), "msgDialog");
+		
+		try {
+			msgDialog.show(getFragmentManager(), "msgDialog");
+		} catch (Exception e) {
+			// do nothing
+		}
 	}
 
 	@Override

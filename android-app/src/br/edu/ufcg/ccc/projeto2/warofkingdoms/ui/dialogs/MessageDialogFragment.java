@@ -1,6 +1,7 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -12,7 +13,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
 
 public class MessageDialogFragment extends DialogFragment implements OnClickListener {
@@ -58,6 +63,15 @@ public class MessageDialogFragment extends DialogFragment implements OnClickList
 
 		if (v == okButton) {
 			dismiss();
+			resetPreviousGameState();
+			startActivity(new Intent(getActivity(), ConnectActivity.class));
+			getActivity().finish();
 		}
+	}
+	
+	private void resetPreviousGameState() {
+		GameManager.getInstance().reset();
+		HouseTokenManager.getInstance().reset();
+		RulesChecker.getInstance().reset();
 	}
 }

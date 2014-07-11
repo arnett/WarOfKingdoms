@@ -580,6 +580,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			unregisterReceiver(broadcastReceiver);
 			stopService(new Intent(this, TimerService.class));
 			countdownIsRunning = false;
+			dismissDialogs();
 			waitDialog.show();
 			communicationManager
 			.sendCurrentMoves(this, gameManager.getCurrentMoves());
@@ -587,6 +588,16 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		} else {
 			waitDialog.dismiss();
 			openMessageDialog(getResources().getString(R.string.no_internet_msg));
+		}
+	}
+
+	private void dismissDialogs() {
+		try {
+			waitDialog.dismiss();
+			objectiveDialogFragment.dismiss();
+			listPlayersDialogFragment.dismiss();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
 
@@ -618,7 +629,12 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		Bundle args = new Bundle();
 		args.putString(Constants.DIALOG_MESSAGE, message);
 		msgDialog.setArguments(args);
-		msgDialog.show(getFragmentManager(), "msgDialog");
+		
+		try {
+			msgDialog.show(getFragmentManager(), "msgDialog");
+		} catch (Exception e) {
+			// do nothing
+		}
 	}
 
 	private void openGameObjective() {
@@ -699,7 +715,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		}
 		return false;
 	}
-
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -742,8 +758,13 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		gameFinished = true;
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
 		gameOverDialog.setWinners(getWinners());
-		gameOverDialog
-		.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
+		
+		try {
+			gameOverDialog
+			.show(getFragmentManager(), GAME_OVER_DIALOG_FRAGMENT_TAG);
+		} catch (Exception e) {
+			// do nothing
+		}
 	}
 
 	private String getWinners() {
