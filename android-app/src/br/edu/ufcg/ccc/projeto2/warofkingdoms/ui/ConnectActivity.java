@@ -77,7 +77,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		tutorialBtn = (ImageView) findViewById(R.id.tutorial_button);
 		tutorialBtn.setOnClickListener(this);
 
-		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
+		waitDialog = new CustomProgressDialog(this, R.drawable.progress, getString(R.string.waiting_players_join));
 		loadSavedPreferences();
 	}
 

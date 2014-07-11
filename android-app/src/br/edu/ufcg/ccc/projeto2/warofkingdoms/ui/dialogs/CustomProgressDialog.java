@@ -13,7 +13,6 @@ import android.widget.LinearLayout.LayoutParams;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants;
 import br.ufcg.edu.ccc.projeto2.R;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
@@ -23,9 +22,9 @@ public class CustomProgressDialog extends Dialog {
 
 	private AdView adView;
 
-	
-
-	public CustomProgressDialog(Context context, int resourceIdOfImage,
+	public CustomProgressDialog(
+			Context context, 
+			int resourceIdOfImage,
 			String title) {
 		super(context, R.style.TransparentProgressDialog);
 		WindowManager.LayoutParams wlmp = getWindow().getAttributes();

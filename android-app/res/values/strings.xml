@@ -75,5 +75,9 @@
 	<string name="tutorial_txt9">Your goal:\n3 territories in each region</string>
 	<string name="tutorial_txt9a">Ready to see if you\'re fit to rule? :)</string>
 	
+	<!-- Wait messages -->
+	<string name="waiting_players_join">Waiting other players join&#8230;</string>
+	<string name="waiting_players_moves">Waiting other players moves&#8230;</string>	
+	
 	
 </resources>

@@ -143,7 +143,7 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 
 		setContentView(R.layout.map_screen);
 
-		waitDialog = new CustomProgressDialog(this, R.drawable.progress, null);
+		waitDialog = new CustomProgressDialog(this, R.drawable.progress, getString(R.string.waiting_players_moves));
 
 		mapImage = findViewById(R.id.map);
 		mapImageMask = findViewById(R.id.map_mask);
