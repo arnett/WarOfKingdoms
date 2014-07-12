@@ -11,10 +11,10 @@ public class Constants {
 
 	// Networking constants
 
-	//public final static String SERVER_URL = "http://ec2-54-94-134-213.sa-east-1.compute.amazonaws.com";
-	//public final static String SERVER_URL = "http://192.168.25.4:3000"; //ANDRE
-	public final static String SERVER_URL = "http://10.0.0.2:3000"; // LUAN
-	//public final static String SERVER_URL = "http://192.168.1.24:3000"; // ARNETT
+	public final static String SERVER_URL = "http://ec2-54-94-134-213.sa-east-1.compute.amazonaws.com";
+	// public final static String SERVER_URL = "http://192.168.25.4:3000"; //ANDRE
+	// public final static String SERVER_URL = "http://10.0.0.2:3000"; // LUAN
+	// public final static String SERVER_URL = "http://192.168.1.24:3000"; // ARNETT
 
 	public final static String CONNECT_URI = "/connect";
 	public final static String SEND_MOVES_URI = "/sendMoves";
@@ -78,6 +78,6 @@ public class Constants {
 	public static final int DIALOG_ERROR = 2;
 	public static final String DIALOG_MESSAGE = "dialogMessage";
 	public static final String DIALOG_MESSAGE_HEADER = "dialogMessageHeader";
-	
+
 	public static final String AD_UNIT_ID = "ca-app-pub-8527120677821180/9945806754";
 }

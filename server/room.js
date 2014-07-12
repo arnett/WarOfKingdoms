@@ -56,8 +56,8 @@ this.roomController.prototype.getNextAvailableRoom = function(numPlayers) {
 
 Room.prototype.reset = function() {
     // AI
+    this.firstConnectWasMade = false;
     this.aiPlayersIds = new Array();
-    this.addAIPlayersIfNeeded();
 
     // Game Variables
     this.players             = new playerModule.PlayerController()
@@ -99,6 +99,7 @@ Room.prototype.addAIPlayersIfNeeded = function() {
             roomObject.numPlayersThatSentMoves = roomObject.aiPlayersIds.length;
             clearInterval(busyWait);
         }
+        console.log(timeToWait + "ms remaining before creating an AI Player");
         timeToWait -= 1000;
     }
 
@@ -106,6 +107,12 @@ Room.prototype.addAIPlayersIfNeeded = function() {
 }
 
 Room.prototype.connect = function(req, res) {
+
+    if (!this.firstConnectWasMade) {
+        this.firstConnectWasMade = true;
+        this.addAIPlayersIfNeeded();
+    }
+
     var id        = req.body.id;
     var name      = req.body.name;
     var house     = this.chooseHouse();
