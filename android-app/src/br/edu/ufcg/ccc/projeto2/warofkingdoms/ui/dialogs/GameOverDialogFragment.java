@@ -16,7 +16,7 @@ import android.widget.TextView;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
-import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.FeedbackActivity;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
 
@@ -97,11 +97,9 @@ public class GameOverDialogFragment extends DialogFragment implements
 
 	public void onClick(View v) {
 		if (v == gameOverOkBtn) {
-			resetPreviousGameState();
-			startActivity(new Intent(getActivity(), ConnectActivity.class));
+			startActivity(new Intent(getActivity(), FeedbackActivity.class));
 			getActivity().finish();
 		}
-
 	}
 
 	public List<Player> getWinners() {
@@ -110,11 +108,5 @@ public class GameOverDialogFragment extends DialogFragment implements
 
 	public void setWinners(List<Player> list) {
 		this.winners = list;
-	}
-
-	private void resetPreviousGameState() {
-		GameManager.getInstance().reset();
-		HouseTokenManager.getInstance().reset();
-		RulesChecker.getInstance().reset();
 	}
 }
