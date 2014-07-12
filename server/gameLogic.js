@@ -31,7 +31,8 @@ exports.Status = function(numTerritoriesToConquerInNorth, numTerritoriesToConque
     this.numTerritoriesConqueredInSouth  = 0;
 }
 
-exports.GameState = function (isGameFinished, winnerList, status) {
+exports.GameState = function (wo, isGameFinished, winnerList, status) {
+    this.wo = wo;
     this.isGameFinished = isGameFinished;
     this.winnerList     = winnerList;
     this.status         = status;

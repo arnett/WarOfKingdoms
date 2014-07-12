@@ -11,9 +11,9 @@ public class Constants {
 
 	// Networking constants
 
-	public final static String SERVER_URL = "http://ec2-54-94-134-213.sa-east-1.compute.amazonaws.com";
+	//public final static String SERVER_URL = "http://ec2-54-94-134-213.sa-east-1.compute.amazonaws.com";
 	// public final static String SERVER_URL = "http://192.168.25.4:3000"; //ANDRE
-	// public final static String SERVER_URL = "http://10.0.0.2:3000"; // LUAN
+	public final static String SERVER_URL = "http://10.0.0.2:3000"; // LUAN
 	// public final static String SERVER_URL = "http://192.168.1.24:3000"; // ARNETT
 
 	public final static String CONNECT_URI = "/connect";
@@ -37,6 +37,7 @@ public class Constants {
 	public final static String CONFLICT_DICE_VALUES_TAG = "diceValues";
 
 	public final static String GAME_STATE_IS_GAME_FINISHED_TAG = "isGameFinished";
+	public final static String GAME_STATE_WO_TAG = "wo";
 	public final static String GAME_STATE_WINNER_LIST_TAG = "winnerList";
 	public final static String GAME_STATE_STATUS_TAG = "status";
 

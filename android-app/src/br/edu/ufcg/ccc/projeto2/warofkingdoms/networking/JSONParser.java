@@ -6,6 +6,7 @@ import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONFLICT_TER
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_PLAYERS_TAG;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_ROOM_ID_TAG;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.CONNECT_RESULT_TERRITORIES_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_STATE_WO_TAG;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_STATE_IS_GAME_FINISHED_TAG;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.GAME_STATE_WINNER_LIST_TAG;
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.HOUSE_NAME_TAG;
@@ -331,6 +332,8 @@ public class JSONParser {
 	public static GameState parseJsonToGameState(JSONObject gameStateJson) throws JSONException {
 		GameState gameState = new GameState();
 
+		gameState.setWO(gameStateJson
+				.getBoolean(GAME_STATE_WO_TAG));
 		gameState.setGameFinished(gameStateJson
 				.getBoolean(GAME_STATE_IS_GAME_FINISHED_TAG));
 		gameState.setWinnerList(parseJsonToPlayers(gameStateJson

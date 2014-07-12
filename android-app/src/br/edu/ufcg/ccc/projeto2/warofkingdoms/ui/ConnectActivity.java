@@ -206,11 +206,16 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	@Override
 	public void onConnectTaskCompleted(ConnectResult result) {
 		if (result == null) {
-			waitDialog.dismiss();
-			openMessageDialog(
-					getResources().getString(R.string.sorry_label),
-					getResources().getString(R.string.server_down_msg), 
-					Constants.DIALOG_ERROR);
+			try {
+				waitDialog.dismiss();
+				openMessageDialog(
+						getResources().getString(R.string.sorry_label),
+						getResources().getString(R.string.server_down_msg), 
+						Constants.DIALOG_ERROR);
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		} else {
 			gameManager.updateAllTerritories(result.getTerritories());
 			gameManager.updateAllPlayers(result.getPlayers());

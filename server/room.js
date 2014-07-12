@@ -97,9 +97,9 @@ Room.prototype.addAIPlayersIfNeeded = function() {
         } else if (timeToWait <= 0) {
             roomObject.createAIPlayers(1);
             roomObject.numPlayersThatSentMoves = roomObject.aiPlayersIds.length;
+            console.log("Time is up - AI Player created");
             clearInterval(busyWait);
         }
-        console.log(timeToWait + "ms remaining before creating an AI Player");
         timeToWait -= 1000;
     }
 
@@ -157,6 +157,8 @@ Room.prototype.sendMoves = function(req, res) {
     else
         return;
 
+    var wo = false;
+
     this.allMovesRound = this.allMovesRound.concat(playerMoves);   // saving all moves in one list per round
 
     console.log("Moves Sent");
@@ -166,9 +168,10 @@ Room.prototype.sendMoves = function(req, res) {
     var f = function(roomObject) {
         count++;
 
-        if (count >= 200) {
+        if (count >= 70) {
             var left = roomObject.numMaxOfPlayers - roomObject.numPlayersThatSentMoves;
             if (left > 0) {
+                wo = true;
                 for (var i = 0; i < left; i++) {
                     var playerMoves = utilsModule.createMoveObjects([]);
                     roomObject.numPlayersThatSentMoves++;
@@ -195,11 +198,11 @@ Room.prototype.sendMoves = function(req, res) {
 
             // this object is created to be possible to generate a JSONArray using JSON.stringify
             var winners   = roomObject.players.getWinners(roomObject.map);
-            var gameState = new gameLogicModule.GameState(winners.length > 0, winners, roomObject.players.getById(req.body.id).status)
+            var gameState = new gameLogicModule.GameState(wo, (wo || winners.length > 0), winners, roomObject.players.getById(req.body.id).status);
 
             var returnObject = new utilsModule.SendmovesReturnObj(roomObject.conflicts, roomObject.map.map, gameState);
 
-            console.log(utilsModule.objToJSON(returnObject))
+            console.log(utilsModule.objToJSON(returnObject));
             res.send(utilsModule.objToJSON(returnObject));
             roomObject.responsesSentSendMovesCount++;
 
@@ -211,7 +214,7 @@ Room.prototype.sendMoves = function(req, res) {
                 roomObject.conflicts                   = new Array();
 
                 if (gameState.isGameFinished)
-                    roomObject.reset()
+                    roomObject.reset();
             }
 
             clearInterval(busyWait);

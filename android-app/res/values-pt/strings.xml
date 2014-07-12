@@ -60,18 +60,18 @@
 	<string name="choose_a_territory_owned_by_you_info">Escolha um território pertencente a você</string>
 	
 	<!-- Tutorial -->
-	<string name="tutorial_txt1">Aperte Jogar para connectar</string>
+	<string name="tutorial_txt1">Aperte Jogar</string>
 	<string name="tutorial_txt2">Espere outros jogadores entrarem</string>
-	<string name="tutorial_txt3">Fase de Planejamento!\nToque um território seu</string>
-	<string name="tutorial_txt4">Escolha uma ação\nAtaque outro território, ou\nDefenda um seu</string>
+	<string name="tutorial_txt3">Fase de Planejamento!\nToque em um território seu</string>
+	<string name="tutorial_txt4">Escolha uma ação\nAtaque outro território ou\nDefenda um seu</string>
 	<string name="tutorial_txt5">Escolha um vizinho para atacar</string>
 	<string name="tutorial_txt6">Todas as jogadas prontas!?\nVamos para próxima fase :)</string>
-	<string name="tutorial_txt6a">Esperar outros jogadores finalizarem as jogadas deles</string>
+	<string name="tutorial_txt6a">Esperare outros jogadores finalizarem as jogadas deles</string>
 	<string name="tutorial_txt6b">Todos tem o mesmo tempo para finalizar as suas jogadas</string>
-	<string name="tutorial_txt7">Conflito!\nOutro jogador quer seu território</string>
-	<string name="tutorial_txt8">Veja o estatus do seu objetivo a qualquer momento</string>
+	<string name="tutorial_txt7">Conflito!\nOutro jogador quer o mesmo território</string>
+	<string name="tutorial_txt8">Veja o status do seu objetivo a qualquer momento</string>
 	<string name="tutorial_txt8a">Veja a lista de jogadores a qualquer momento</string>
-	<string name="tutorial_txt9">Seu objetivo:\n3 territórios em cada região</string>
+	<string name="tutorial_txt9">Seu objetivo:\nConquiste 3 territórios em cada região</string>
 	<string name="tutorial_txt9a">Pronto para saber se você é um líder? :)</string>
 	
 	<!-- Wait messages -->
@@ -82,6 +82,7 @@
 	<string name="anonymous_player">Anônimo</string>
 	<string name="you_label">Você</string>
 	<string name="won_label">Ganhou!</string>
+	<string name="wo_label">O adversário saiu!</string>
 	
 	<string name="alpha_label">Alpha testes</string>
 	<string name="alpha_message">Seja paciente com a nossa versão alpha(testes) =)</string>

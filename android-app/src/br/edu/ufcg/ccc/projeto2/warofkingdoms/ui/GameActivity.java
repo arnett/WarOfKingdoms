@@ -31,6 +31,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Action;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Conflict;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.House;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Move;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Territory;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.CommunicationManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
@@ -294,7 +295,15 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 	 * @return
 	 */
 	private int getHotspotColor(int hotspotId, int x, int y) {
-		return maskImageBitmap.getPixel(x, y);
+		
+		int pixelColor;
+		try {
+			pixelColor = maskImageBitmap.getPixel(x, y);
+		} catch (Exception e) {
+			pixelColor = Color.WHITE;
+		}
+		
+		return pixelColor;
 	}
 
 	private void addTokenToLayout(int imageResource, int x, int y,
@@ -763,16 +772,28 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		gameManager.updateAllTerritories(sendMovesResult.getUpdatedMap());
 		drawTerritoryOwnershipTokens();
 
-		if (sendMovesResult.getGameState().isGameFinished()) {
+		if (sendMovesResult.getGameState().isWO()) {
+			gameFinished = true;
+			
+			List<Player> winners = new ArrayList<Player>();
+			winners.add(gameManager.getCurrentPlayer());
+			openGameFinishedDialg(
+					winners, 
+					sendMovesResult.getGameState().isWO());
+		}
+		else if (sendMovesResult.getGameState().isGameFinished()) {
 			profileManager.saveGameStatistics(sendMovesResult.getGameState(), getApplicationContext());
-			openGameFinishedDialog();
+			gameFinished = true;
+			openGameFinishedDialg(
+					sendMovesResult.getGameState().getWinnerList(), 
+					sendMovesResult.getGameState().isWO());
 		}
 	}
 
-	private void openGameFinishedDialog() {
-		gameFinished = true;
+	private void openGameFinishedDialg(List<Player> winners, boolean wo) {
 		GameOverDialogFragment gameOverDialog = new GameOverDialogFragment();
-		gameOverDialog.setWinners(sendMovesResult.getGameState().getWinnerList());
+		gameOverDialog.setWinners(winners);
+		gameOverDialog.setWO(wo);
 		
 		try {
 			gameOverDialog.show(

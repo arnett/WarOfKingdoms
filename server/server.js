@@ -26,8 +26,8 @@ function connect(req, res) {
 
     console.log(req.body.id)
     console.log(roomsController.isPlayerConnected(req.body.id))
-    if (roomsController.isPlayerConnected(req.body.id))
-        return;
+    //if (roomsController.isPlayerConnected(req.body.id))
+    //    return;
 
     var numAiPlayers = 1;
     var room = roomsController.getNextAvailableRoom(num_players);

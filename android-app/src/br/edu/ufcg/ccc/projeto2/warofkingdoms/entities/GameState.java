@@ -4,6 +4,7 @@ import java.util.List;
 
 public class GameState {
 	
+	private boolean wo;
 	private boolean isGameFinished;
 	private List<Player> winnerList;
 	
@@ -30,5 +31,13 @@ public class GameState {
 
 	public void setWinnerList(List<Player> winnerList) {
 		this.winnerList = winnerList;
+	}
+
+	public boolean isWO() {
+		return wo;
+	}
+
+	public void setWO(boolean wo) {
+		this.wo = wo;
 	}
 }

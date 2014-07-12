@@ -60,28 +60,29 @@
 	<string name="choose_a_territory_owned_by_you_info">Choose a territory owned by you</string>
 	
 	<!-- Tutorial -->
-	<string name="tutorial_txt1">Press play to connect</string>
-	<string name="tutorial_txt2">Wait for other players join</string>
+	<string name="tutorial_txt1">Press play</string>
+	<string name="tutorial_txt2">Wait for other players to join</string>
 	<string name="tutorial_txt3">Planning Phase!\nTouch on your territories</string>
 	<string name="tutorial_txt4">Choose an action\nAttack another territory, or\nDefend yours</string>
 	<string name="tutorial_txt5">Choose a neighbour to attack</string>
 	<string name="tutorial_txt6">All moves placed!?\nLet\'s go to the next phase :)</string>
-	<string name="tutorial_txt6a">Wait other players finish their moves</string>
+	<string name="tutorial_txt6a">Wait for other players to finish their moves</string>
 	<string name="tutorial_txt6b">Everyone has the same time to finish its moves</string>
 	<string name="tutorial_txt7">Conflict!\nAnother player wants this territory</string>
 	<string name="tutorial_txt8">See your objective status at anytime</string>
-	<string name="tutorial_txt8a">See list of players at anytime</string>
-	<string name="tutorial_txt9">Your goal:\n3 territories in each region</string>
+	<string name="tutorial_txt8a">See the list of players at anytime</string>
+	<string name="tutorial_txt9">Your goal:\nConquer 3 territories in each region</string>
 	<string name="tutorial_txt9a">Ready to see if you\'re fit to rule? :)</string>
 	
 	<!-- Wait messages -->
-	<string name="waiting_players_join">Waiting other players join&#8230;</string>
+	<string name="waiting_players_join">Waiting for other players to join&#8230;</string>
 	<string name="waiting_players_moves">Waiting other players moves&#8230;</string>	
 	
 	<!-- Other -->
 	<string name="anonymous_player">Anonymous</string>
 	<string name="you_label">You</string>
 	<string name="won_label">Won!</string>
+	<string name="wo_label">The opponent left!</string>
 	
 	<string name="keep_homebase_label">Keep Homebase</string>
 	<string name="retrieve_homebase_label">Retrieve Homebase!</string>

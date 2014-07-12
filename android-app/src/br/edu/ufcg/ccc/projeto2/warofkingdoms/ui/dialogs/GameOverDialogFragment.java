@@ -31,7 +31,9 @@ public class GameOverDialogFragment extends DialogFragment implements
 
 	private Button gameOverOkBtn;
 	private TextView winnersTextView;
+	private TextView dialogTitle;
 	private List<Player> winners;
+	private boolean wo;
 	
 	private ImageView starkToken;
 	private ImageView lannisterToken;
@@ -55,19 +57,25 @@ public class GameOverDialogFragment extends DialogFragment implements
 
 		winnersTextView = (TextView) view.findViewById(R.id.winners_text_view);
 		winnersTextView.setText(getWinnersText());
+		
+		dialogTitle = (TextView) view.findViewById(R.id.gameOverTitle);
+		
+		if (wo) {
+			dialogTitle.setText(getActivity().getString(R.string.wo_label));
+		}
 
 		starkToken = (ImageView) view.findViewById(R.id.starkTokenImage);
 		lannisterToken = (ImageView) view.findViewById(R.id.lannisterTokenImage);
 		martellToken = (ImageView) view.findViewById(R.id.martellTokenImage);
 		
-		hideLosersHouses();
+		showWinnersHouses();
 
 		setCancelable(false);
 
 		return view;
 	}
 	
-	private void hideLosersHouses() {
+	private void showWinnersHouses() {
 		
 		for (Player winner : winners) {
 			
@@ -95,7 +103,7 @@ public class GameOverDialogFragment extends DialogFragment implements
 			
 			if (p.equals(GameManager.getInstance().getCurrentPlayer())) {
 			
-				winnersText += playerName +" "+ getString(R.string.won_label)+"\n";
+				winnersText += playerName +" ("+ getString(R.string.you_label) +") "+ getString(R.string.won_label)+"\n";
 			} 
 			else {
 				winnersText += playerName +" "+ getString(R.string.won_label)+"\n";
@@ -141,5 +149,13 @@ public class GameOverDialogFragment extends DialogFragment implements
 
 	public void setWinners(List<Player> list) {
 		this.winners = list;
+	}
+
+	public boolean isWO() {
+		return wo;
+	}
+
+	public void setWO(boolean wo) {
+		this.wo = wo;
 	}
 }

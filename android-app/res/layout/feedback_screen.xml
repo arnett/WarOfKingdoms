@@ -144,7 +144,6 @@
                     android:ems="10"
                     android:inputType="textMultiLine" >
 
-                    <requestFocus />
                 </EditText>
             </LinearLayout>
 
