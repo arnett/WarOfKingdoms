@@ -4,12 +4,15 @@ import java.util.List;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,8 +40,12 @@ public class GameOverDialogFragment extends DialogFragment implements
 		View view = inflater.inflate(R.layout.game_over_custom_dialog,
 				container);
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-		setStyle(STYLE_NO_FRAME, android.R.style.Theme_Translucent_NoTitleBar);
+		final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.gravity = Gravity.CENTER;
 
 		gameOverOkBtn = (Button) view.findViewById(R.id.gameOverOk);
 		gameOverOkBtn.setOnClickListener(this);

@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@color/blue_play"
-	android:minWidth="500dp"
+    android:background="@drawable/shape"
+	android:minWidth="320dp"
 	android:minHeight="200dp">
 
     <LinearLayout

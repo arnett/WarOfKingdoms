@@ -1,9 +1,7 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -95,14 +93,10 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	}
 
 	private void loadAlphaWarning() {
-		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-		alertDialog.setMessage(getString(R.string.alpha_message));
-		alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				alertDialog.dismiss();
-			}
-		});
-		alertDialog.show();
+		openMessageDialog(
+				getString(R.string.alpha_label),
+				getString(R.string.alpha_message), 
+				Constants.DIALOG_INFO);
 	}
 
 	private void loadSavedPreferences() {
@@ -111,7 +105,6 @@ public class ConnectActivity extends Activity implements OnClickListener,
 		boolean firstOpen = sharedPreferences.getBoolean("firstOpen", true);
 		if (firstOpen) {
 			savePreferences("firstOpen", false);
-			loadAlphaWarning();
 			startTutorial();
 		}
 	}
@@ -144,7 +137,10 @@ public class ConnectActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent(this, ProfileActivity.class);
 			startActivity(intent);
 		} else if (v == facebookBtn) {
-			// TODO - facebook connection
+			openMessageDialog(
+					getString(R.string.alpha_label),
+					getString(R.string.not_yet_implemented), 
+					Constants.DIALOG_INFO);
 		} else if (v == tutorialBtn) {
 			startTutorial();
 		}
@@ -157,16 +153,29 @@ public class ConnectActivity extends Activity implements OnClickListener,
 			waitDialog.show();
 			communicationManager.connect(this, connectEntity);
 		} else {
-			openMessageDialog(getResources()
-					.getString(R.string.no_internet_msg));
+			openMessageDialog(
+					getResources().getString(R.string.sorry_label),
+					getResources().getString(R.string.no_internet_msg), 
+					Constants.DIALOG_ERROR);
 		}
 	}
 
-	private void openMessageDialog(String message) {
+	
+	/**
+	 * Opens a message dialog
+	 * 
+	 * @param header dialog title
+	 * @param message
+	 * @param type - error or info
+	 */
+	private void openMessageDialog(String header, String message, int type) {
 
 		MessageDialogFragment msgDialog = new MessageDialogFragment();
 		Bundle args = new Bundle();
+		
+		args.putString(Constants.DIALOG_MESSAGE_HEADER, header);
 		args.putString(Constants.DIALOG_MESSAGE, message);
+		args.putInt(Constants.DIALOG_TYPE, type);
 		msgDialog.setArguments(args);
 
 		try {
@@ -193,8 +202,10 @@ public class ConnectActivity extends Activity implements OnClickListener,
 	public void onConnectTaskCompleted(ConnectResult result) {
 		if (result == null) {
 			waitDialog.dismiss();
-			openMessageDialog(getResources()
-					.getString(R.string.server_down_msg));
+			openMessageDialog(
+					getResources().getString(R.string.sorry_label),
+					getResources().getString(R.string.server_down_msg), 
+					Constants.DIALOG_ERROR);
 		} else {
 			gameManager.updateAllTerritories(result.getTerritories());
 			gameManager.updateAllPlayers(result.getPlayers());

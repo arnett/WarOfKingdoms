@@ -1,7 +1,10 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.networking;
 
 import static br.edu.ufcg.ccc.projeto2.warofkingdoms.management.RequestManager.requestPOST;
-import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.*;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.PLAYER_ID_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_REQUEST_MOVES_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_REQUEST_ROOM_ID_TAG;
+import static br.edu.ufcg.ccc.projeto2.warofkingdoms.util.Constants.SEND_MOVES_URI;
 
 import java.io.IOException;
 import java.util.Arrays;

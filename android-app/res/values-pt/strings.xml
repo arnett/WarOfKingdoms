@@ -83,7 +83,9 @@
 	<string name="you_label">Você</string>
 	<string name="won_label">Ganhou!</string>
 	
-	<string name="alpha_message">Seja paciente! Estamos apenas na versão alpha(testes) =)</string>
+	<string name="alpha_label">Alpha testes</string>
+	<string name="alpha_message">Seja paciente com a nossa versão alpha(testes) =)</string>
+	<string name="not_yet_implemented">Estamos trabalhando nisso&#8230;</string>
 	
 	<string name="feedback_label">Avaliação</string>
 	<string name="rate_label">Avalie</string>

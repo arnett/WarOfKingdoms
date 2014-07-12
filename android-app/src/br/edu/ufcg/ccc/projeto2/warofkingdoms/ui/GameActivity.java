@@ -586,7 +586,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 			gameManager.startNextPhase();
 		} else {
 			waitDialog.dismiss();
-			openMessageDialog(getResources().getString(R.string.no_internet_msg));
+			openMessageDialog(
+					getResources().getString(R.string.sorry_label),
+					getResources().getString(R.string.no_internet_msg), 
+					Constants.DIALOG_ERROR);
 		}
 	}
 
@@ -622,11 +625,21 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		listPlayersDialogFragment.show(getFragmentManager(), LIST_PLAYERS_DIALOG_FRAGMENT_TAG);
 	}
 
-	private void openMessageDialog(String message) {
+	/**
+	 * Opens a message dialog
+	 * 
+	 * @param header dialog title
+	 * @param message
+	 * @param type - error or info
+	 */
+	private void openMessageDialog(String msgHeader, String message, int type) {
 
 		MessageDialogFragment msgDialog = new MessageDialogFragment();
 		Bundle args = new Bundle();
+		
+		args.putString(Constants.DIALOG_MESSAGE_HEADER, msgHeader);
 		args.putString(Constants.DIALOG_MESSAGE, message);
+		args.putInt(Constants.DIALOG_TYPE, type);
 		msgDialog.setArguments(args);
 		
 		try {
@@ -663,7 +676,10 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		sendMovesResult = result;
 		if(sendMovesResult == null) {
 			waitDialog.dismiss();
-			openMessageDialog(getResources().getString(R.string.internet_missbehaving_msg));
+			openMessageDialog(
+					getResources().getString(R.string.sorry_label),
+					getResources().getString(R.string.internet_missbehaving_msg), 
+					Constants.DIALOG_ERROR);
 		}
 		else {
 			if (chooseActionDialogFragment != null && chooseActionDialogFragment.isVisible()) {

@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" 
     android:background="@drawable/shape"
-	android:minWidth="400dp"
-	android:minHeight="430dp">
+	android:minWidth="350dp"
+	android:minHeight="200dp">
 
     <LinearLayout
         android:layout_width="match_parent"

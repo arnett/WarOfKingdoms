@@ -86,7 +86,10 @@
 	<string name="keep_homebase_label">Keep Homebase</string>
 	<string name="retrieve_homebase_label">Retrieve Homebase!</string>
 	
-	<string name="alpha_message">Be cool!\nThis is only an alpha(tests) version.\n Enjoy! =)</string>
+	<string name="alpha_label">Alpha tests</string>
+	<string name="alpha_message">Be cool with our alpha(tests) version =)</string>
+	<string name="not_yet_implemented">We\'re still working on this&#8230;</string>
+	
 	
 	<!-- Feedback -->
 	<string name="feedback_label">Feedback</string>
