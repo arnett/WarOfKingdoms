@@ -88,4 +88,14 @@
 	
 	<string name="alpha_message">Be cool!\nThis is only an alpha(tests) version.\n Enjoy! =)</string>
 	
+	<!-- Feedback -->
+	<string name="feedback_label">Feedback</string>
+	<string name="rate_label">Rate it</string>
+	<string name="would_pay_label">Would you pay for this app?</string>
+	<string name="yes_label">Yes</string>
+	<string name="no_label">No</string>
+	<string name="general_comments_label">General Comments =)</string>
+	<string name="send_label">Send</string>
+	<string name="later_label">Later</string>
+	
 </resources>

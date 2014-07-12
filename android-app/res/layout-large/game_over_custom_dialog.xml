@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/blue_play"
-	android:minWidth="500dp"
-	android:minHeight="200dp">
+    android:minHeight="200dp"
+    android:minWidth="500dp"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +14,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:layout_marginTop="20dip">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -27,67 +27,105 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/game_over_label"
-                android:textSize="30sp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" 
-				android:layout_weight="1" />
-
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:layout_marginTop="20dip">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" 
-                android:layout_weight="1"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/winners_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Large Text"
-                android:textSize="20sp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-				android:layout_weight="1" />
-
-            </LinearLayout>
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:layout_marginTop="20dip"
-            android:layout_marginBottom="20dip">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" 
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/starkTokenImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/token_stark_castle"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/lannisterTokenImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/token_lannister_castle"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/martellTokenImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/token_martell_castle"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dip"
+            android:layout_marginTop="20dip" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <Button
                 android:id="@+id/gameOverOk"
                 android:layout_width="150dp"
-            	android:layout_height="50dp"
+                android:layout_height="50dp"
+                android:background="@color/dark_gray"
                 android:text="@string/ok_label"
-                android:textColor="@color/white"
-                android:background="@color/dark_gray" />
+                android:textColor="@color/white" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" 
-				android:layout_weight="1" />
-
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
         </LinearLayout>
-
-	</LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

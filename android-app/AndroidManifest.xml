@@ -62,6 +62,11 @@
             android:theme="@style/noAnimTheme" >
         </activity>
         <activity
+            android:name="br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.FeedbackActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" >
+        </activity>
+        <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     </application>

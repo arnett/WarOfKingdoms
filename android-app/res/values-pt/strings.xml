@@ -85,4 +85,13 @@
 	
 	<string name="alpha_message">Seja paciente! Estamos apenas na versão alpha(testes) =)</string>
 	
+	<string name="feedback_label">Avaliação</string>
+	<string name="rate_label">Avalie</string>
+	<string name="would_pay_label">Você pagaria por este app?</string>
+	<string name="yes_label">Sim</string>
+	<string name="no_label">Não</string>
+	<string name="general_comments_label">Comentários =)</string>
+	<string name="send_label">Enviar</string>
+	<string name="later_label">Depois</string>
+	
 </resources>
