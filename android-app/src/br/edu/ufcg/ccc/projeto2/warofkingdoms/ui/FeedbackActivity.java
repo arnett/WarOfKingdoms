@@ -3,10 +3,13 @@ package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -60,10 +63,20 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 			AsyncTask<String, Void, Void> rateRequest = new PostEvaluationRequest(
 					commenterId, rating, wouldBuy, comments);
 			rateRequest.execute();
+			
+			savePreferences("feedbackSent", true);
+			leaveFeedbackScreen();
 		} else if (v == laterBtn) {
-
+			leaveFeedbackScreen();
 		}
-		leaveFeedbackScreen();
+	}
+	
+	private void savePreferences(String key, boolean value) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(key, value);
+		editor.commit();
 	}
 
 	private int getWouldBuySelectedOption() {

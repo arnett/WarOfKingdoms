@@ -85,7 +85,7 @@ public class ConnectActivity extends Activity implements OnClickListener,
 
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress,
 				getString(R.string.waiting_players_join));
-		loadSavedPreferences();
+		openTutorial();
 	}
 
 	private void updateMac() {
@@ -99,14 +99,19 @@ public class ConnectActivity extends Activity implements OnClickListener,
 				Constants.DIALOG_INFO);
 	}
 
-	private void loadSavedPreferences() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		boolean firstOpen = sharedPreferences.getBoolean("firstOpen", true);
-		if (firstOpen) {
+	private void openTutorial() {
+		
+		if (isFirstTimeOpenningApp()) {
 			savePreferences("firstOpen", false);
 			startTutorial();
 		}
+	}
+
+	private boolean isFirstTimeOpenningApp() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean firstOpen = sharedPreferences.getBoolean("firstOpen", true);
+		return firstOpen;
 	}
 
 	private void startTutorial() {

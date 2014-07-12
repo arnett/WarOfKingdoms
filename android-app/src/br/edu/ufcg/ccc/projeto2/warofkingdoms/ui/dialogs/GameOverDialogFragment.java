@@ -4,8 +4,10 @@ import java.util.List;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.entities.Player;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.ConnectActivity;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.FeedbackActivity;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.RulesChecker;
 import br.ufcg.edu.ccc.projeto2.R;
@@ -104,9 +107,32 @@ public class GameOverDialogFragment extends DialogFragment implements
 
 	public void onClick(View v) {
 		if (v == gameOverOkBtn) {
-			startActivity(new Intent(getActivity(), FeedbackActivity.class));
-			getActivity().finish();
+			if (!wasFeedbackSent()) {
+
+				startActivity(new Intent(getActivity(), FeedbackActivity.class));
+				getActivity().finish();
+			} else {
+				leaveGameScreen();
+			}
 		}
+	}
+	
+	private void leaveGameScreen() {
+		resetPreviousGameState();
+		startActivity(new Intent(getActivity(), ConnectActivity.class));
+		dismiss();
+	}
+	
+	private void resetPreviousGameState() {
+		GameManager.getInstance().reset();
+		HouseTokenManager.getInstance().reset();
+		RulesChecker.getInstance().reset();
+	}
+
+	private boolean wasFeedbackSent() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		return sharedPreferences.getBoolean("feedbackSent", false);
 	}
 
 	public List<Player> getWinners() {
