@@ -95,5 +95,6 @@
 	<string name="general_comments_label">Comentários =)</string>
 	<string name="send_label">Enviar</string>
 	<string name="later_label">Depois</string>
+	<string name="feedback_sent">Obrigado por nos ajudar! =)</string>
 	
 </resources>

@@ -100,5 +100,6 @@
 	<string name="general_comments_label">General Comments =)</string>
 	<string name="send_label">Send</string>
 	<string name="later_label">Later</string>
+	<string name="feedback_sent">Thank you for helping us! =)</string>
 	
 </resources>

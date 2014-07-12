@@ -82,10 +82,13 @@ public class MessageDialogFragment extends DialogFragment implements OnClickList
 	public void onClick(View v) {
 
 		if (v == okButton) {
+			
 			dismiss();
-			resetPreviousGameState();
-			startActivity(new Intent(getActivity(), ConnectActivity.class));
-			getActivity().finish();
+			if (messageType == Constants.DIALOG_ERROR) {
+				resetPreviousGameState();
+				startActivity(new Intent(getActivity(), ConnectActivity.class));
+				getActivity().finish();
+			}
 		}
 	}
 	

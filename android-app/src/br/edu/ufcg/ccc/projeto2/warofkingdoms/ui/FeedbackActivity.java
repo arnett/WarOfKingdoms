@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.Toast;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.util.GoogleFormHttpRequest;
@@ -63,6 +64,8 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 			AsyncTask<String, Void, Void> rateRequest = new PostEvaluationRequest(
 					commenterId, rating, wouldBuy, comments);
 			rateRequest.execute();
+			
+			Toast.makeText(this, getString(R.string.feedback_sent), Toast.LENGTH_LONG).show();
 			
 			savePreferences("feedbackSent", true);
 			leaveFeedbackScreen();
