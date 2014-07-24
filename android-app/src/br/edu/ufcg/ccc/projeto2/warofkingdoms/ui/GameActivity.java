@@ -8,12 +8,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -136,13 +138,14 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		super.onCreate(savedInstanceState);
 
 		gameManager = GameManager.getInstance();
+		gameManager.updateCurrentPlayerName(getUserName());
+		
 		territoryManager = TerritoryUIManager.getInstance();
 		houseTokenManager = HouseTokenManager.getInstance();
 		profileManager = ProfileManager.getInstance();
 		communicationManager = NetworkManager.getInstance();
-
 		setContentView(R.layout.map_screen);
-
+		
 		waitDialog = new CustomProgressDialog(this, R.drawable.progress, getString(R.string.waiting_players_moves));
 
 		mapImage = findViewById(R.id.map);
@@ -182,6 +185,14 @@ OnActionSelectedListener, OnClickListener, OnTaskCompleted {
 		showObjectiveDialog(false, 0, 0, 0, false);
 		
 		round++;
+	}
+	
+	private String getUserName() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.getApplicationContext());
+		String userName = sharedPreferences.getString("user_name", "Anonymous Player");
+		Log.v(LOG_TAG, userName);
+		return userName;
 	}
 
 	private void setCurrentPlayerHomebase() {

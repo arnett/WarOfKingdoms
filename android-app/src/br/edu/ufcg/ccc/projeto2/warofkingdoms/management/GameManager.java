@@ -33,7 +33,6 @@ public class GameManager {
 	private Territory currentPlayerHomebase;
 
 	private GameManager() {
-		
 		currentPlayer = new Player(ID, NAME);
 		game = new Game();
 
@@ -170,6 +169,15 @@ public class GameManager {
 
 	public void setCurrentPlayers(List<Player> currentPlayers) {
 		this.currentPlayers = currentPlayers;
+	}
+
+	public void updateCurrentPlayerName(String userName) {
+		currentPlayer.setName(userName);
+		for (int i = 0; i < currentPlayers.size(); i++) {
+			if (currentPlayers.get(i).equals(currentPlayer)) {
+				currentPlayers.set(i, currentPlayer);
+			}
+ 		}
 	}
 	
 }

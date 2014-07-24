@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_id">310967959070516</string>
     <string name="app_name">War of Kingdoms</string>
     <string name="app_shot_name">W of K</string>
     <string name="title_activity_game">War of Kingdoms</string>
+    <string name="logout">Logout</string>
     <string name="choose_an_action">Escolha uma ação</string>
-    
     <string name="play_label">Jogar</string>
     <string name="profile_label">Perfil</string>
     <string name="about_label">Sobre</string>
@@ -17,85 +18,74 @@
     <string name="victory_track_label">Histórico</string>
     <string name="last_ten_games_label">10 últimos jogos</string>
     <string name="player_label">Jogadores</string>
-    
     <string name="sorry_label">Mil desculpas!</string>
     <string name="no_internet_msg">Você precisa de internet  =\\</string>
     <string name="server_down_msg">Nosso sistema está fora do ar! =\\</string>
     <string name="internet_missbehaving_msg">Nosso sistema está louco! =\\</string>
-
-    
     <string name="conflict_lost_label">Perdeu Conflito</string>
     <string name="conflict_won_label">Ganhou Conflito</string>
     <string name="conflict_tie_label">Conflito Empatado</string>
-    
     <string name="game_over_label">O jogo acabou</string>
     <string name="ok_label">Ok</string>
-    
     <string name="action_label">Ação</string>
     <string name="remove_action_label">Remover Ação</string>
-	<string name="attack_action_label">Atacar</string>
-	<string name="defense_action_label">Defender</string>
-	<string name="cancel_action_label">Remover</string>
-	
-	<string name="objective_label">Objetivo</string>
-	<string name="what_objective_label">Conquiste pelo menos 3 territórios em cada região</string>
-	<string name="north_objective">Norte</string>
-	<string name="center_objective">Centro</string>
-	<string name="south_objective">Sul</string>
-	<string name="homebase_objective">Mantenha sua casa inicial</string>
-	
-	
-	<string name="andre_label">André</string>
-	<string name="arnett_label">Arnett</string>
-	<string name="luan_label">Luan</string>
-	<string name="rafael_label">Rafael</string>
-	
-	<string name="game_email_label">wofkapp@gmail.com</string>
-	
-	<!-- info messages -->
-	<string name="territory_already_owned_by_you_info">Você já possui este território</string>
-	<string name="attack_a_neighbour_territory_info">Ataque um território vizinho</string>
-	<string name="you_already_attacked_this_territory_info">Você já atacou este território</string>
-	<string name="territory_already_used_during_this_turn_info">Território já utilizado</string>
-	<string name="choose_a_territory_owned_by_you_info">Escolha um território pertencente a você</string>
-	
-	<!-- Tutorial -->
-	<string name="tutorial_txt1">Aperte Jogar</string>
-	<string name="tutorial_txt2">Espere outros jogadores entrarem</string>
-	<string name="tutorial_txt3">Fase de Planejamento!\nToque em um território seu</string>
-	<string name="tutorial_txt4">Escolha uma ação\nAtaque outro território ou\nDefenda um seu</string>
-	<string name="tutorial_txt5">Escolha um vizinho para atacar</string>
-	<string name="tutorial_txt6">Todas as jogadas prontas!?\nVamos para próxima fase :)</string>
-	<string name="tutorial_txt6a">Esperare outros jogadores finalizarem as jogadas deles</string>
-	<string name="tutorial_txt6b">Todos tem o mesmo tempo para finalizar as suas jogadas</string>
-	<string name="tutorial_txt7">Conflito!\nOutro jogador quer o mesmo território</string>
-	<string name="tutorial_txt8">Veja o status do seu objetivo a qualquer momento</string>
-	<string name="tutorial_txt8a">Veja a lista de jogadores a qualquer momento</string>
-	<string name="tutorial_txt9">Seu objetivo:\nConquiste 3 territórios em cada região</string>
-	<string name="tutorial_txt9a">Pronto para saber se você é um líder? :)</string>
-	
-	<!-- Wait messages -->
-	<string name="waiting_players_join">Esperando outros jogadores entrarem&#8230;</string>
-	<string name="waiting_players_moves">Esperando as jogadas dos outros&#8230;</string>	
-	
-	<!-- Other -->
-	<string name="anonymous_player">Anônimo</string>
-	<string name="you_label">Você</string>
-	<string name="won_label">Ganhou!</string>
-	<string name="wo_label">O adversário saiu!</string>
-	
-	<string name="alpha_label">Alpha testes</string>
-	<string name="alpha_message">Seja paciente com a nossa versão alpha(testes) =)</string>
-	<string name="not_yet_implemented">Estamos trabalhando nisso&#8230;</string>
-	
-	<string name="feedback_label">Avaliação</string>
-	<string name="rate_label">Avalie</string>
-	<string name="would_pay_label">Você pagaria por este app?</string>
-	<string name="yes_label">Sim</string>
-	<string name="no_label">Não</string>
-	<string name="general_comments_label">Comentários =)</string>
-	<string name="send_label">Enviar</string>
-	<string name="later_label">Depois</string>
-	<string name="feedback_sent">Obrigado por nos ajudar! =)</string>
-	
+    <string name="attack_action_label">Atacar</string>
+    <string name="defense_action_label">Defender</string>
+    <string name="cancel_action_label">Remover</string>
+    <string name="objective_label">Objetivo</string>
+    <string name="what_objective_label">Conquiste pelo menos 3 territórios em cada região</string>
+    <string name="north_objective">Norte</string>
+    <string name="center_objective">Centro</string>
+    <string name="south_objective">Sul</string>
+    <string name="homebase_objective">Mantenha sua casa inicial</string>
+    <string name="andre_label">André</string>
+    <string name="arnett_label">Arnett</string>
+    <string name="luan_label">Luan</string>
+    <string name="rafael_label">Rafael</string>
+    <string name="game_email_label">wofkapp@gmail.com</string>
+
+    <!-- info messages -->
+    <string name="territory_already_owned_by_you_info">Você já possui este território</string>
+    <string name="attack_a_neighbour_territory_info">Ataque um território vizinho</string>
+    <string name="you_already_attacked_this_territory_info">Você já atacou este território</string>
+    <string name="territory_already_used_during_this_turn_info">Território já utilizado</string>
+    <string name="choose_a_territory_owned_by_you_info">Escolha um território pertencente a você</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_txt1">Aperte Jogar</string>
+    <string name="tutorial_txt2">Espere outros jogadores entrarem</string>
+    <string name="tutorial_txt3">Fase de Planejamento!\nToque em um território seu</string>
+    <string name="tutorial_txt4">Escolha uma ação\nAtaque outro território ou\nDefenda um seu</string>
+    <string name="tutorial_txt5">Escolha um vizinho para atacar</string>
+    <string name="tutorial_txt6">Todas as jogadas prontas!?\nVamos para próxima fase :)</string>
+    <string name="tutorial_txt6a">Esperare outros jogadores finalizarem as jogadas deles</string>
+    <string name="tutorial_txt6b">Todos tem o mesmo tempo para finalizar as suas jogadas</string>
+    <string name="tutorial_txt7">Conflito!\nOutro jogador quer o mesmo território</string>
+    <string name="tutorial_txt8">Veja o status do seu objetivo a qualquer momento</string>
+    <string name="tutorial_txt8a">Veja a lista de jogadores a qualquer momento</string>
+    <string name="tutorial_txt9">Seu objetivo:\nConquiste 3 territórios em cada região</string>
+    <string name="tutorial_txt9a">Pronto para saber se você é um líder? :)</string>
+
+    <!-- Wait messages -->
+    <string name="waiting_players_join">Esperando outros jogadores entrarem&#8230;</string>
+    <string name="waiting_players_moves">Esperando as jogadas dos outros&#8230;</string>
+
+    <!-- Other -->
+    <string name="anonymous_player">Anônimo</string>
+    <string name="you_label">Você</string>
+    <string name="won_label">Ganhou!</string>
+    <string name="wo_label">O adversário saiu!</string>
+    <string name="alpha_label">Alpha testes</string>
+    <string name="alpha_message">Seja paciente com a nossa versão alpha(testes) =)</string>
+    <string name="not_yet_implemented">Estamos trabalhando nisso&#8230;</string>
+    <string name="feedback_label">Avaliação</string>
+    <string name="rate_label">Avalie</string>
+    <string name="would_pay_label">Você pagaria por este app?</string>
+    <string name="yes_label">Sim</string>
+    <string name="no_label">Não</string>
+    <string name="general_comments_label">Comentários =)</string>
+    <string name="send_label">Enviar</string>
+    <string name="later_label">Depois</string>
+    <string name="feedback_sent">Obrigado por nos ajudar! =)</string>
+
 </resources>
