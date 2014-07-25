@@ -1,5 +1,6 @@
 package br.edu.ufcg.ccc.projeto2.warofkingdoms.ui;
 
+import java.security.PublicKey;
 import java.util.Arrays;
 
 import android.app.Activity;
@@ -23,6 +24,7 @@ import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.CommunicationManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.GameManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.HouseTokenManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.NetworkManager;
+import br.edu.ufcg.ccc.projeto2.warofkingdoms.management.ProfileManager;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.ConnectResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.networking.SendMovesResult;
 import br.edu.ufcg.ccc.projeto2.warofkingdoms.ui.dialogs.CustomProgressDialog;
@@ -145,20 +147,18 @@ OnTaskCompleted {
 	        requestBatch.add(new Request(Session.getActiveSession(), 
 	                requestId, null, null, new Request.Callback() {
 	            public void onCompleted(Response response) {
-	            	String s = "";
 	                GraphObject graphObject = response.getGraphObject();
 	                if (graphObject != null) {
 	                    if (graphObject.getProperty("id") != null) {
-	                        s = s + String.format("%s", 
+	                        String userName = String.format("%s", 
 	                                graphObject.getProperty("name"));
-	                        SharedPreferences sharedPreferences = PreferenceManager
-	                				.getDefaultSharedPreferences(getApplicationContext());
-	                		Editor editor = sharedPreferences.edit();
-	                		editor.putString("user_name", s);
-	                		editor.commit();
+	                        String userId = String.format("%s", 
+	                                graphObject.getProperty("id"));
+	                        ProfileManager.getInstance().saveString(Constants.USER_NAME, userName, getApplicationContext());
+	                        ProfileManager.getInstance().saveString(Constants.USER_ID, userId, getApplicationContext());
+	                		Log.v(LOG_TAG,userName + ":" + userId);
 	                    }
 	                }
-	                Log.v(LOG_TAG,s);
 	            }
 	        }));
 	    }
@@ -357,11 +357,12 @@ OnTaskCompleted {
 
 			if (!session.isClosed()) {
 				session.closeAndClearTokenInformation();
-				SharedPreferences sharedPreferences = PreferenceManager
-        				.getDefaultSharedPreferences(getApplicationContext());
-        		Editor editor = sharedPreferences.edit();
-        		editor.putString("user_name", "Anonymous Player");
-        		editor.commit();
+        		ProfileManager profileManager = ProfileManager.getInstance();
+				profileManager.saveString(Constants.USER_NAME, Constants.ANONYMOUS_NAME, getApplicationContext());
+                profileManager.saveString(Constants.USER_ID, Constants.ANONYMOUS_ID, getApplicationContext());
+                profileManager.saveInt(Constants.NUM_VICTORIES_KEY, 0, getApplicationContext());
+                profileManager.saveInt(Constants.NUM_TIMES_PLAYED_KEY, 0, getApplicationContext());
+                profileManager.saveString(Constants.TEN_LAST_GAMES, Constants.CLEAN_VICTORY_TRACK, getApplicationContext());
 			}
 		} else {
 

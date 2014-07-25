@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/gray_home_screen"
-    android:weightSum="100">
+    android:orientation="vertical"
+    android:weightSum="100" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/orange_profile"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,22 +42,39 @@
                 android:layout_weight="1" >
             </LinearLayout>
         </LinearLayout>
+
+        <com.facebook.widget.ProfilePictureView
+            android:id="@+id/selection_profile_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            facebook:preset_size="small" />
+
+        <TextView
+            android:id="@+id/selection_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:textColor="#333"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/chart"
         android:layout_width="fill_parent"
         android:layout_height="80dp"
-        android:orientation="horizontal" 
-        android:layout_weight="60">
+        android:layout_weight="60"
+        android:orientation="horizontal" >
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="20"
-        android:orientation="horizontal" 
-        android:background="@color/gray_home_screen">
+        android:background="@color/gray_home_screen"
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -69,8 +87,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="60%"
-            android:textColor="@color/green"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -83,8 +101,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="40%"
-            android:textColor="@color/red"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/red" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -96,8 +114,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
         android:layout_marginTop="20dp"
+        android:layout_weight="10"
         android:orientation="vertical" >
 
         <TextView
@@ -106,14 +124,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/last_ten_games_label"
-            android:textColor="@color/dark_gray"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            
+            android:layout_marginTop="10dp" >
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -233,14 +251,13 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="20dp"
                 android:layout_height="20dp" />
-            
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1" >
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

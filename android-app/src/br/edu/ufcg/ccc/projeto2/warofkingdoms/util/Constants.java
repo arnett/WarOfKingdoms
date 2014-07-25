@@ -73,7 +73,13 @@ public class Constants {
 	public static final String NUM_CONQUERED_SOUTH = "numConqueredSouth";
 
 	public static final String HAS_HOMEBASE = "hasHomebase";
+	public static final String USER_NAME = "user_name";
+	public static final String USER_ID = "user_id";
+	public static final String ANONYMOUS_NAME = "Anonymous Name";
+	public static final String ANONYMOUS_ID = "Anonymous Id";
+	public static final String CLEAN_VICTORY_TRACK = "NR NR NR NR NR NR NR NR NR NR";
 
+	
 	public static final String DIALOG_TYPE = "dialogType";
 	public static final int DIALOG_INFO = 1;
 	public static final int DIALOG_ERROR = 2;
